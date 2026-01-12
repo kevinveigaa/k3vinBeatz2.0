@@ -1,59 +1,132 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // TILT 3D
-  document.querySelectorAll('.beat-card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const xRotation = -((y - rect.height / 2) / 20);
-      const yRotation = (x - rect.width / 2) / 20;
-      card.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg) scale(1.02)`;
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-    });
+
+  const menuBtn = document.getElementById('menuButton');
+
+  const menuDropdown = document.getElementById('menuDropdown');
+
+  const backBtnContainer = document.getElementById('backBtnContainer');
+
+  // 1. Menu Toggle
+
+  menuBtn.addEventListener('click', () => {
+
+    menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block';
+
   });
 
-  // MENU CATEGORIAS
-  const menuBtn = document.getElementById('menuButton');
-  const menuDropdown = document.getElementById('menuDropdown');
-  menuBtn.addEventListener('click', () => {
-    menuDropdown.style.display = menuDropdown.style.display === 'block' ? 'none' : 'block';
+  // 2. Lógica de Favoritos (LocalStorage)
+
+  let favoritos = JSON.parse(localStorage.getItem('k3vin_favs')) || [];
+
+  document.querySelectorAll('.beat-card').forEach(card => {
+
+    const name = card.dataset.name;
+
+    const btn = card.querySelector('.btn-fav');
+
+    
+
+    if (favoritos.includes(name)) {
+
+      btn.classList.add('active');
+
+      btn.querySelector('i').classList.replace('fa-regular', 'fa-solid');
+
+    }
+
+    btn.addEventListener('click', (e) => {
+
+      e.stopPropagation();
+
+      btn.classList.toggle('active');
+
+      const isFav = btn.classList.contains('active');
+
+      btn.querySelector('i').classList.replace(isFav ? 'fa-regular' : 'fa-solid', isFav ? 'fa-solid' : 'fa-regular');
+
+      
+
+      if (isFav) favoritos.push(name);
+
+      else favoritos = favoritos.filter(f => f !== name);
+
+      
+
+      localStorage.setItem('k3vin_favs', JSON.stringify(favoritos));
+
+    });
+
   });
+
+  // 3. Filtros (Categorias e Favoritos)
+
+  function showBackBtn() {
+
+    if (!document.getElementById('backBtn')) {
+
+      const b = document.createElement('button');
+
+      b.id = 'backBtn'; b.innerHTML = '← Ver Todos os Beats';
+
+      b.style = "margin:10px auto; background:none; color:white; border:1px solid var(--main-color); padding:8px 15px; border-radius:20px; cursor:pointer; font-weight:600;";
+
+      backBtnContainer.appendChild(b);
+
+      b.onclick = () => { document.querySelectorAll('.beat-card').forEach(c => c.style.display = 'flex'); b.remove(); };
+
+    }
+
+  }
 
   document.querySelectorAll('.category-btn').forEach(btn => {
+
     btn.addEventListener('click', () => {
-      const category = btn.getAttribute('data-category');
-      document.querySelectorAll('.beat-card').forEach(card => {
-        card.style.display = card.dataset.category === category ? 'flex' : 'none';
-      });
-      if (!document.getElementById('backBtn')) {
-        const back = document.createElement('button');
-        back.textContent = 'Voltar para todos os beats';
-        back.id = 'backBtn';
-        back.style.margin = '20px auto';
-        back.style.padding = '10px 20px';
-        back.style.cursor = 'pointer';
-        back.onclick = () => location.reload();
-        document.querySelector('.lista-beats').prepend(back);
-      }
+
+      const cat = btn.dataset.category;
+
+      document.querySelectorAll('.beat-card').forEach(c => c.style.display = c.dataset.category === cat ? 'flex' : 'none');
+
+      showBackBtn();
+
       menuDropdown.style.display = 'none';
+
     });
+
   });
 
-  // PESQUISA INTELIGENTE
-  const searchInput = document.getElementById('searchInput');
-  const searchBtn = document.getElementById('searchBtn');
-  function normalizeString(str){
-    return str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-  }
-  function searchBeats(){
-    const value = normalizeString(searchInput.value);
-    document.querySelectorAll('.beat-card').forEach(card => {
-      const name = normalizeString(card.dataset.name);
-      card.style.display = name.includes(value) ? 'flex' : 'none';
+  document.getElementById('btnShowFavs').addEventListener('click', () => {
+
+    document.querySelectorAll('.beat-card').forEach(c => {
+
+      c.style.display = c.querySelector('.btn-fav').classList.contains('active') ? 'flex' : 'none';
+
     });
-  }
-  searchInput.addEventListener('input', searchBeats);
-  searchBtn.addEventListener('click', searchBeats);
+
+    showBackBtn();
+
+    menuDropdown.style.display = 'none';
+
+  });
+
+  // 4. Busca
+
+  document.getElementById('searchInput').addEventListener('input', (e) => {
+
+    const v = e.target.value.toLowerCase();
+
+    document.querySelectorAll('.beat-card').forEach(c => c.style.display = c.dataset.name.toLowerCase().includes(v) ? 'flex' : 'none');
+
+  });
+
+  // 5. Skeleton
+
+  window.addEventListener('load', () => {
+
+    setTimeout(() => document.querySelectorAll('.skeleton').forEach(s => s.classList.remove('skeleton')), 800);
+
+  });
+
 });
+
+function changeTheme(t) { document.body.className = t === 'default' ? '' : t; }
+
