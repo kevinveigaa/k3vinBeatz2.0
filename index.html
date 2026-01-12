@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K3VIN BEATZ - Catálogo</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<div class="background-glow"></div>
+
+<header class="topo">
+  <div class="logo-container">
+    <img src="https://i.imgur.com/uz1F8n0.jpeg" alt="Logo K3VIN BEATZ" class="logo">
+    <h1 class="logo-text">
+      <span class="blue-neon">K3VIN</span> <span class="white-glow">BEATZ</span>
+    </h1>
+  </div>
+  <p class="subtitle">Escolha o beat ideal para o seu projeto</p>
+
+  <!-- BUSCA -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Pesquisar beat...">
+    <button id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+  </div>
+
+  <!-- MENU DE CATEGORIAS -->
+  <div class="menu-categorias">
+    <button id="menuButton">Categorias <i class="fa-solid fa-bars"></i></button>
+    <div id="menuDropdown">
+      <button class="category-btn" data-category="trap">Trap</button>
+      <button class="category-btn" data-category="rnb">R&B</button>
+      <button class="category-btn" data-category="rap">Rap</button>
+    </div>
+  </div>
+</header>
+
+<section class="lista-beats">
+
+  <!-- CARD 1 -->
+  <div class="beat-card" data-category="trap" data-name="Retroceder">
+    <div class="card-image-wrapper">
+      <img src="https://i.imgur.com/WjvDH0b.jpeg" alt="Capa do beat Retroceder" class="capa">
+    </div>
+    <div class="beat-info">
+      <h2>Retroceder</h2>
+      <div class="tags-container">
+        <span class="badge badge-blue"><i class="fa-solid fa-music"></i> Trap • Dark • Melodic</span>
+        <span class="badge badge-purple"><i class="fa-solid fa-sliders"></i> 132 BPM • Key: Bb minor</span>
+      </div>
+      <div class="soundcloud-player">
+        <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
+        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2245057388&color=%2300f2ff&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
+      </div>
+      <p class="preco">R$120,00</p>
+      <a href="https://sun.eduzz.com/60EEP52303" class="btn-buy">Comprar Beat <i class="fa-solid fa-cart-shopping"></i></a>
+      <p class="aviso">Você será redirecionado para o checkout da Eduzz</p>
+    </div>
+  </div>
+
+  <!-- CARD 2 -->
+  <div class="beat-card" data-category="rnb" data-name="Pródigio">
+    <div class="card-image-wrapper">
+      <img src="https://i.imgur.com/cyHzDoM.jpeg" alt="Capa do beat Pródigio" class="capa">
+    </div>
+    <div class="beat-info">
+      <h2>Pródigio</h2>
+      <div class="tags-container">
+        <span class="badge badge-blue"><i class="fa-solid fa-music"></i> R&B • Melodic</span>
+        <span class="badge badge-purple"><i class="fa-solid fa-sliders"></i> 120 BPM • Key: C minor</span>
+      </div>
+      <div class="soundcloud-player">
+        <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
+        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2245192229&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"></iframe>
+      </div>
+      <p class="preco">R$90,00</p>
+      <a href="https://sun.eduzz.com/7WXQRKNO9A" class="btn-buy">Comprar Beat <i class="fa-solid fa-cart-shopping"></i></a>
+      <p class="aviso">Você será redirecionado para o checkout da Eduzz</p>
+    </div>
+  </div>
+
+</section>
+
+<script src="js/script.js"></script>
+</body>
+</html>
