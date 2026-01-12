@@ -1,31 +1,47 @@
-Console.log("Beat Retroceder carregado 🎧🔥");
+console.log("Beats carregados 🎧🔥");
 
-// FUNÇÃO PARA ADICIONAR EFEITO DE INCLINAÇÃO 3D (TILT) AO CARD
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // Seleciona o cartão principal do beat
-    const card = document.querySelector('.beat-card');
+/* MENU */
+const menuBtn = document.getElementById("menuBtn");
+const menu = document.getElementById("menu");
 
-    if(card) {
-        // 1. Efeito de inclinação ao mover o mouse
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            
-            // Posição X e Y do mouse dentro do cartão
-            const x = e.clientX - rect.left; 
-            const y = e.clientY - rect.top;
-            
-            // Cálculo da rotação (o divisor 20 suaviza o efeito)
-            const xRotation = -((y - rect.height / 2) / 20); 
-            const yRotation = (x - rect.width / 2) / 20;
+menuBtn.onclick = () => menu.classList.toggle("active");
 
-            // Aplica a transformação 3D
-            card.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg) scale(1.02)`;
-        });
+/* FILTRO */
+const filterBtns = document.querySelectorAll(".filter-btn");
+const cards = document.querySelectorAll(".beat-card");
 
-        // 2. Retorna à posição normal ao retirar o mouse
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-        });
-    }
+filterBtns.forEach(btn => {
+  btn.onclick = () => {
+    const filter = btn.dataset.filter;
+    cards.forEach(card => {
+      card.style.display =
+        filter === "all" || card.dataset.category === filter
+        ? "block"
+        : "none";
+    });
+  };
+});
+
+/* BUSCA */
+document.getElementById("searchInput").addEventListener("input", e => {
+  const value = e.target.value.toLowerCase();
+  cards.forEach(card => {
+    card.style.display = card.dataset.name.includes(value) ? "block" : "none";
+  });
+});
+
+/* TILT 3D */
+cards.forEach(card => {
+  card.addEventListener("mousemove", e => {
+    const r = card.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    const rx = -(y - r.height / 2) / 20;
+    const ry = (x - r.width / 2) / 20;
+    card.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.03)`;
+  });
+
+  card.addEventListener("mouseleave", () => {
+    card.style.transform = "perspective(1000px) rotateX(0) rotateY(0) scale(1)";
+  });
 });
