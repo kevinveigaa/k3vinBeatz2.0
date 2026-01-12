@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.lista-beats').prepend(back);
       }
     });
-  });
+  });.
 
   // BUSCA POR NOME
   const searchInput = document.getElementById('searchInput');
