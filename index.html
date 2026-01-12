@@ -2,93 +2,118 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>K3VIN BEATZ</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K3VIN BEATZ - Catálogo</title>
 
-  <!-- FONTES -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
 
-  <!-- ÍCONES -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
+  <!-- Aqui você modifica o link do CSS -->
+  <link rel="stylesheet" href="CSS/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-
 <body>
 
-  <!-- TOPO -->
-  <header class="topo">
-    <button id="menuBtn" class="menu-btn">
-      <i class="fa-solid fa-bars"></i>
-    </button>
+<div class="background-glow"></div>
 
-    <h1 class="logo">
-      <span class="neon-blue">K3VIN</span>
-      <span class="neon-white">BEATZ</span>
+<header class="topo">
+  <div class="logo-container">
+    <img src="https://i.imgur.com/uz1F8n0.jpeg" alt="Logo K3VIN BEATZ" class="logo">
+    <h1 class="logo-text">
+      <span class="blue-neon">K3VIN</span> <span class="white-glow">BEATZ</span>
     </h1>
+  </div>
 
-    <div class="search-box">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" id="searchInput" placeholder="Pesquisar beat...">
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Pesquisar beat...">
+  </div>
+
+  <p class="subtitle">Escolha o beat ideal para o seu projeto</p>
+</header>
+
+<!-- Menu de categorias -->
+<div class="menu-categorias">
+  <button id="menuButton"><i class="fa-solid fa-bars"></i> Categorias</button>
+  <div id="menuDropdown" class="dropdown-content">
+    <button class="category-btn" data-category="trap">Trap</button>
+    <button class="category-btn" data-category="rnb">RnB</button>
+    <button class="category-btn" data-category="rap">Rap</button>
+  </div>
+</div>
+
+<section class="lista-beats">
+
+  <!-- CARD 1 -->
+  <div class="beat-card" data-name="retroceder" data-category="trap">
+    <div class="card-image-wrapper">
+      <img src="https://i.imgur.com/WjvDH0b.jpeg" alt="Capa do beat Retroceder" class="capa">
     </div>
 
-    <p class="subtitle">Escolha o beat ideal para seu projeto</p>
-  </header>
-
-  <!-- MENU CATEGORIAS -->
-  <nav class="menu" id="menu">
-    <button class="filter-btn" data-filter="all">Todos</button>
-    <button class="filter-btn" data-filter="trap">Trap</button>
-    <button class="filter-btn" data-filter="rnb">R&B</button>
-  </nav>
-
-  <!-- LISTA DE BEATS -->
-  <section class="lista-beats">
-
-    <!-- BEAT RETROCEDER -->
-    <div class="beat-card" data-category="trap" data-name="retroceder">
-      <img src="https://i.imgur.com/WjvDH0b.jpeg" class="capa">
-
+    <div class="beat-info">
       <h2>Retroceder</h2>
-      <span class="categoria">Trap</span>
-      <div class="preco">R$ 120</div>
 
-      <iframe
-        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2245057388&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false">
-      </iframe>
+      <div class="tags-container">
+        <span class="badge badge-blue"><i class="fa-solid fa-music"></i> Trap • Dark • Melodic</span>
+        <span class="badge badge-purple"><i class="fa-solid fa-sliders"></i> 132 BPM • Key: Bb minor</span>
+      </div>
 
-      <a href="https://sun.eduzz.com/60EEP52303" target="_blank" class="btn-buy">
-        Comprar Beat <i class="fa-solid fa-cart-shopping"></i>
-      </a>
+      <div class="soundcloud-player">
+        <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" 
+        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2245057388&color=%2300f2ff&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
+      </div>
 
-      <small>Você será redirecionado para o checkout da Eduzz</small>
+      <p class="preco">Preço: R$120</p>
+
+      <div class="footer-info">
+        <a href="https://sun.eduzz.com/60EEP52303" id="buyButton" class="btn-buy" target="_blank">
+          Comprar Beat <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+        <p class="aviso">Você será redirecionado para a página de checkout da Eduzz.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2 -->
+  <div class="beat-card" data-name="prodigio" data-category="rnb">
+    <div class="card-image-wrapper">
+      <img src="https://i.imgur.com/cyHzDoM.jpeg" alt="Capa do beat Pródigio" class="capa">
     </div>
 
-    <!-- BEAT PRODÍGIO -->
-    <div class="beat-card" data-category="rnb" data-name="prodigio">
-      <img src="https://i.imgur.com/cyHzDoM.jpeg" class="capa">
+    <div class="beat-info">
+      <h2>Pródigio 🎵</h2>
 
-      <h2>Prodígio 🎵</h2>
-      <span class="categoria">R&amp;B</span>
-      <div class="preco">R$ 90</div>
+      <div class="tags-container">
+        <span class="badge badge-blue"><i class="fa-solid fa-music"></i> RnB • Melodic</span>
+        <span class="badge badge-purple"><i class="fa-solid fa-sliders"></i> 120 BPM • Key: C minor</span>
+      </div>
 
-      <iframe
-        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2245192229&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false">
-      </iframe>
+      <div class="soundcloud-player">
+        <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" 
+        src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2245192229&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
+      </div>
 
-      <a href="https://sun.eduzz.com/7WXQRKNO9A" target="_blank" class="btn-buy">
-        Comprar Beat <i class="fa-solid fa-cart-shopping"></i>
-      </a>
+      <p class="preco">Preço: R$90</p>
 
-      <small>Você será redirecionado para o checkout da Eduzz</small>
+      <div class="footer-info">
+        <a href="https://sun.eduzz.com/7WXQRKNO9A" id="buyButton2" class="btn-buy" target="_blank">
+          Comprar Beat <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+        <p class="aviso">Você será redirecionado para a página de checkout da Eduzz.</p>
+      </div>
     </div>
+  </div>
 
-  </section>
+</section>
 
-  <!-- JS -->
-  <script src="script.js"></script>
+<section class="features">
+  <div class="feature-item"><i class="fa-solid fa-music"></i> Beats modernos</div>
+  <div class="feature-item"><i class="fa-solid fa-cloud-moon"></i> Atmosfera intensa</div>
+  <div class="feature-item"><i class="fa-solid fa-microphone-lines"></i> Flow marcante</div>
+</section>
 
+<!-- Aqui você modifica o link do JS -->
+<script src="JS/script.js"></script>
 </body>
-</html> 
+</html>
 
