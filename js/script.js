@@ -75,11 +75,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const audio = new Audio(player.dataset.audio);
     const playBtn = player.querySelector(".play-btn");
     const bar = player.querySelector(".progress-bar");
-    const dot = player.querySelector(".progress-dot");
+    const fill = player.querySelector(".progress-fill");
     const cur = player.querySelector(".current");
     const dur = player.querySelector(".duration");
 
-    // play/pause
     playBtn.onclick = () => {
       if (currentAudio && currentAudio !== audio) {
         currentAudio.pause();
@@ -91,28 +90,23 @@ document.addEventListener("DOMContentLoaded", () => {
       playBtn.innerHTML = audio.paused ? '<i class="fa-solid fa-play"></i>' : '<i class="fa-solid fa-pause"></i>';
     };
 
-    // atualiza barra e bolinha
     audio.ontimeupdate = () => {
       if (!audio.duration) return;
       const percent = (audio.currentTime / audio.duration) * 100;
-      bar.firstElementChild.style.width = percent + "%";
-      dot.style.left = percent + "%";
+      fill.style.width = percent + "%";
       cur.innerText = format(audio.currentTime);
       dur.innerText = format(audio.duration);
     };
 
-    // clique na barra para mudar posição
     bar.onclick = e => {
       const rect = bar.getBoundingClientRect();
       const x = (e.clientX - rect.left) / bar.clientWidth;
       audio.currentTime = x * audio.duration;
     };
 
-    // reset botão quando termina
     audio.onended = () => {
       playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-      dot.style.left = "0%";
-      bar.firstElementChild.style.width = "0%";
+      fill.style.width = "0%";
       cur.innerText = "0:00";
     };
   });
@@ -123,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const s = Math.floor(t % 60).toString().padStart(2,"0");
     return `${m}:${s}`;
   }
+
 });
 
 // TEMA
