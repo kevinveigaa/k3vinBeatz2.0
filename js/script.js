@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // PLAYER
   let currentAudio = null;
+  let currentBtn = null;
 
   document.querySelectorAll(".player").forEach(player => {
     const audio = new Audio(player.dataset.audio);
@@ -78,25 +79,41 @@ document.addEventListener("DOMContentLoaded", () => {
     const cur = player.querySelector(".current");
     const dur = player.querySelector(".duration");
 
+    // play/pause
     playBtn.onclick = () => {
-      if (currentAudio && currentAudio !== audio) currentAudio.pause();
+      if (currentAudio && currentAudio !== audio) {
+        currentAudio.pause();
+        if (currentBtn) currentBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+      }
       currentAudio = audio;
+      currentBtn = playBtn;
       audio.paused ? audio.play() : audio.pause();
       playBtn.innerHTML = audio.paused ? '<i class="fa-solid fa-play"></i>' : '<i class="fa-solid fa-pause"></i>';
     };
 
+    // atualiza barra e bolinha
     audio.ontimeupdate = () => {
+      if (!audio.duration) return;
       const percent = (audio.currentTime / audio.duration) * 100;
-      bar.style.setProperty("--p", percent + "%");
-      bar.firstElementChild.style.width = percent + "%";
-      dot.style.left = percent + "%";
+      bar.firstElementChild.style.width = percent + "%";  // barra preenchida
+      dot.style.left = percent + "%";                      // bolinha se move
       cur.innerText = format(audio.currentTime);
       dur.innerText = format(audio.duration);
     };
 
+    // clique na barra para mudar posição
     bar.onclick = e => {
-      const x = e.offsetX / bar.clientWidth;
+      const rect = bar.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / bar.clientWidth;
       audio.currentTime = x * audio.duration;
+    };
+
+    // reset botão quando termina
+    audio.onended = () => {
+      playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+      dot.style.left = "0%";
+      bar.firstElementChild.style.width = "0%";
+      cur.innerText = "0:00";
     };
   });
 
