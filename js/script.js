@@ -95,8 +95,8 @@ document.addEventListener("DOMContentLoaded", () => {
     audio.ontimeupdate = () => {
       if (!audio.duration) return;
       const percent = (audio.currentTime / audio.duration) * 100;
-      bar.firstElementChild.style.width = percent + "%";  // barra preenchida
-      dot.style.left = percent + "%";                      // bolinha só se move
+      bar.firstElementChild.style.width = percent + "%";
+      dot.style.left = percent + "%";
       cur.innerText = format(audio.currentTime);
       dur.innerText = format(audio.duration);
     };

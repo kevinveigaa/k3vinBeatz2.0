@@ -208,6 +208,8 @@ body {
 .progress-bar::before {
   content:"";
   position:absolute;
+  top:0;
+  left:0;
   height:100%;
   width:0%;
   background:var(--main-color);
@@ -218,9 +220,9 @@ body {
   position:absolute;
   top:50%;
   left:0%;
-  transform:translate(-50%,-50%);
-  width:12px;   /* tamanho fixo */
-  height:12px;  /* tamanho fixo */
+  transform:translate(-50%, -50%);
+  width:12px;
+  height:12px;
   background:var(--main-color);
   border-radius:50%;
   pointer-events:none;
