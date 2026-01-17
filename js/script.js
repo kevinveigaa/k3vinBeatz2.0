@@ -1,194 +1,51 @@
-document.addEventListener("DOMContentLoaded", () => {
+const beats = [
+    { id: 1, name: "Retroceder", cat: "trap", price: "R$ 120", link: "https://sun.eduzz.com/60EEP52303" },
+    { id: 2, name: "Prodígio", cat: "rnb", price: "R$ 90", link: "https://sun.eduzz.com/7WXQRKNO9A" },
+    { id: 3, name: "Te Esperando", cat: "rap", price: "R$ 95", link: "https://chk.eduzz.com/n5j7fdbb" },
+    { id: 4, name: "Auto Confiança", cat: "trap", price: "R$ 82", link: "https://chk.eduzz.com/G92E6XZZWE" },
+    { id: 5, name: "Lentamente", cat: "trap", price: "R$ 98", link: "https://chk.eduzz.com/G96132EAW1" },
+    { id: 6, name: "Sentimento Impuro", cat: "rnb", price: "R$ 110", link: "https://chk.eduzz.com/39YDPG6Q9O" },
+    { id: 7, name: "Espanhola", cat: "trap", price: "R$ 130", link: "https://chk.eduzz.com/Q9N5JQ7P01" },
+    { id: 8, name: "Desista", cat: "rnb", price: "R$ 130", link: "https://chk.eduzz.com/Q9N5JZ4K01" }
+];
 
-  /* ================= MENU CATEGORIAS ================= */
-
-  const menuBtn = document.getElementById("menuButton");
-  const menuDropdown = document.getElementById("menuDropdown");
-  const backBtnContainer = document.getElementById("backBtnContainer");
-
-  menuBtn.addEventListener("click", () => {
-    menuDropdown.style.display =
-      menuDropdown.style.display === "block" ? "none" : "block";
-  });
-
-  document.addEventListener("click", (e) => {
-    if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
-      menuDropdown.style.display = "none";
-    }
-  });
-
-  function showBackBtn() {
-    if (!document.getElementById("backBtn")) {
-      const btn = document.createElement("button");
-      btn.id = "backBtn";
-      btn.innerText = "← Ver todos os beats";
-      backBtnContainer.appendChild(btn);
-
-      btn.onclick = () => {
-        document.querySelectorAll(".beat-card").forEach(card => {
-          card.style.display = "flex";
-        });
-        btn.remove();
-      };
-    }
-  }
-
-  document.querySelectorAll(".category-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const cat = btn.dataset.category;
-
-      document.querySelectorAll(".beat-card").forEach(card => {
-        card.style.display =
-          card.dataset.category === cat ? "flex" : "none";
-      });
-
-      menuDropdown.style.display = "none";
-      showBackBtn();
+function render(filter = 'all') {
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+    const filtered = filter === 'all' ? beats : beats.filter(b => b.cat === filter);
+    
+    filtered.forEach(beat => {
+        // Lógica automática: categoria trap -> capas/trap.png
+        const capImg = `capas/${beat.cat}.png`;
+        
+        grid.innerHTML += `
+            <div class="beat-card" onclick="selectBeat(${beat.id})">
+                <img src="${capImg}" alt="${beat.name}">
+                <h3 style="margin: 15px 0 5px 0; font-size: 1.3rem">${beat.name}</h3>
+                <span class="neon-text" style="font-size: 0.8rem; letter-spacing: 2px">${beat.cat.toUpperCase()}</span>
+            </div>
+        `;
     });
-  });
-
-  document.getElementById("btnShowFavs").addEventListener("click", () => {
-    document.querySelectorAll(".beat-card").forEach(card => {
-      const favBtn = card.querySelector(".btn-fav");
-      card.style.display = favBtn.classList.contains("active")
-        ? "flex"
-        : "none";
-    });
-    menuDropdown.style.display = "none";
-    showBackBtn();
-  });
-
-  /* ================= BUSCA ================= */
-
-  document.getElementById("searchInput").addEventListener("input", e => {
-    const value = e.target.value.toLowerCase();
-
-    document.querySelectorAll(".beat-card").forEach(card => {
-      card.style.display = card.dataset.name.includes(value)
-        ? "flex"
-        : "none";
-    });
-  });
-
-  /* ================= FAVORITOS ================= */
-
-  let favs = JSON.parse(localStorage.getItem("k3vin_favs")) || [];
-
-  document.querySelectorAll(".beat-card").forEach(card => {
-    const name = card.dataset.name;
-    const favBtn = card.querySelector(".btn-fav");
-
-    if (favs.includes(name)) favBtn.classList.add("active");
-
-    favBtn.addEventListener("click", (e) => {
-      favBtn.classList.toggle("active");
-
-      if (favBtn.classList.contains("active")) {
-        favs.push(name);
-        createParticleHeart(e);
-      } else {
-        favs = favs.filter(f => f !== name);
-      }
-
-      localStorage.setItem("k3vin_favs", JSON.stringify(favs));
-    });
-  });
-
-  function createParticleHeart(e) {
-    const heart = document.createElement("div");
-    heart.className = "particle";
-    heart.innerHTML = "❤️";
-
-    const x = Math.random() * 2 - 1;
-    const y = Math.random() * 2 - 1;
-
-    heart.style.setProperty("--x", x);
-    heart.style.setProperty("--y", y);
-    heart.style.left = e.clientX + "px";
-    heart.style.top = e.clientY + "px";
-
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 800);
-  }
-
-  /* ================= PLAYER ================= */
-
-  let currentAudio = null;
-  let currentBtn = null;
-
-  document.querySelectorAll(".player").forEach(player => {
-
-    const audio = new Audio(player.dataset.audio);
-    const playBtn = player.querySelector(".play-btn");
-    const bar = player.querySelector(".progress-bar");
-    const fill = player.querySelector(".progress-fill");
-    const cur = player.querySelector(".current");
-    const dur = player.querySelector(".duration");
-
-    playBtn.addEventListener("click", () => {
-
-      if (currentAudio && currentAudio !== audio) {
-        currentAudio.pause();
-        if (currentBtn) {
-          currentBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-        }
-      }
-
-      currentAudio = audio;
-      currentBtn = playBtn;
-
-      if (audio.paused) {
-        audio.play();
-        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-      } else {
-        audio.pause();
-        playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-      }
-    });
-
-    audio.addEventListener("timeupdate", () => {
-      if (!audio.duration) return;
-
-      const percent = (audio.currentTime / audio.duration) * 100;
-      fill.style.width = percent + "%";
-      cur.innerText = formatTime(audio.currentTime);
-      dur.innerText = formatTime(audio.duration);
-    });
-
-    bar.addEventListener("click", e => {
-      const rect = bar.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      audio.currentTime = x * audio.duration;
-    });
-
-    audio.addEventListener("ended", () => {
-      playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-      fill.style.width = "0%";
-      cur.innerText = "0:00";
-    });
-
-    /* PREVIEW AO PASSAR O MOUSE NA CAPA */
-    const thumb = player.closest(".beat-card").querySelector(".thumb");
-    thumb.addEventListener("mouseenter", () => {
-      audio.volume = 0.2;
-      audio.currentTime = 0;
-      audio.play();
-      setTimeout(() => audio.pause(), 1800);
-    });
-
-  });
-
-  function formatTime(t) {
-    if (!t) return "0:00";
-    const m = Math.floor(t / 60);
-    const s = Math.floor(t % 60).toString().padStart(2, "0");
-    return `${m}:${s}`;
-  }
-
-});
-
-/* ================= TEMA ================= */
-
-function changeTheme(theme) {
-  document.body.className = theme === "default" ? "" : theme;
 }
+
+function selectBeat(id) {
+    const beat = beats.find(b => b.id === id);
+    const capImg = `capas/${beat.cat}.png`;
+
+    document.getElementById('p-img').src = capImg;
+    document.getElementById('p-name').innerText = beat.name;
+    document.getElementById('p-price').innerText = beat.price;
+    document.getElementById('p-buy').href = beat.link;
+    
+    // Pequeno feedback visual ao clicar
+    const cover = document.querySelector('.p-cover-wrapper');
+    cover.style.transform = 'scale(1.1)';
+    setTimeout(() => cover.style.transform = 'scale(1)', 200);
+}
+
+function setTheme(theme) {
+    document.body.className = theme;
+}
+
+// Inicializa o catálogo com todos os beats
+render();
