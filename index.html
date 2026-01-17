@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K3VIN BEATZ | Premium Store</title>
+    <title>K3VIN BEATZ | Official Store</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -29,7 +29,7 @@
     <header class="top-bar">
         <div class="search-container">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="mainSearch" placeholder="Encontre o seu som...">
+            <input type="text" id="mainSearch" placeholder="Pesquisar batida...">
         </div>
         <div class="theme-switcher">
             <div class="dot dot-cyan" onclick="setTheme('theme-cyan')"></div>
@@ -47,7 +47,7 @@
 <footer class="player-bar">
     <div class="player-left">
         <div class="p-cover-wrapper">
-            <img src="" id="p-img" class="p-cover">
+            <img src="capas/trap.png" id="p-img" class="p-cover">
         </div>
         <div class="p-details">
             <h4 id="p-name">Selecione um beat</h4>
@@ -56,12 +56,14 @@
     </div>
 
     <div class="player-center">
-        <button class="master-btn" id="masterPlay"><i class="fa-solid fa-play"></i></button>
+        <div class="controls">
+            <button class="master-btn" id="masterPlay"><i class="fa-solid fa-play"></i></button>
+        </div>
         <div class="bar-bg"><div class="bar-fill" id="seek-fill"></div></div>
     </div>
 
     <div class="player-right">
-        <div class="price-tag"><span id="p-price">---</span></div>
+        <div class="price-tag"><span id="p-price" class="neon-text">---</span></div>
         <a href="#" id="p-buy" class="buy-neon-btn" target="_blank">COMPRAR AGORA</a>
     </div>
 </footer>
