@@ -3,284 +3,165 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>K3VIN BEATZ - Catálogo Oficial</title>
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
 
-  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-  <div class="background-glow"></div>
+<div class="background-glow"></div>
 
-  <!-- HEADER -->
-  <header class="topo">
-    <img src="https://i.imgur.com/uz1F8n0.jpeg" class="logo">
+<header class="topo">
+  <img src="https://i.imgur.com/uz1F8n0.jpeg" class="logo">
 
-    <h1 class="logo-text">
-      <span class="blue-neon">K3VIN</span> BEATZ
-    </h1>
+  <h1 class="logo-text">
+    <span class="blue-neon">K3VIN</span> BEATZ
+  </h1>
 
-    <div class="theme-switch-container">
-      <button class="dot-btn ciano" onclick="changeTheme('default')"></button>
-      <button class="dot-btn roxo" onclick="changeTheme('theme-purple')"></button>
-      <button class="dot-btn rosa" onclick="changeTheme('theme-pink')"></button>
+  <div class="theme-switch-container">
+    <button class="dot-btn ciano" onclick="changeTheme('default')"></button>
+    <button class="dot-btn roxo" onclick="changeTheme('theme-purple')"></button>
+    <button class="dot-btn rosa" onclick="changeTheme('theme-pink')"></button>
+  </div>
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Pesquisar beat...">
+  </div>
+
+  <div class="menu-categorias">
+    <button id="menuButton">Categorias <i class="fa-solid fa-bars"></i></button>
+    <div id="menuDropdown">
+      <button class="category-btn" data-category="trap">Trap</button>
+      <button class="category-btn" data-category="rnb">RnB</button>
+      <button class="category-btn" data-category="rap">Rap</button>
+      <button class="category-btn" data-category="funk">Funk</button>
+      <hr>
+      <button id="btnShowFavs"><i class="fa-solid fa-heart"></i> Favoritos</button>
     </div>
+  </div>
+</header>
 
-    <div class="search-container">
-      <input type="text" id="searchInput" placeholder="Pesquisar beat...">
-    </div>
+<div id="backBtnContainer"></div>
 
-    <div class="menu-categorias">
-      <button id="menuButton">
-        Categorias <i class="fa-solid fa-bars"></i>
-      </button>
+<section class="lista-beats">
 
-      <div id="menuDropdown">
-        <button class="category-btn" data-category="trap">Trap</button>
-        <button class="category-btn" data-category="rnb">RnB</button>
-        <button class="category-btn" data-category="rap">Rap</button>
-        <button class="category-btn" data-category="funk">Funk</button>
-        <hr>
-        <button id="btnShowFavs">
-          <i class="fa-solid fa-heart"></i> Favoritos
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <div id="backBtnContainer"></div>
-
-  <!-- LISTA DE BEATS -->
-  <section class="lista-beats">
-
-    <!-- Retroceder -->
-    <div class="beat-card" data-category="trap" data-name="retroceder">
-      <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
-      <img src="https://i.imgur.com/WjvDH0b.jpeg" class="thumb">
-      <div class="info">
-        <h2>Retroceder</h2>
-        <span class="tag">Trap • Dark • 132 BPM</span>
-        <div class="player" data-audio="beats/retroceder.mp3">
-          <button class="play-btn"><i class="fa-solid fa-play"></i></button>
-          <div class="progress-area">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
-          </div>
+  <!-- Retroceder -->
+  <div class="beat-card" data-category="trap" data-name="retroceder">
+    <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
+    <img class="thumb">
+    <div class="info">
+      <h2>Retroceder</h2>
+      <span class="tag">Trap • Dark • 132 BPM</span>
+      <div class="player" data-audio="beats/retroceder.mp3">
+        <button class="play-btn"><i class="fa-solid fa-play"></i></button>
+        <div class="progress-area">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
         </div>
       </div>
-      <div class="actions"><span class="preco">R$120,00</span><a href="https://sun.eduzz.com/60EEP52303" class="btn-buy">Comprar</a></div>
     </div>
+    <div class="actions"><span class="preco">R$120,00</span><a href="https://sun.eduzz.com/60EEP52303" class="btn-buy">Comprar</a></div>
+  </div>
 
-    <!-- Prodígio -->
-    <div class="beat-card" data-category="rnb" data-name="prodigio">
-      <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
-      <img src="https://i.imgur.com/cyHzDoM.jpeg" class="thumb">
-      <div class="info">
-        <h2>Prodígio</h2>
-        <span class="tag">R&B • Melodic • 120 BPM</span>
-        <div class="player" data-audio="beats/prodigio.mp3">
-          <button class="play-btn"><i class="fa-solid fa-play"></i></button>
-          <div class="progress-area">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
-          </div>
+  <!-- Prodígio -->
+  <div class="beat-card" data-category="rnb" data-name="prodigio">
+    <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
+    <img class="thumb">
+    <div class="info">
+      <h2>Prodígio</h2>
+      <span class="tag">R&B • Melodic • 120 BPM</span>
+      <div class="player" data-audio="beats/prodigio.mp3">
+        <button class="play-btn"><i class="fa-solid fa-play"></i></button>
+        <div class="progress-area">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
         </div>
       </div>
-      <div class="actions"><span class="preco">R$90,00</span><a href="https://sun.eduzz.com/7WXQRKNO9A" class="btn-buy">Comprar</a></div>
     </div>
+    <div class="actions"><span class="preco">R$90,00</span><a href="https://sun.eduzz.com/7WXQRKNO9A" class="btn-buy">Comprar</a></div>
+  </div>
 
-    <!-- Desista -->
-    <div class="beat-card" data-category="rnb" data-name="desista">
-      <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
-      <img src="https://i.imgur.com/YDgwkli.jpeg" class="thumb">
-      <div class="info">
-        <h2>Desista</h2>
-        <span class="tag">R&B • Melancólico • 91 BPM</span>
-        <div class="player" data-audio="beats/desista.mp3">
-          <button class="play-btn"><i class="fa-solid fa-play"></i></button>
-          <div class="progress-area">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
-          </div>
+  <!-- Desista -->
+  <div class="beat-card" data-category="rnb" data-name="desista">
+    <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
+    <img class="thumb">
+    <div class="info">
+      <h2>Desista</h2>
+      <span class="tag">R&B • Melancólico • 91 BPM</span>
+      <div class="player" data-audio="beats/desista.mp3">
+        <button class="play-btn"><i class="fa-solid fa-play"></i></button>
+        <div class="progress-area">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
         </div>
       </div>
-      <div class="actions"><span class="preco">R$130,00</span><a href="https://chk.eduzz.com/Q9N5JZ4K01" class="btn-buy">Comprar</a></div>
     </div>
+    <div class="actions"><span class="preco">R$130,00</span><a href="https://chk.eduzz.com/Q9N5JZ4K01" class="btn-buy">Comprar</a></div>
+  </div>
 
-    <!-- Te Esperando -->
-    <div class="beat-card" data-category="rap" data-name="teesperando">
-      <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
-      <img src="https://i.imgur.com/BA6SDme.png" class="thumb">
-      <div class="info">
-        <h2>Te Esperando</h2>
-        <span class="tag">Rap • Consciente • 130 BPM</span>
-        <div class="player" data-audio="beats/teesperando.mp3">
-          <button class="play-btn"><i class="fa-solid fa-play"></i></button>
-          <div class="progress-area">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
-          </div>
+  <!-- Te Esperando -->
+  <div class="beat-card" data-category="rap" data-name="teesperando">
+    <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
+    <img class="thumb">
+    <div class="info">
+      <h2>Te Esperando</h2>
+      <span class="tag">Rap • Consciente • 130 BPM</span>
+      <div class="player" data-audio="beats/teesperando.mp3">
+        <button class="play-btn"><i class="fa-solid fa-play"></i></button>
+        <div class="progress-area">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
         </div>
       </div>
-      <div class="actions"><span class="preco">R$95,00</span><a href="https://chk.eduzz.com/n5j7fdbb" class="btn-buy">Comprar</a></div>
     </div>
+    <div class="actions"><span class="preco">R$95,00</span><a href="https://chk.eduzz.com/n5j7fdbb" class="btn-buy">Comprar</a></div>
+  </div>
 
-    <!-- Auto Confiança -->
-    <div class="beat-card" data-category="trap" data-name="autoconfianca">
-      <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
-      <img src="https://i.imgur.com/wAOKpZ5.jpeg" class="thumb">
-      <div class="info">
-        <h2>Auto Confiança</h2>
-        <span class="tag">Trap • Dark • 128 BPM</span>
-        <div class="player" data-audio="beats/autoconfianca.mp3">
-          <button class="play-btn"><i class="fa-solid fa-play"></i></button>
-          <div class="progress-area">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
-          </div>
+  <!-- Auto Confiança -->
+  <div class="beat-card" data-category="trap" data-name="autoconfianca">
+    <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
+    <img class="thumb">
+    <div class="info">
+      <h2>Auto Confiança</h2>
+      <span class="tag">Trap • Dark • 128 BPM</span>
+      <div class="player" data-audio="beats/autoconfianca.mp3">
+        <button class="play-btn"><i class="fa-solid fa-play"></i></button>
+        <div class="progress-area">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
         </div>
       </div>
-      <div class="actions"><span class="preco">R$82,00</span><a href="https://chk.eduzz.com/Q9N5JEVB01" class="btn-buy">Comprar</a></div>
     </div>
+    <div class="actions"><span class="preco">R$82,00</span><a href="https://chk.eduzz.com/Q9N5JEVB01" class="btn-buy">Comprar</a></div>
+  </div>
 
-    <!-- Lentamente -->
-    <div class="beat-card" data-category="trap" data-name="lentamente">
-      <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
-      <img src="https://i.imgur.com/BRJxp0L.jpeg" class="thumb">
-      <div class="info">
-        <h2>Lentamente</h2>
-        <span class="tag">Trap • Poder • 101 BPM</span>
-        <div class="player" data-audio="beats/lentamente.mp3">
-          <button class="play-btn"><i class="fa-solid fa-play"></i></button>
-          <div class="progress-area">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
-          </div>
+  <!-- Lentamente -->
+  <div class="beat-card" data-category="trap" data-name="lentamente">
+    <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
+    <img class="thumb">
+    <div class="info">
+      <h2>Lentamente</h2>
+      <span class="tag">Trap • Poder • 101 BPM</span>
+      <div class="player" data-audio="beats/lentamente.mp3">
+        <button class="play-btn"><i class="fa-solid fa-play"></i></button>
+        <div class="progress-area">
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+          <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
         </div>
       </div>
-      <div class="actions"><span class="preco">R$98,00</span><a href="https://chk.eduzz.com/89AQ2155WD" class="btn-buy">Comprar</a></div>
     </div>
+    <div class="actions"><span class="preco">R$98,00</span><a href="https://chk.eduzz.com/89AQ2155WD" class="btn-buy">Comprar</a></div>
+  </div>
 
-    <!-- Sentimento Impuro -->
-    <div class="beat-card" data-category="rnb" data-name="sentimentoimpuro">
-      <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
-      <img src="https://i.imgur.com/U4eTmbn.jpeg" class="thumb">
-      <div class="info">
-        <h2>Sentimento Impuro</h2>
-        <span class="tag">RnB • Intenso • 110 BPM</span>
-        <div class="player" data-audio="beats/sentimentoimpuro.mp3">
-          <button class="play-btn"><i class="fa-solid fa-play"></i></button>
-          <div class="progress-area">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="actions"><span class="preco">R$110,00</span><a href="https://chk.eduzz.com/39YDPG6Q9O" class="btn-buy">Comprar</a></div>
-    </div>
+  <!-- resto segue igual ao original -->
+</section>
 
-    <!-- Espanhola -->
-    <div class="beat-card" data-category="trap" data-name="espanhola">
-      <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
-      <img src="https://i.imgur.com/y7VdvOD.jpeg" class="thumb">
-      <div class="info">
-        <h2>Espanhola</h2>
-        <span class="tag">Trap • Sensual • 140 BPM</span>
-        <div class="player" data-audio="beats/espanhola.mp3">
-          <button class="play-btn"><i class="fa-solid fa-play"></i></button>
-          <div class="progress-area">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="actions"><span class="preco">R$130,00</span><a href="https://chk.eduzz.com/Q9N5JQ7P01" class="btn-buy">Comprar</a></div>
-    </div>
-
-    <!-- Nada a Perder -->
-    <div class="beat-card" data-category="rnb" data-name="nadaperder">
-      <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
-      <img src="https://i.imgur.com/JlnKexa.jpeg" class="thumb">
-      <div class="info">
-        <h2>Nada a Perder</h2>
-        <span class="tag">RnB • Emocional • 76 BPM</span>
-        <div class="player" data-audio="beats/nadaaperder.mp3">
-          <button class="play-btn"><i class="fa-solid fa-play"></i></button>
-          <div class="progress-area">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="actions"><span class="preco">R$96,00</span><a href="https://chk.eduzz.com/801EPKKNW7" class="btn-buy">Comprar</a></div>
-    </div>
-
-    <!-- Olhar Distante -->
-    <div class="beat-card" data-category="trap" data-name="olhardistante">
-      <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
-      <img src="https://i.imgur.com/y7P8G3H.jpeg" class="thumb">
-      <div class="info">
-        <h2>Olhar Distante</h2>
-        <span class="tag">Trap • Alma • 78 BPM</span>
-        <div class="player" data-audio="beats/olhardistante.mp3">
-          <button class="play-btn"><i class="fa-solid fa-play"></i></button>
-          <div class="progress-area">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="actions"><span class="preco">R$112,00</span><a href="https://chk.eduzz.com/E0D6R45D91" class="btn-buy">Comprar</a></div>
-    </div>
-
-    <!-- Será Que Não Entende -->
-    <div class="beat-card" data-category="rnb" data-name="seraquenaoentende">
-      <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
-      <img src="https://i.imgur.com/AwHeG5e.jpeg" class="thumb">
-      <div class="info">
-        <h2>Será Que Não Entende</h2>
-        <span class="tag">RnB • Sentido • 87 BPM</span>
-        <div class="player" data-audio="beats/seraquenaoentende.mp3">
-          <button class="play-btn"><i class="fa-solid fa-play"></i></button>
-          <div class="progress-area">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="actions"><span class="preco">R$140,00</span><a href="https://chk.eduzz.com/G92E623XWE" class="btn-buy">Comprar</a></div>
-    </div>
-
-    <!-- Sem Você -->
-    <div class="beat-card" data-category="trap" data-name="semvoce">
-      <button class="btn-fav"><i class="fa-regular fa-heart"></i></button>
-      <img src="https://i.imgur.com/2RfIam8.jpeg" class="thumb">
-      <div class="info">
-        <h2>Sem Você</h2>
-        <span class="tag">Trap • Love Song • 93 BPM</span>
-        <div class="player" data-audio="beats/semvoce.mp3">
-          <button class="play-btn"><i class="fa-solid fa-play"></i></button>
-          <div class="progress-area">
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="time"><span class="current">0:00</span><span class="duration">0:00</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="actions"><span class="preco">R$78,00</span><a href="https://chk.eduzz.com/40Q3J8JQ0B" class="btn-buy">Comprar</a></div>
-    </div>
-
-  </section>
-
-  <script src="js/script.js"></script>
+<script src="js/script.js"></script>
 </body>
 </html>

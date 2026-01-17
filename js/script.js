@@ -1,1 +1,143 @@
-document.addEventListener("DOMContentLoaded",()=>{const e=document.getElementById("menuButton"),t=document.getElementById("menuDropdown"),n=document.getElementById("backBtnContainer");e.onclick=()=>{t.style.display=t.style.display==="block"?"none":"block"};function o(){if(!document.getElementById("backBtn")){const e=document.createElement("button");e.id="backBtn",e.innerText="← Ver todos os beats",e.style.cssText="margin:15px auto; padding:8px 18px; border-radius:20px; border:1px solid var(--main-color); background:none; color:white; cursor:pointer;",n.appendChild(e),e.onclick=()=>{document.querySelectorAll(".beat-card").forEach(e=>e.style.display="flex"),e.remove()}}}document.querySelectorAll(".category-btn").forEach(e=>{e.onclick=()=>{const t=e.dataset.category;document.querySelectorAll(".beat-card").forEach(e=>{e.style.display=e.dataset.category===t?"flex":"none"}),menuDropdown.style.display="none",o()}}),document.getElementById("btnShowFavs").onclick=()=>{document.querySelectorAll(".beat-card").forEach(e=>{e.style.display=e.querySelector(".btn-fav").classList.contains("active")?"flex":"none"}),menuDropdown.style.display="none",o()},document.getElementById("searchInput").addEventListener("input",e=>{const t=e.target.value.toLowerCase();document.querySelectorAll(".beat-card").forEach(e=>{e.style.display=e.dataset.name.includes(t)?"flex":"none"})});let r=JSON.parse(localStorage.getItem("k3vin_favs"))||[];document.querySelectorAll(".beat-card").forEach(e=>{const t=e.dataset.name,n=e.querySelector(".btn-fav");r.includes(t)&&n.classList.add("active"),n.onclick=()=>{n.classList.toggle("active"),n.classList.contains("active")?r.push(t):r=r.filter(e=>e!==t),localStorage.setItem("k3vin_favs",JSON.stringify(r))}});let a=null,l=null;document.querySelectorAll(".player").forEach(e=>{const t=new Audio(e.dataset.audio),n=e.querySelector(".play-btn"),o=e.querySelector(".progress-bar"),r=e.querySelector(".progress-fill"),s=e.querySelector(".current"),i=e.querySelector(".duration");n.onclick=()=>{a&&a!==t&&(a.pause(),l&&(l.innerHTML='<i class="fa-solid fa-play"></i>')),a=t,l=n,t.paused?t.play():t.pause(),n.innerHTML=t.paused?'<i class="fa-solid fa-play"></i>':'<i class="fa-solid fa-pause"></i>'},t.ontimeupdate=()=>{if(!t.duration)return;const e=t.currentTime/t.duration*100;r.style.width=e+"%",s.innerText=format(t.currentTime),i.innerText=format(t.duration)},o.onclick=e=>{const n=o.getBoundingClientRect(),l=(e.clientX-n.left)/o.clientWidth;t.currentTime=l*t.duration},t.onended=()=>{n.innerHTML='<i class="fa-solid fa-play"></i>',r.style.width="0%",s.innerText="0:00"}});function format(e){if(!e)return"0:00";const t=Math.floor(e/60),n=Math.floor(e%60).toString().padStart(2,"0");return`${t}:${n}`}});function changeTheme(t){document.body.className=t==="default"?"":t}
+document.addEventListener("DOMContentLoaded", () => {
+
+  const e = document.getElementById("menuButton"),
+        t = document.getElementById("menuDropdown"),
+        n = document.getElementById("backBtnContainer");
+
+  e.onclick = () => {
+    t.style.display = t.style.display === "block" ? "none" : "block";
+  };
+
+  function o() {
+    if (!document.getElementById("backBtn")) {
+      const e = document.createElement("button");
+      e.id = "backBtn";
+      e.innerText = "← Ver todos os beats";
+      e.style.cssText =
+        "margin:15px auto; padding:8px 18px; border-radius:20px; border:1px solid var(--main-color); background:none; color:white; cursor:pointer;";
+      n.appendChild(e);
+
+      e.onclick = () => {
+        document.querySelectorAll(".beat-card").forEach(e => e.style.display = "flex");
+        e.remove();
+      };
+    }
+  }
+
+  document.querySelectorAll(".category-btn").forEach(e => {
+    e.onclick = () => {
+      const n = e.dataset.category;
+      document.querySelectorAll(".beat-card").forEach(e => {
+        e.style.display = e.dataset.category === n ? "flex" : "none";
+      });
+      menuDropdown.style.display = "none";
+      o();
+    };
+  });
+
+  document.getElementById("btnShowFavs").onclick = () => {
+    document.querySelectorAll(".beat-card").forEach(e => {
+      e.style.display = e.querySelector(".btn-fav").classList.contains("active")
+        ? "flex"
+        : "none";
+    });
+    menuDropdown.style.display = "none";
+    o();
+  };
+
+  document.getElementById("searchInput").addEventListener("input", e => {
+    const t = e.target.value.toLowerCase();
+    document.querySelectorAll(".beat-card").forEach(e => {
+      e.style.display = e.dataset.name.includes(t) ? "flex" : "none";
+    });
+  });
+
+  let r = JSON.parse(localStorage.getItem("k3vin_favs")) || [];
+
+  document.querySelectorAll(".beat-card").forEach(e => {
+    const t = e.dataset.name,
+          n = e.querySelector(".btn-fav");
+
+    r.includes(t) && n.classList.add("active");
+
+    n.onclick = () => {
+      n.classList.toggle("active");
+      n.classList.contains("active")
+        ? r.push(t)
+        : r = r.filter(e => e !== t);
+      localStorage.setItem("k3vin_favs", JSON.stringify(r));
+    };
+  });
+
+  let a = null,
+      l = null;
+
+  document.querySelectorAll(".player").forEach(e => {
+    const t = new Audio(e.dataset.audio),
+          n = e.querySelector(".play-btn"),
+          o = e.querySelector(".progress-bar"),
+          r = e.querySelector(".progress-fill"),
+          s = e.querySelector(".current"),
+          i = e.querySelector(".duration");
+
+    n.onclick = () => {
+      a && a !== t && (a.pause(), l && (l.innerHTML = '<i class="fa-solid fa-play"></i>'));
+      a = t;
+      l = n;
+      t.paused ? t.play() : t.pause();
+      n.innerHTML = t.paused
+        ? '<i class="fa-solid fa-play"></i>'
+        : '<i class="fa-solid fa-pause"></i>';
+    };
+
+    t.ontimeupdate = () => {
+      if (!t.duration) return;
+      const e = t.currentTime / t.duration * 100;
+      r.style.width = e + "%";
+      s.innerText = format(t.currentTime);
+      i.innerText = format(t.duration);
+    };
+
+    o.onclick = e => {
+      const n = o.getBoundingClientRect(),
+            l = (e.clientX - n.left) / o.clientWidth;
+      t.currentTime = l * t.duration;
+    };
+
+    t.onended = () => {
+      n.innerHTML = '<i class="fa-solid fa-play"></i>';
+      r.style.width = "0%";
+      s.innerText = "0:00";
+    };
+  });
+
+  function format(e) {
+    if (!e) return "0:00";
+    const t = Math.floor(e / 60),
+          n = Math.floor(e % 60).toString().padStart(2, "0");
+    return `${t}:${n}`;
+  }
+
+  /* ====== CAPAS LOCAIS POR CATEGORIA (NOVO) ====== */
+
+  const capasPorCategoria = {
+    trap: "capas/trap.png",
+    rap: "capas/rap.png",
+    rnb: "capas/rnb.png",
+    funk: "capas/funk.png"
+  };
+
+  document.querySelectorAll(".beat-card").forEach(card => {
+    const categoria = card.dataset.category;
+    const img = card.querySelector(".thumb");
+
+    if (img && capasPorCategoria[categoria]) {
+      img.src = capasPorCategoria[categoria];
+    }
+  });
+
+});
+
+function changeTheme(t) {
+  document.body.className = t === "default" ? "" : t;
+}
