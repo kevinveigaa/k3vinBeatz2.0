@@ -17,8 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
       backBtnContainer.appendChild(btn);
 
       btn.onclick = () => {
-        document.querySelectorAll(".beat-card")
-          .forEach(c => c.style.display = "flex");
+        document.querySelectorAll(".beat-card").forEach(c => c.style.display = "flex");
         btn.remove();
       };
     }
@@ -28,8 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.onclick = () => {
       const cat = btn.dataset.category;
       document.querySelectorAll(".beat-card").forEach(card => {
-        card.style.display =
-          card.dataset.category === cat ? "flex" : "none";
+        card.style.display = card.dataset.category === cat ? "flex" : "none";
       });
       menuDropdown.style.display = "none";
       showBackBtn();
@@ -38,22 +36,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("btnShowFavs").onclick = () => {
     document.querySelectorAll(".beat-card").forEach(card => {
-      card.style.display =
-        card.querySelector(".btn-fav").classList.contains("active")
-          ? "flex" : "none";
+      card.style.display = card.querySelector(".btn-fav").classList.contains("active")
+        ? "flex" : "none";
     });
     menuDropdown.style.display = "none";
     showBackBtn();
   };
 
-  document.getElementById("searchInput").addEventListener("input", e => {
-    const v = e.target.value.toLowerCase();
-    document.querySelectorAll(".beat-card").forEach(card => {
-      card.style.display =
-        card.dataset.name.includes(v) ? "flex" : "none";
-    });
-  });
-
+  // FAVORITOS
   let favs = JSON.parse(localStorage.getItem("k3vin_favs")) || [];
 
   document.querySelectorAll(".beat-card").forEach(card => {
@@ -62,16 +52,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (favs.includes(name)) btn.classList.add("active");
 
-    btn.onclick = () => {
+    btn.onclick = e => {
       btn.classList.toggle("active");
-      favs = btn.classList.contains("active")
-        ? [...favs, name]
-        : favs.filter(f => f !== name);
-
+      if (btn.classList.contains("active")) {
+        favs.push(name);
+        createParticle(e);
+      } else {
+        favs = favs.filter(f => f !== name);
+      }
       localStorage.setItem("k3vin_favs", JSON.stringify(favs));
     };
   });
 
+  function createParticle(e) {
+    const p = document.createElement("div");
+    p.className = "particle";
+    p.innerHTML = "❤️";
+    p.style.left = e.clientX + "px";
+    p.style.top = e.clientY + "px";
+    p.style.setProperty('--x', Math.random() * 2 - 1);
+    p.style.setProperty('--y', Math.random() * 2 - 1);
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 800);
+  }
+
+  // PLAYER
   let currentAudio = null;
   let currentBtn = null;
 
@@ -80,8 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const playBtn = player.querySelector(".play-btn");
     const bar = player.querySelector(".progress-bar");
     const fill = player.querySelector(".progress-fill");
-    const cur = player.querySelector(".current");
-    const dur = player.querySelector(".duration");
 
     playBtn.onclick = () => {
       if (currentAudio && currentAudio !== audio) {
@@ -99,32 +102,26 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     audio.ontimeupdate = () => {
-      if (!audio.duration) return;
       fill.style.width = (audio.currentTime / audio.duration) * 100 + "%";
-      cur.innerText = format(audio.currentTime);
-      dur.innerText = format(audio.duration);
     };
 
     bar.onclick = e => {
       const rect = bar.getBoundingClientRect();
-      audio.currentTime =
-        ((e.clientX - rect.left) / bar.clientWidth) * audio.duration;
+      audio.currentTime = ((e.clientX - rect.left) / bar.clientWidth) * audio.duration;
     };
 
     audio.onended = () => {
       playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
       fill.style.width = "0%";
-      cur.innerText = "0:00";
     };
+
+    // PREVIEW NA CAPA
+    player.closest(".beat-card").querySelector(".thumb").addEventListener("mouseenter", () => {
+      audio.volume = 0.2;
+      audio.play();
+      setTimeout(() => audio.pause(), 2000);
+    });
   });
-
-  function format(t) {
-    if (!t) return "0:00";
-    const m = Math.floor(t / 60);
-    const s = Math.floor(t % 60).toString().padStart(2, "0");
-    return `${m}:${s}`;
-  }
-
 });
 
 function changeTheme(t) {
