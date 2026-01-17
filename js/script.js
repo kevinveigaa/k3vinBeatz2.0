@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.id = "backBtn";
       btn.innerText = "← Ver todos os beats";
       backBtnContainer.appendChild(btn);
+
       btn.onclick = () => {
         document.querySelectorAll(".beat-card")
           .forEach(c => c.style.display = "flex");
@@ -45,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
     showBackBtn();
   };
 
-  /* BUSCA */
   document.getElementById("searchInput").addEventListener("input", e => {
     const v = e.target.value.toLowerCase();
     document.querySelectorAll(".beat-card").forEach(card => {
@@ -54,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* FAVORITOS */
   let favs = JSON.parse(localStorage.getItem("k3vin_favs")) || [];
 
   document.querySelectorAll(".beat-card").forEach(card => {
@@ -63,31 +62,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (favs.includes(name)) btn.classList.add("active");
 
-    btn.onclick = (e) => {
+    btn.onclick = () => {
       btn.classList.toggle("active");
-      if (btn.classList.contains("active")) {
-        favs.push(name);
-        createParticleHeart(e);
-      } else {
-        favs = favs.filter(f => f !== name);
-      }
+      favs = btn.classList.contains("active")
+        ? [...favs, name]
+        : favs.filter(f => f !== name);
+
       localStorage.setItem("k3vin_favs", JSON.stringify(favs));
     };
   });
 
-  function createParticleHeart(e) {
-    const heart = document.createElement("div");
-    heart.className = "particle";
-    heart.innerHTML = "❤️";
-    heart.style.setProperty('--x', Math.random() * 2 - 1);
-    heart.style.setProperty('--y', Math.random() * 2 - 1);
-    heart.style.left = e.clientX + "px";
-    heart.style.top = e.clientY + "px";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 800);
-  }
-
-  /* PLAYER */
   let currentAudio = null;
   let currentBtn = null;
 
@@ -102,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     playBtn.onclick = () => {
       if (currentAudio && currentAudio !== audio) {
         currentAudio.pause();
-        currentBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+        if (currentBtn) currentBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
       }
 
       currentAudio = audio;
@@ -132,23 +116,17 @@ document.addEventListener("DOMContentLoaded", () => {
       fill.style.width = "0%";
       cur.innerText = "0:00";
     };
-
-    player.parentElement.querySelector(".thumb")
-      .addEventListener("mouseenter", () => {
-        audio.volume = 0.2;
-        audio.play();
-        setTimeout(() => audio.pause(), 2000);
-      });
   });
 
   function format(t) {
+    if (!t) return "0:00";
     const m = Math.floor(t / 60);
     const s = Math.floor(t % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   }
+
 });
 
-/* TEMA */
 function changeTheme(t) {
   document.body.className = t === "default" ? "" : t;
 }
