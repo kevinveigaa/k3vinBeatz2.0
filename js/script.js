@@ -15,12 +15,12 @@ function render(filter = 'all') {
     const filtered = filter === 'all' ? beats : beats.filter(b => b.cat === filter);
     
     filtered.forEach(beat => {
-        // Lógica de imagem por categoria automática
-        const imgPath = `capas/${beat.cat}.png`;
+        // BUSCA NA PASTA LOCAL: capas/trap.png, capas/rnb.png, etc.
+        const capImg = `capas/${beat.cat}.png`;
         
         grid.innerHTML += `
             <div class="beat-card" onclick="selectBeat(${beat.id})">
-                <img src="${imgPath}" alt="${beat.name}">
+                <img src="${capImg}" alt="${beat.name}">
                 <h3 style="margin: 15px 0 5px 0; font-size: 1.3rem">${beat.name}</h3>
                 <span class="neon-text" style="font-size: 0.8rem; letter-spacing: 2px">${beat.cat.toUpperCase()}</span>
             </div>
@@ -30,14 +30,13 @@ function render(filter = 'all') {
 
 function selectBeat(id) {
     const beat = beats.find(b => b.id === id);
-    const imgPath = `capas/${beat.cat}.png`;
+    const capImg = `capas/${beat.cat}.png`;
 
-    document.getElementById('p-img').src = imgPath;
+    document.getElementById('p-img').src = capImg;
     document.getElementById('p-name').innerText = beat.name;
     document.getElementById('p-price').innerText = beat.price;
     document.getElementById('p-buy').href = beat.link;
     
-    // Feedback visual
     const cover = document.querySelector('.p-cover-wrapper');
     cover.style.transform = 'scale(1.1)';
     setTimeout(() => cover.style.transform = 'scale(1)', 200);
@@ -47,5 +46,4 @@ function setTheme(theme) {
     document.body.className = theme;
 }
 
-// Iniciar catálogo
 render();
