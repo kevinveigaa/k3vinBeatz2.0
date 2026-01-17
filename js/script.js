@@ -1,60 +1,150 @@
-let currentAudio = null;
-let currentButton = null;
+document.addEventListener("DOMContentLoaded", () => {
 
-document.querySelectorAll('.play-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const card = btn.closest('.beat-card');
-    const audio = card.querySelector('audio');
-    const progress = card.querySelector('.progress-fill');
+  const menuBtn = document.getElementById("menuButton");
+  const menuDropdown = document.getElementById("menuDropdown");
+  const backContainer = document.getElementById("backBtnContainer");
 
-    if (currentAudio && currentAudio !== audio) {
-      currentAudio.pause();
-      currentButton.innerHTML = '▶';
-    }
+  menuBtn.onclick = () => {
+    menuDropdown.style.display =
+      menuDropdown.style.display === "block" ? "none" : "block";
+  };
 
-    if (audio.paused) {
-      audio.play();
-      btn.innerHTML = '⏸';
-      currentAudio = audio;
-      currentButton = btn;
-    } else {
-      audio.pause();
-      btn.innerHTML = '▶';
-    }
+  function createBackBtn() {
+    if (document.getElementById("backBtn")) return;
 
-    audio.ontimeupdate = () => {
-      const percent = (audio.currentTime / audio.duration) * 100;
-      progress.style.width = percent + '%';
+    const btn = document.createElement("button");
+    btn.id = "backBtn";
+    btn.innerText = "← Ver todos os beats";
+    btn.style.cssText = `
+      margin:15px auto;
+      padding:8px 18px;
+      border-radius:20px;
+      border:1px solid var(--main-color);
+      background:none;
+      color:white;
+      cursor:pointer;
+    `;
+
+    backContainer.appendChild(btn);
+
+    btn.onclick = () => {
+      document.querySelectorAll(".beat-card").forEach(card => {
+        card.style.display = "flex";
+      });
+      btn.remove();
+    };
+  }
+
+  /* FILTRO */
+  document.querySelectorAll(".category-btn").forEach(btn => {
+    btn.onclick = () => {
+      const cat = btn.dataset.category;
+
+      document.querySelectorAll(".beat-card").forEach(card => {
+        card.style.display =
+          card.dataset.category === cat ? "flex" : "none";
+      });
+
+      menuDropdown.style.display = "none";
+      createBackBtn();
     };
   });
-});
 
-document.querySelectorAll('.progress-bar').forEach(bar => {
-  bar.addEventListener('click', e => {
-    const audio = bar.closest('.beat-card').querySelector('audio');
-    const rect = bar.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
-    audio.currentTime = percent * audio.duration;
-  });
-});
+  /* FAVORITOS */
+  let favs = JSON.parse(localStorage.getItem("k3vin_favs")) || [];
 
-document.querySelectorAll('.btn-fav').forEach(btn => {
-  btn.addEventListener('click', e => {
-    btn.classList.toggle('active');
-    for (let i = 0; i < 6; i++) {
-      const p = document.createElement('span');
-      p.className = 'particle';
-      p.textContent = '❤';
-      p.style.setProperty('--x', Math.random() * 2 - 1);
-      p.style.setProperty('--y', Math.random() * 2);
-      btn.appendChild(p);
-      setTimeout(() => p.remove(), 800);
-    }
-  });
-});
+  document.querySelectorAll(".beat-card").forEach(card => {
+    const name = card.dataset.name;
+    const favBtn = card.querySelector(".btn-fav");
 
-document.querySelectorAll('.dot-btn').forEach(dot => {
-  dot.addEventListener('click', () => {
-    document.body.className = dot.dataset.theme;
+    if (favs.includes(name)) favBtn.classList.add("active");
+
+    favBtn.onclick = () => {
+      favBtn.classList.toggle("active");
+
+      if (favBtn.classList.contains("active")) {
+        favs.push(name);
+      } else {
+        favs = favs.filter(n => n !== name);
+      }
+
+      localStorage.setItem("k3vin_favs", JSON.stringify(favs));
+    };
   });
+
+  document.getElementById("btnShowFavs").onclick = () => {
+    document.querySelectorAll(".beat-card").forEach(card => {
+      const fav = card.querySelector(".btn-fav").classList.contains("active");
+      card.style.display = fav ? "flex" : "none";
+    });
+
+    menuDropdown.style.display = "none";
+    createBackBtn();
+  };
+
+  /* BUSCA */
+  document.getElementById("searchInput").addEventListener("input", e => {
+    const val = e.target.value.toLowerCase();
+
+    document.querySelectorAll(".beat-card").forEach(card => {
+      card.style.display =
+        card.dataset.name.includes(val) ? "flex" : "none";
+    });
+  });
+
+  /* PLAYER */
+  let currentAudio = null;
+  let currentBtn = null;
+
+  document.querySelectorAll(".player").forEach(player => {
+
+    const audio = new Audio(player.dataset.audio);
+    const playBtn = player.querySelector(".play-btn");
+    const bar = player.querySelector(".progress-bar");
+    const fill = player.querySelector(".progress-fill");
+    const current = player.querySelector(".current");
+    const duration = player.querySelector(".duration");
+
+    playBtn.onclick = () => {
+      if (currentAudio && currentAudio !== audio) {
+        currentAudio.pause();
+        currentBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+      }
+
+      currentAudio = audio;
+      currentBtn = playBtn;
+
+      audio.paused ? audio.play() : audio.pause();
+      playBtn.innerHTML = audio.paused
+        ? '<i class="fa-solid fa-play"></i>'
+        : '<i class="fa-solid fa-pause"></i>';
+    };
+
+    audio.ontimeupdate = () => {
+      if (!audio.duration) return;
+      const percent = (audio.currentTime / audio.duration) * 100;
+      fill.style.width = percent + "%";
+      current.innerText = format(audio.currentTime);
+      duration.innerText = format(audio.duration);
+    };
+
+    bar.onclick = e => {
+      const rect = bar.getBoundingClientRect();
+      const pos = (e.clientX - rect.left) / rect.width;
+      audio.currentTime = pos * audio.duration;
+    };
+
+    audio.onended = () => {
+      playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+      fill.style.width = "0%";
+      current.innerText = "0:00";
+    };
+  });
+
+  function format(sec) {
+    if (!sec) return "0:00";
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  }
 });
