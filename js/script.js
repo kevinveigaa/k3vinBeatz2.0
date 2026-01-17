@@ -2,52 +2,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const menuBtn = document.getElementById("menuButton");
   const menuDropdown = document.getElementById("menuDropdown");
-  const backContainer = document.getElementById("backBtnContainer");
+  const backBtnContainer = document.getElementById("backBtnContainer");
 
   menuBtn.onclick = () => {
     menuDropdown.style.display =
       menuDropdown.style.display === "block" ? "none" : "block";
   };
 
-  function createBackBtn() {
-    if (document.getElementById("backBtn")) return;
-
-    const btn = document.createElement("button");
-    btn.id = "backBtn";
-    btn.innerText = "← Ver todos os beats";
-    btn.style.cssText = `
-      margin:15px auto;
-      padding:8px 18px;
-      border-radius:20px;
-      border:1px solid var(--main-color);
-      background:none;
-      color:white;
-      cursor:pointer;
-    `;
-
-    backContainer.appendChild(btn);
-
-    btn.onclick = () => {
-      document.querySelectorAll(".beat-card").forEach(card => {
-        card.style.display = "flex";
-      });
-      btn.remove();
-    };
+  function showBackBtn() {
+    if (!document.getElementById("backBtn")) {
+      const btn = document.createElement("button");
+      btn.id = "backBtn";
+      btn.innerText = "← Ver todos os beats";
+      backBtnContainer.appendChild(btn);
+      btn.onclick = () => {
+        document.querySelectorAll(".beat-card")
+          .forEach(c => c.style.display = "flex");
+        btn.remove();
+      };
+    }
   }
 
-  /* FILTRO */
   document.querySelectorAll(".category-btn").forEach(btn => {
     btn.onclick = () => {
       const cat = btn.dataset.category;
-
       document.querySelectorAll(".beat-card").forEach(card => {
         card.style.display =
           card.dataset.category === cat ? "flex" : "none";
       });
-
       menuDropdown.style.display = "none";
-      createBackBtn();
+      showBackBtn();
     };
+  });
+
+  document.getElementById("btnShowFavs").onclick = () => {
+    document.querySelectorAll(".beat-card").forEach(card => {
+      card.style.display =
+        card.querySelector(".btn-fav").classList.contains("active")
+          ? "flex" : "none";
+    });
+    menuDropdown.style.display = "none";
+    showBackBtn();
+  };
+
+  /* BUSCA */
+  document.getElementById("searchInput").addEventListener("input", e => {
+    const v = e.target.value.toLowerCase();
+    document.querySelectorAll(".beat-card").forEach(card => {
+      card.style.display =
+        card.dataset.name.includes(v) ? "flex" : "none";
+    });
   });
 
   /* FAVORITOS */
@@ -55,55 +59,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelectorAll(".beat-card").forEach(card => {
     const name = card.dataset.name;
-    const favBtn = card.querySelector(".btn-fav");
+    const btn = card.querySelector(".btn-fav");
 
-    if (favs.includes(name)) favBtn.classList.add("active");
+    if (favs.includes(name)) btn.classList.add("active");
 
-    favBtn.onclick = () => {
-      favBtn.classList.toggle("active");
-
-      if (favBtn.classList.contains("active")) {
+    btn.onclick = (e) => {
+      btn.classList.toggle("active");
+      if (btn.classList.contains("active")) {
         favs.push(name);
+        createParticleHeart(e);
       } else {
-        favs = favs.filter(n => n !== name);
+        favs = favs.filter(f => f !== name);
       }
-
       localStorage.setItem("k3vin_favs", JSON.stringify(favs));
     };
   });
 
-  document.getElementById("btnShowFavs").onclick = () => {
-    document.querySelectorAll(".beat-card").forEach(card => {
-      const fav = card.querySelector(".btn-fav").classList.contains("active");
-      card.style.display = fav ? "flex" : "none";
-    });
-
-    menuDropdown.style.display = "none";
-    createBackBtn();
-  };
-
-  /* BUSCA */
-  document.getElementById("searchInput").addEventListener("input", e => {
-    const val = e.target.value.toLowerCase();
-
-    document.querySelectorAll(".beat-card").forEach(card => {
-      card.style.display =
-        card.dataset.name.includes(val) ? "flex" : "none";
-    });
-  });
+  function createParticleHeart(e) {
+    const heart = document.createElement("div");
+    heart.className = "particle";
+    heart.innerHTML = "❤️";
+    heart.style.setProperty('--x', Math.random() * 2 - 1);
+    heart.style.setProperty('--y', Math.random() * 2 - 1);
+    heart.style.left = e.clientX + "px";
+    heart.style.top = e.clientY + "px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 800);
+  }
 
   /* PLAYER */
   let currentAudio = null;
   let currentBtn = null;
 
   document.querySelectorAll(".player").forEach(player => {
-
     const audio = new Audio(player.dataset.audio);
     const playBtn = player.querySelector(".play-btn");
     const bar = player.querySelector(".progress-bar");
     const fill = player.querySelector(".progress-fill");
-    const current = player.querySelector(".current");
-    const duration = player.querySelector(".duration");
+    const cur = player.querySelector(".current");
+    const dur = player.querySelector(".duration");
 
     playBtn.onclick = () => {
       if (currentAudio && currentAudio !== audio) {
@@ -122,29 +116,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     audio.ontimeupdate = () => {
       if (!audio.duration) return;
-      const percent = (audio.currentTime / audio.duration) * 100;
-      fill.style.width = percent + "%";
-      current.innerText = format(audio.currentTime);
-      duration.innerText = format(audio.duration);
+      fill.style.width = (audio.currentTime / audio.duration) * 100 + "%";
+      cur.innerText = format(audio.currentTime);
+      dur.innerText = format(audio.duration);
     };
 
     bar.onclick = e => {
       const rect = bar.getBoundingClientRect();
-      const pos = (e.clientX - rect.left) / rect.width;
-      audio.currentTime = pos * audio.duration;
+      audio.currentTime =
+        ((e.clientX - rect.left) / bar.clientWidth) * audio.duration;
     };
 
     audio.onended = () => {
       playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
       fill.style.width = "0%";
-      current.innerText = "0:00";
+      cur.innerText = "0:00";
     };
+
+    player.parentElement.querySelector(".thumb")
+      .addEventListener("mouseenter", () => {
+        audio.volume = 0.2;
+        audio.play();
+        setTimeout(() => audio.pause(), 2000);
+      });
   });
 
-  function format(sec) {
-    if (!sec) return "0:00";
-    const m = Math.floor(sec / 60);
-    const s = Math.floor(sec % 60).toString().padStart(2, "0");
+  function format(t) {
+    const m = Math.floor(t / 60);
+    const s = Math.floor(t % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
   }
 });
+
+/* TEMA */
+function changeTheme(t) {
+  document.body.className = t === "default" ? "" : t;
+}
