@@ -31,7 +31,7 @@ function renderBeats(filterCat = 'all') {
                 <div class="cover-box">
                     <img src="${beat.img}">
                     <button class="play-btn" onclick="startBeat(${realIndex})">
-                        <i data-lucide="${isPlaying ? 'pause' : 'play'}" class="card-icon" fill="black"></i>
+                        <i data-lucide="${isPlaying ? 'pause' : 'play'}" class="card-icon" data-index="${realIndex}" fill="black"></i>
                     </button>
                 </div>
                 <div class="card-info">
@@ -40,100 +40,61 @@ function renderBeats(filterCat = 'all') {
                 </div>
                 <div class="card-right">
                     <span class="price">${beat.price}</span>
-                    <a href="${beat.link}" target="_blank" class="buy-link">COMPRAR</a>
+                    <button data-kiwify-checkout="${beat.link}" data-kiwify-magical="true" class="buy-link">COMPRAR</button>
                 </div>
             </article>
         `;
     });
     lucide.createIcons();
+    syncUI();
 }
 
 function startBeat(index) {
-    if (currentBeatIndex === index) {
-        toggleAudio();
-        return;
-    }
-
+    if (currentBeatIndex === index) { toggleAudio(); return; }
     currentBeatIndex = index;
     const beat = beats[currentBeatIndex];
-    
     document.getElementById('p-title').innerText = beat.name;
-    document.getElementById('p-bpm').innerText = `${beat.bpm} BPM | k3vin Beatz`;
     document.getElementById('p-img').src = beat.img;
-
     audioPlayer.src = `beats/${formatFileName(beat.name)}.mp3`;
     audioPlayer.play();
 }
 
 function toggleAudio() {
-    if (currentBeatIndex === null) {
-        startBeat(0);
-        return;
-    }
-    if (audioPlayer.paused) {
-        audioPlayer.play();
-    } else {
-        audioPlayer.pause();
-    }
+    if (currentBeatIndex === null) { startBeat(0); return; }
+    audioPlayer.paused ? audioPlayer.play() : audioPlayer.pause();
 }
 
-// A MÁGICA ACONTECE AQUI: Sincronização Total
 function syncUI() {
     const isPlaying = !audioPlayer.paused && audioPlayer.src !== "";
-    
-    // Atualiza o ícone do Player (Rodapé)
     const masterPlayBtn = document.getElementById('masterPlayIcon');
-    if (masterPlayBtn) {
-        masterPlayBtn.setAttribute('data-lucide', isPlaying ? 'pause' : 'play');
-    }
+    if (masterPlayBtn) masterPlayBtn.setAttribute('data-lucide', isPlaying ? 'pause' : 'play');
 
-    // Atualiza todos os botões de Play nos Cards
-    const allButtons = document.querySelectorAll('.play-btn');
-    allButtons.forEach((btn, index) => {
-        // Precisamos descobrir o index real do beat que esse botão representa
-        // Para simplificar, vamos apenas dar o re-render que é mais seguro
+    document.querySelectorAll('.card-icon').forEach((icon) => {
+        const idx = parseInt(icon.getAttribute('data-index'));
+        icon.setAttribute('data-lucide', (isPlaying && idx === currentBeatIndex) ? 'pause' : 'play');
     });
-
-    renderBeats(document.querySelector('.tab-btn.active').innerText.toLowerCase().replace('todos', 'all'));
+    lucide.createIcons();
 }
 
-audioPlayer.onplay = () => syncUI();
-audioPlayer.onpause = () => syncUI();
-audioPlayer.onended = () => {
-    nextBeat();
-};
+audioPlayer.onplay = syncUI;
+audioPlayer.onpause = syncUI;
+audioPlayer.onended = () => { syncUI(); nextBeat(); };
 
 audioPlayer.ontimeupdate = () => {
     if (audioPlayer.duration) {
         const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
         progressBar.value = percent;
-        progressBar.style.background = `linear-gradient(to right, #1DB954 ${percent}%, #333 ${percent}%)`;
-        
-        const curMin = Math.floor(audioPlayer.currentTime / 60);
-        const curSec = Math.floor(audioPlayer.currentTime % 60);
-        const durMin = Math.floor(audioPlayer.duration / 60);
-        const durSec = Math.floor(audioPlayer.duration % 60);
-        
-        document.getElementById('current-time').innerText = `${curMin}:${curSec < 10 ? '0' : ''}${curSec}`;
-        document.getElementById('duration-time').innerText = `${durMin}:${durSec < 10 ? '0' : ''}${durSec}`;
+        document.getElementById('current-time').innerText = Math.floor(audioPlayer.currentTime / 60) + ":" + ("0" + Math.floor(audioPlayer.currentTime % 60)).slice(-2);
+        document.getElementById('duration-time').innerText = Math.floor(audioPlayer.duration / 60) + ":" + ("0" + Math.floor(audioPlayer.duration % 60)).slice(-2);
     }
 };
 
 progressBar.oninput = () => { audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration; };
-
-function nextBeat() {
-    if (currentBeatIndex === null) return;
-    startBeat((currentBeatIndex + 1) % beats.length);
-}
-
-function prevBeat() {
-    if (currentBeatIndex === null) return;
-    startBeat((currentBeatIndex - 1 + beats.length) % beats.length);
-}
+function nextBeat() { startBeat((currentBeatIndex + 1) % beats.length); }
+function prevBeat() { startBeat((currentBeatIndex - 1 + beats.length) % beats.length); }
 
 function filter(cat) {
-    const tabs = document.querySelectorAll('.tab-btn');
-    tabs.forEach(btn => {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.innerText.toLowerCase() === cat || (cat === 'all' && btn.innerText === 'TODOS'));
     });
     renderBeats(cat);
