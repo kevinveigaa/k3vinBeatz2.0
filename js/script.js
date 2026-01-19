@@ -9,7 +9,7 @@ const beats = [
     { id: 8, name: "Espanhola", cat: "trap", bpm: "140", price: "R$ 130", link: "https://pay.kiwify.com.br/lkhizZS", img: "https://i.imgur.com/y7VdvOD.jpeg" }
 ];
 
-let currentBeatIndex = 0;
+let currentBeatIndex = null;
 const audioPlayer = new Audio();
 const playIcon = document.getElementById('masterPlayIcon');
 const progressBar = document.getElementById('progress-bar');
@@ -20,19 +20,17 @@ function formatFileName(text) {
 
 function renderBeats(filterCat = 'all') {
     const grid = document.getElementById('beatGrid');
-    if(!grid) return;
     grid.innerHTML = '';
-    
     const filtered = filterCat === 'all' ? beats : beats.filter(b => b.cat === filterCat);
 
     filtered.forEach((beat) => {
         const realIndex = beats.findIndex(b => b.id === beat.id);
         grid.innerHTML += `
-            <article class="card">
+            <article class="card" id="card-${realIndex}">
                 <div class="cover-box">
-                    <img src="${beat.img}" alt="${beat.name}">
+                    <img src="${beat.img}">
                     <button class="play-btn" onclick="startBeat(${realIndex})">
-                        <i data-lucide="play" fill="black" size="20"></i>
+                        <i data-lucide="play" id="icon-${realIndex}" fill="black"></i>
                     </button>
                 </div>
                 <div class="card-info">
@@ -46,15 +44,21 @@ function renderBeats(filterCat = 'all') {
             </article>
         `;
     });
-    if(window.lucide) lucide.createIcons();
+    lucide.createIcons();
+    updatePlayIcon(!audioPlayer.paused && audioPlayer.src !== "");
 }
 
 function startBeat(index) {
+    if (currentBeatIndex === index) {
+        toggleAudio();
+        return;
+    }
+
     currentBeatIndex = index;
     const beat = beats[currentBeatIndex];
     
     document.getElementById('p-title').innerText = beat.name;
-    document.getElementById('p-bpm').innerText = `${beat.cat.toUpperCase()} | ${beat.bpm} BPM`;
+    document.getElementById('p-bpm').innerText = `${beat.bpm} BPM | k3vin Beatz`;
     document.getElementById('p-img').src = beat.img;
 
     audioPlayer.src = `beats/${formatFileName(beat.name)}.mp3`;
@@ -63,16 +67,34 @@ function startBeat(index) {
 }
 
 function toggleAudio() {
-    if (!audioPlayer.src) {
-        startBeat(0);
-        return;
+    if (currentBeatIndex === null) { startBeat(0); return; }
+    
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        updatePlayIcon(true);
+    } else {
+        audioPlayer.pause();
+        updatePlayIcon(false);
     }
-    audioPlayer.paused ? audioPlayer.play() : audioPlayer.pause();
-    updatePlayIcon(!audioPlayer.paused);
 }
 
 function updatePlayIcon(playing) {
-    playIcon.setAttribute('data-lucide', playing ? 'pause' : 'play');
+    // 1. Ícone do Player Principal
+    if (playIcon) {
+        playIcon.setAttribute('data-lucide', playing ? 'pause' : 'play');
+    }
+
+    // 2. Reseta todos os ícones dos cards para Play
+    document.querySelectorAll('.play-btn i').forEach(i => {
+        i.setAttribute('data-lucide', 'play');
+    });
+
+    // 3. Se estiver tocando, muda o ícone do card atual para Pause
+    if (playing && currentBeatIndex !== null) {
+        const cardIcon = document.getElementById(`icon-${currentBeatIndex}`);
+        if (cardIcon) cardIcon.setAttribute('data-lucide', 'pause');
+    }
+
     lucide.createIcons();
 }
 
@@ -80,7 +102,7 @@ audioPlayer.ontimeupdate = () => {
     if (audioPlayer.duration) {
         const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
         progressBar.value = percent;
-        progressBar.style.background = `linear-gradient(to right, var(--accent) ${percent}%, #333 ${percent}%)`;
+        progressBar.style.background = `linear-gradient(to right, #1DB954 ${percent}%, #333 ${percent}%)`;
         
         const curMin = Math.floor(audioPlayer.currentTime / 60);
         const curSec = Math.floor(audioPlayer.currentTime % 60);
@@ -92,19 +114,9 @@ audioPlayer.ontimeupdate = () => {
     }
 };
 
-progressBar.oninput = () => {
-    audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
-};
-
-function nextBeat() {
-    currentBeatIndex = (currentBeatIndex + 1) % beats.length;
-    startBeat(currentBeatIndex);
-}
-
-function prevBeat() {
-    currentBeatIndex = (currentBeatIndex - 1 + beats.length) % beats.length;
-    startBeat(currentBeatIndex);
-}
+progressBar.oninput = () => { audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration; };
+function nextBeat() { startBeat((currentBeatIndex + 1) % beats.length); }
+function prevBeat() { startBeat((currentBeatIndex - 1 + beats.length) % beats.length); }
 
 function filter(cat) {
     renderBeats(cat);
