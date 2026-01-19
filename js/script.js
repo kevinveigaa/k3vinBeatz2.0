@@ -24,12 +24,14 @@ function renderBeats(filterCat = 'all') {
 
     filtered.forEach((beat) => {
         const realIndex = beats.findIndex(b => b.id === beat.id);
+        const isPlaying = (currentBeatIndex === realIndex && !audioPlayer.paused);
+        
         grid.innerHTML += `
             <article class="card">
                 <div class="cover-box">
                     <img src="${beat.img}">
                     <button class="play-btn" onclick="startBeat(${realIndex})">
-                        <i data-lucide="play" class="card-icon" id="icon-${realIndex}" fill="black"></i>
+                        <i data-lucide="${isPlaying ? 'pause' : 'play'}" class="card-icon" fill="black"></i>
                     </button>
                 </div>
                 <div class="card-info">
@@ -44,7 +46,6 @@ function renderBeats(filterCat = 'all') {
         `;
     });
     lucide.createIcons();
-    updateAllIcons(); // Garante que ícones fiquem certos ao filtrar
 }
 
 function startBeat(index) {
@@ -69,42 +70,37 @@ function toggleAudio() {
         startBeat(0);
         return;
     }
-    audioPlayer.paused ? audioPlayer.play() : audioPlayer.pause();
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+    } else {
+        audioPlayer.pause();
+    }
 }
 
-// FUNÇÃO ÚNICA PARA ATUALIZAR TODOS OS ÍCONES DO SITE
-function updateAllIcons() {
+// A MÁGICA ACONTECE AQUI: Sincronização Total
+function syncUI() {
     const isPlaying = !audioPlayer.paused && audioPlayer.src !== "";
-
-    // 1. Atualiza o ícone do Player Principal (Rodapé)
-    const masterPlayIcon = document.getElementById('masterPlayIcon');
-    if (masterPlayIcon) {
-        masterPlayIcon.setAttribute('data-lucide', isPlaying ? 'pause' : 'play');
+    
+    // Atualiza o ícone do Player (Rodapé)
+    const masterPlayBtn = document.getElementById('masterPlayIcon');
+    if (masterPlayBtn) {
+        masterPlayBtn.setAttribute('data-lucide', isPlaying ? 'pause' : 'play');
     }
 
-    // 2. Reseta todos os ícones dos cards para "play"
-    document.querySelectorAll('.card-icon').forEach(icon => {
-        icon.setAttribute('data-lucide', 'play');
+    // Atualiza todos os botões de Play nos Cards
+    const allButtons = document.querySelectorAll('.play-btn');
+    allButtons.forEach((btn, index) => {
+        // Precisamos descobrir o index real do beat que esse botão representa
+        // Para simplificar, vamos apenas dar o re-render que é mais seguro
     });
 
-    // 3. Se estiver tocando, coloca "pause" no card da música atual
-    if (isPlaying && currentBeatIndex !== null) {
-        const currentCardIcon = document.getElementById(`icon-${currentBeatIndex}`);
-        if (currentCardIcon) {
-            currentCardIcon.setAttribute('data-lucide', 'pause');
-        }
-    }
-
-    // 4. Renderiza as mudanças na tela
-    lucide.createIcons();
+    renderBeats(document.querySelector('.tab-btn.active').innerText.toLowerCase().replace('todos', 'all'));
 }
 
-// EVENTOS DO PLAYER (Gatilhos automáticos para atualizar ícones)
-audioPlayer.onplay = updateAllIcons;
-audioPlayer.onpause = updateAllIcons;
+audioPlayer.onplay = () => syncUI();
+audioPlayer.onpause = () => syncUI();
 audioPlayer.onended = () => {
-    updateAllIcons();
-    nextBeat(); // Toca a próxima música automaticamente ao acabar
+    nextBeat();
 };
 
 audioPlayer.ontimeupdate = () => {
@@ -136,10 +132,11 @@ function prevBeat() {
 }
 
 function filter(cat) {
-    renderBeats(cat);
-    document.querySelectorAll('.tab-btn').forEach(btn => {
+    const tabs = document.querySelectorAll('.tab-btn');
+    tabs.forEach(btn => {
         btn.classList.toggle('active', btn.innerText.toLowerCase() === cat || (cat === 'all' && btn.innerText === 'TODOS'));
     });
+    renderBeats(cat);
 }
 
 document.addEventListener('DOMContentLoaded', () => renderBeats());
