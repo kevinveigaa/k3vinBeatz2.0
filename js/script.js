@@ -16,12 +16,16 @@ const progressBar = document.getElementById('progress-bar');
 const currentTimeDisplay = document.getElementById('current-time');
 const durationTimeDisplay = document.getElementById('duration-time');
 
-// Limpador de nomes (tudo junto, sem acento, sem ç)
+// Formata nome: minúsculo, sem acentos, sem ç, sem espaços
 function formatFileName(text) {
-    return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ç/g, "c").replace(/\s+/g, "");
+    return text.toLowerCase().normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/ç/g, "c")
+        .replace(/\s+/g, "");
 }
 
 function formatTime(seconds) {
+    if (isNaN(seconds)) return "0:00";
     const min = Math.floor(seconds / 60);
     const sec = Math.floor(seconds % 60);
     return `${min}:${sec < 10 ? '0' : ''}${sec}`;
@@ -33,12 +37,14 @@ function renderBeats(filterCat = 'all') {
     grid.innerHTML = '';
     const filtered = filterCat === 'all' ? beats : beats.filter(b => b.cat === filterCat);
 
-    filtered.forEach((beat, index) => {
+    filtered.forEach((beat) => {
+        // Encontra o index real no array principal para manter navegação correta
+        const realIndex = beats.findIndex(b => b.id === beat.id);
         grid.innerHTML += `
             <article class="card">
                 <div class="cover-box">
                     <img src="${beat.img}" alt="${beat.name}" onerror="this.src='https://via.placeholder.com/400?text=Beat'">
-                    <button class="play-btn" onclick="startBeat(${index})">
+                    <button class="play-btn" onclick="startBeat(${realIndex})">
                         <i data-lucide="play" fill="black" size="20"></i>
                     </button>
                 </div>
@@ -68,6 +74,7 @@ function startBeat(index) {
 }
 
 function toggleAudio() {
+    if (!audioPlayer.src) return;
     if (audioPlayer.paused) {
         audioPlayer.play();
         updatePlayIcon(true);
@@ -82,18 +89,32 @@ function updatePlayIcon(playing) {
     lucide.createIcons();
 }
 
+// ATUALIZAÇÃO DA BARRA COM COR VERDE DINÂMICA
 audioPlayer.ontimeupdate = () => {
     if (audioPlayer.duration) {
         const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        
+        // Move a bolinha
         progressBar.value = percent;
+        
+        // Pinta a linha: verde onde passou, cinza o resto
+        progressBar.style.background = `linear-gradient(to right, var(--accent) ${percent}%, #333 ${percent}%)`;
+        
+        // Atualiza tempos
         currentTimeDisplay.innerText = formatTime(audioPlayer.currentTime);
         durationTimeDisplay.innerText = formatTime(audioPlayer.duration);
     }
 };
 
+// ARRASTAR A BOLINHA
 progressBar.oninput = () => {
-    const seekTime = (progressBar.value / 100) * audioPlayer.duration;
+    if (!audioPlayer.duration) return;
+    const percent = progressBar.value;
+    const seekTime = (percent / 100) * audioPlayer.duration;
     audioPlayer.currentTime = seekTime;
+    
+    // Atualiza cor enquanto arrasta
+    progressBar.style.background = `linear-gradient(to right, var(--accent) ${percent}%, #333 ${percent}%)`;
 };
 
 function nextBeat() {

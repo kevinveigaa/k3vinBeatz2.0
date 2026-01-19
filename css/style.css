@@ -15,7 +15,7 @@
 
 body { 
     background-color: var(--black); color: var(--text-white); 
-    padding-top: 80px; padding-bottom: 160px; /* Aumentado para não cobrir o conteúdo */
+    padding-top: 80px; padding-bottom: 160px; 
     overflow-x: hidden; 
 }
 
@@ -36,67 +36,70 @@ body {
 .hero h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 10px; }
 .filter-wrapper { display: flex; justify-content: center; margin-bottom: 25px; padding: 0 10px; }
 .tabs { background: #121212; padding: 4px; border-radius: 50px; display: flex; gap: 4px; border: 1px solid #282828; }
-.tab-btn { background: transparent; border: none; color: var(--text-dim); padding: 8px 16px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; cursor: pointer; }
+.tab-btn { background: transparent; border: none; color: var(--text-dim); padding: 8px 16px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
 .tab-btn.active { background: #fff; color: #000; }
 
-/* GRID */
+/* GRID BEATS */
 .beat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 12px; max-width: 1200px; margin: 0 auto; }
 .card { background: var(--card-bg); padding: 10px; border-radius: 10px; display: flex; flex-direction: column; }
 .cover-box { position: relative; border-radius: 8px; overflow: hidden; aspect-ratio: 1/1; margin-bottom: 10px; }
 .cover-box img { width: 100%; height: 100%; object-fit: cover; }
-.play-btn { position: absolute; bottom: 8px; right: 8px; width: 36px; height: 36px; background: var(--accent); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.play-btn { position: absolute; bottom: 8px; right: 8px; width: 36px; height: 36px; background: var(--accent); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
 .card h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card p { font-size: 0.65rem; color: var(--text-dim); margin-bottom: 10px; }
 .price { color: var(--accent); font-weight: 800; font-size: 0.9rem; margin-bottom: 8px; }
-.buy-link { background: #fff; color: #000; text-decoration: none; text-align: center; padding: 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 800; }
+.buy-link { background: #fff; color: #000; text-decoration: none; text-align: center; padding: 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
 
-/* PLAYER MOBILE CORRIGIDO */
+/* PLAYER MOBILE & DESKTOP */
 .player {
     position: fixed; bottom: 0; left: 0; width: 100%;
     background: #0a0a0a; border-top: 1px solid #1a1a1a;
     padding: 15px 20px; z-index: 2000;
-    display: flex; flex-direction: column; gap: 12px; /* Garante empilhamento no mobile */
+    display: flex; flex-direction: column; gap: 15px;
 }
 
 .now-playing { display: flex; align-items: center; gap: 12px; width: 100%; }
-.now-playing img { width: 40px; height: 40px; border-radius: 4px; }
+.now-playing img { width: 42px; height: 42px; border-radius: 4px; border: 1px solid #222; }
 .p-info { flex: 1; min-width: 0; }
 .p-info strong { display: block; font-size: 0.85rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .p-info small { color: var(--text-dim); font-size: 0.7rem; }
 
-.p-controls { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+.p-controls { width: 100%; display: flex; flex-direction: column; gap: 12px; }
 
-/* BOTÕES */
-.p-btns-wrapper { display: flex; align-items: center; justify-content: center; gap: 30px; }
-.btn-ctrl { color: #b3b3b3; cursor: pointer; }
+/* BOTÕES DE CONTROLE */
+.p-btns-wrapper { display: flex; align-items: center; justify-content: center; gap: 35px; }
+.btn-ctrl { color: #b3b3b3; cursor: pointer; transition: 0.2s; }
+.btn-ctrl:hover { color: #fff; }
+
 .play-main-wrapper { 
-    width: 42px; height: 42px; background: #fff; border-radius: 50%; 
+    width: 45px; height: 45px; background: #fff; border-radius: 50%; 
     display: flex; align-items: center; justify-content: center; cursor: pointer; 
+    transition: 0.2s;
+}
+.play-main-wrapper:active { transform: scale(0.9); }
+
+/* LINHA DE PROGRESSO DINÂMICA */
+.p-progress-container { display: flex; align-items: center; gap: 10px; width: 100%; }
+.p-progress-container span { font-size: 0.65rem; color: var(--text-dim); min-width: 35px; font-family: monospace; }
+
+#progress-bar { 
+    flex: 1; -webkit-appearance: none; 
+    background: linear-gradient(to right, var(--accent) 0%, #333 0%);
+    height: 4px; border-radius: 2px; outline: none; cursor: pointer;
 }
 
-/* LINHA DE PROGRESSO - VISÍVEL NO MOBILE */
-.p-progress-container { 
-    display: flex; align-items: center; gap: 10px; width: 100%; 
-}
-.p-progress-container span { 
-    font-size: 0.65rem; color: var(--text-dim); min-width: 32px; 
-    font-family: monospace; 
-}
-#progress-bar { 
-    flex: 1; -webkit-appearance: none; background: #333; 
-    height: 4px; border-radius: 2px; outline: none; 
-}
 #progress-bar::-webkit-slider-thumb { 
     -webkit-appearance: none; width: 12px; height: 12px; 
-    background: var(--accent); border-radius: 50%; cursor: pointer; 
+    background: #fff; border-radius: 50%; cursor: pointer; 
+    border: 2px solid var(--accent);
 }
 
-/* AJUSTES PARA TELAS GRANDES (DESKTOP) */
+/* RESPONSIVIDADE DESKTOP */
 @media (min-width: 769px) {
     .player { height: 90px; flex-direction: row; justify-content: space-between; gap: 40px; }
     .now-playing { width: 280px; }
-    .p-controls { flex: 1; max-width: 600px; flex-direction: column-reverse; } /* Barra em cima dos botões no PC */
-    .p-btns-wrapper { margin-top: 0; }
+    .p-controls { flex: 1; max-width: 600px; flex-direction: column-reverse; gap: 8px; }
     .beat-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+    .hero h1 { font-size: 3rem; }
 }
