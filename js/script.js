@@ -11,7 +11,6 @@ const beats = [
 
 let currentBeatIndex = null;
 const audioPlayer = new Audio();
-const playIcon = document.getElementById('masterPlayIcon');
 const progressBar = document.getElementById('progress-bar');
 
 function formatFileName(text) {
@@ -26,11 +25,11 @@ function renderBeats(filterCat = 'all') {
     filtered.forEach((beat) => {
         const realIndex = beats.findIndex(b => b.id === beat.id);
         grid.innerHTML += `
-            <article class="card" id="card-${realIndex}">
+            <article class="card">
                 <div class="cover-box">
                     <img src="${beat.img}">
                     <button class="play-btn" onclick="startBeat(${realIndex})">
-                        <i data-lucide="play" id="icon-${realIndex}" fill="black"></i>
+                        <i data-lucide="play" class="card-icon" id="icon-${realIndex}" fill="black"></i>
                     </button>
                 </div>
                 <div class="card-info">
@@ -45,7 +44,7 @@ function renderBeats(filterCat = 'all') {
         `;
     });
     lucide.createIcons();
-    updatePlayIcon(!audioPlayer.paused && audioPlayer.src !== "");
+    updateAllIcons(); // Garante que ícones fiquem certos ao filtrar
 }
 
 function startBeat(index) {
@@ -63,40 +62,50 @@ function startBeat(index) {
 
     audioPlayer.src = `beats/${formatFileName(beat.name)}.mp3`;
     audioPlayer.play();
-    updatePlayIcon(true);
 }
 
 function toggleAudio() {
-    if (currentBeatIndex === null) { startBeat(0); return; }
-    
-    if (audioPlayer.paused) {
-        audioPlayer.play();
-        updatePlayIcon(true);
-    } else {
-        audioPlayer.pause();
-        updatePlayIcon(false);
+    if (currentBeatIndex === null) {
+        startBeat(0);
+        return;
     }
+    audioPlayer.paused ? audioPlayer.play() : audioPlayer.pause();
 }
 
-function updatePlayIcon(playing) {
-    // 1. Ícone do Player Principal
-    if (playIcon) {
-        playIcon.setAttribute('data-lucide', playing ? 'pause' : 'play');
+// FUNÇÃO ÚNICA PARA ATUALIZAR TODOS OS ÍCONES DO SITE
+function updateAllIcons() {
+    const isPlaying = !audioPlayer.paused && audioPlayer.src !== "";
+
+    // 1. Atualiza o ícone do Player Principal (Rodapé)
+    const masterPlayIcon = document.getElementById('masterPlayIcon');
+    if (masterPlayIcon) {
+        masterPlayIcon.setAttribute('data-lucide', isPlaying ? 'pause' : 'play');
     }
 
-    // 2. Reseta todos os ícones dos cards para Play
-    document.querySelectorAll('.play-btn i').forEach(i => {
-        i.setAttribute('data-lucide', 'play');
+    // 2. Reseta todos os ícones dos cards para "play"
+    document.querySelectorAll('.card-icon').forEach(icon => {
+        icon.setAttribute('data-lucide', 'play');
     });
 
-    // 3. Se estiver tocando, muda o ícone do card atual para Pause
-    if (playing && currentBeatIndex !== null) {
-        const cardIcon = document.getElementById(`icon-${currentBeatIndex}`);
-        if (cardIcon) cardIcon.setAttribute('data-lucide', 'pause');
+    // 3. Se estiver tocando, coloca "pause" no card da música atual
+    if (isPlaying && currentBeatIndex !== null) {
+        const currentCardIcon = document.getElementById(`icon-${currentBeatIndex}`);
+        if (currentCardIcon) {
+            currentCardIcon.setAttribute('data-lucide', 'pause');
+        }
     }
 
+    // 4. Renderiza as mudanças na tela
     lucide.createIcons();
 }
+
+// EVENTOS DO PLAYER (Gatilhos automáticos para atualizar ícones)
+audioPlayer.onplay = updateAllIcons;
+audioPlayer.onpause = updateAllIcons;
+audioPlayer.onended = () => {
+    updateAllIcons();
+    nextBeat(); // Toca a próxima música automaticamente ao acabar
+};
 
 audioPlayer.ontimeupdate = () => {
     if (audioPlayer.duration) {
@@ -115,8 +124,16 @@ audioPlayer.ontimeupdate = () => {
 };
 
 progressBar.oninput = () => { audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration; };
-function nextBeat() { startBeat((currentBeatIndex + 1) % beats.length); }
-function prevBeat() { startBeat((currentBeatIndex - 1 + beats.length) % beats.length); }
+
+function nextBeat() {
+    if (currentBeatIndex === null) return;
+    startBeat((currentBeatIndex + 1) % beats.length);
+}
+
+function prevBeat() {
+    if (currentBeatIndex === null) return;
+    startBeat((currentBeatIndex - 1 + beats.length) % beats.length);
+}
 
 function filter(cat) {
     renderBeats(cat);
