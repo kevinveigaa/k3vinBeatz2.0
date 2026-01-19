@@ -38,22 +38,16 @@ function renderBeats(filterCat = 'all') {
 function filter(cat) {
     renderBeats(cat);
     document.querySelectorAll('.tab-btn').forEach(btn => {
-        const text = btn.innerText.toLowerCase();
-        btn.classList.toggle('active', text === cat || (cat === 'all' && text === 'todos'));
+        btn.classList.toggle('active', btn.innerText.toLowerCase() === cat || (cat === 'all' && btn.innerText === 'Todos'));
     });
 }
 
 function setPlayer(name, img) {
     document.getElementById('p-title').innerText = name;
     document.getElementById('p-img').src = img;
-    
-    // Animação de troca na imagem do player
     const imgEl = document.getElementById('p-img');
     imgEl.style.transform = 'scale(1.1)';
     setTimeout(() => imgEl.style.transform = 'scale(1)', 200);
 }
 
-// Inicialização
-document.addEventListener('DOMContentLoaded', () => {
-    renderBeats();
-});
+document.addEventListener('DOMContentLoaded', () => renderBeats());
