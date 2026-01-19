@@ -3,7 +3,7 @@ const beats = [
     { id: 2, name: "Prodígio", cat: "rnb", bpm: "120", price: "R$ 90", link: "https://pay.kiwify.com.br/jXHrjSr", img: "https://i.imgur.com/cyHzDoM.jpeg" },
     { id: 3, name: "Desista", cat: "rnb", bpm: "91", price: "R$ 130", link: "https://pay.kiwify.com.br/rqdgNG1", img: "https://i.imgur.com/YDgwkli.jpeg" },
     { id: 4, name: "Te Esperando", cat: "rap", bpm: "130", price: "R$ 95", link: "https://pay.kiwify.com.br/509sDIs", img: "https://i.imgur.com/BA6SDme.png" },
-    { id: 5, name: "Auto Confiança", cat: "trap", bpm: "128", price: "R$ 82", link: "LINK_KIWIFY", img: "https://i.imgur.com/wAOKpZ5.jpeg" },
+    { id: 5, name: "Auto Confiança", cat: "trap", bpm: "128", price: "R$ 82", link: "https://pay.kiwify.com.br/BXai069", img: "https://i.imgur.com/wAOKpZ5.jpeg" },
     { id: 6, name: "Lentamente", cat: "trap", bpm: "101", price: "R$ 98", link: "LINK_KIWIFY", img: "https://i.imgur.com/BRJxp0L.jpeg" },
     { id: 7, name: "Sentimento Impuro", cat: "rnb", bpm: "110", price: "R$ 110", link: "LINK_KIWIFY", img: "https://i.imgur.com/U4eTmbn.jpeg" },
     { id: 8, name: "Espanhola", cat: "trap", bpm: "140", price: "R$ 130", link: "LINK_KIWIFY", img: "https://i.imgur.com/y7VdvOD.jpeg" }
