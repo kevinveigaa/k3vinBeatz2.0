@@ -45,7 +45,14 @@ function renderBeats(filterCat = 'all') {
             </article>
         `;
     });
+
     lucide.createIcons();
+    
+    // FORÇA O POPUP DA KIWIFY A FUNCIONAR
+    if (typeof KiwifyWidget !== 'undefined') {
+        KiwifyWidget.init();
+    }
+    
     syncUI();
 }
 
