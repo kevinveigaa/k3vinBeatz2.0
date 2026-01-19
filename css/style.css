@@ -7,7 +7,6 @@
     --text-dim: #b3b3b3;
 }
 
-/* RESET BASE */
 * { 
     margin: 0; padding: 0; box-sizing: border-box; 
     font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; 
@@ -26,15 +25,11 @@ body {
     z-index: 1000; border-bottom: 1px solid #1a1a1a;
     display: flex; align-items: center; justify-content: center;
 }
-.logo { display: flex; align-items: center; gap: 10px; }
-.profile-circle { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--accent); overflow: hidden; }
-.profile-circle img { width: 100%; height: 100%; object-fit: cover; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; }
 .logo b { color: var(--accent); }
 
-/* HERO & FILTROS */
-.hero { text-align: center; padding: 30px 20px; }
-.hero h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 10px; }
-.filter-wrapper { display: flex; justify-content: center; margin-bottom: 25px; padding: 0 10px; }
+/* FILTROS */
+.filter-wrapper { display: flex; justify-content: center; margin: 20px 0; padding: 0 10px; }
 .tabs { background: #121212; padding: 4px; border-radius: 50px; display: flex; gap: 4px; border: 1px solid #282828; }
 .tab-btn { background: transparent; border: none; color: var(--text-dim); padding: 8px 16px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
 .tab-btn.active { background: #fff; color: #000; }
@@ -46,60 +41,40 @@ body {
 .cover-box img { width: 100%; height: 100%; object-fit: cover; }
 .play-btn { position: absolute; bottom: 8px; right: 8px; width: 36px; height: 36px; background: var(--accent); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-.card h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card p { font-size: 0.65rem; color: var(--text-dim); margin-bottom: 10px; }
-.price { color: var(--accent); font-weight: 800; font-size: 0.9rem; margin-bottom: 8px; }
-.buy-link { background: #fff; color: #000; text-decoration: none; text-align: center; padding: 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
+.card h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 2px; }
+.card p { font-size: 0.65rem; color: var(--accent); font-weight: 600; margin-bottom: 10px; text-transform: uppercase; }
+.card-footer { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+.price { color: #fff; font-weight: 800; font-size: 0.9rem; }
+.buy-link { background: #fff; color: #000; text-decoration: none; text-align: center; padding: 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 800; }
 
-/* PLAYER MOBILE & DESKTOP */
+/* PLAYER */
 .player {
     position: fixed; bottom: 0; left: 0; width: 100%;
     background: #0a0a0a; border-top: 1px solid #1a1a1a;
     padding: 15px 20px; z-index: 2000;
-    display: flex; flex-direction: column; gap: 15px;
+    display: flex; flex-direction: column; gap: 12px;
 }
-
-.now-playing { display: flex; align-items: center; gap: 12px; width: 100%; }
-.now-playing img { width: 42px; height: 42px; border-radius: 4px; border: 1px solid #222; }
-.p-info { flex: 1; min-width: 0; }
-.p-info strong { display: block; font-size: 0.85rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.now-playing { display: flex; align-items: center; gap: 12px; }
+.now-playing img { width: 42px; height: 42px; border-radius: 4px; }
+.p-info strong { display: block; font-size: 0.85rem; color: #fff; }
 .p-info small { color: var(--text-dim); font-size: 0.7rem; }
 
-.p-controls { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+.p-controls { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+.p-btns-wrapper { display: flex; align-items: center; justify-content: center; gap: 30px; }
+.play-main-wrapper { width: 42px; height: 42px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-/* BOTÕES DE CONTROLE */
-.p-btns-wrapper { display: flex; align-items: center; justify-content: center; gap: 35px; }
-.btn-ctrl { color: #b3b3b3; cursor: pointer; transition: 0.2s; }
-.btn-ctrl:hover { color: #fff; }
-
-.play-main-wrapper { 
-    width: 45px; height: 45px; background: #fff; border-radius: 50%; 
-    display: flex; align-items: center; justify-content: center; cursor: pointer; 
-    transition: 0.2s;
-}
-.play-main-wrapper:active { transform: scale(0.9); }
-
-/* LINHA DE PROGRESSO DINÂMICA */
+/* BARRA DE PROGRESSO VERDE */
 .p-progress-container { display: flex; align-items: center; gap: 10px; width: 100%; }
-.p-progress-container span { font-size: 0.65rem; color: var(--text-dim); min-width: 35px; font-family: monospace; }
-
+.p-progress-container span { font-size: 0.65rem; color: var(--text-dim); min-width: 32px; font-family: monospace; }
 #progress-bar { 
     flex: 1; -webkit-appearance: none; 
     background: linear-gradient(to right, var(--accent) 0%, #333 0%);
-    height: 4px; border-radius: 2px; outline: none; cursor: pointer;
+    height: 4px; border-radius: 2px; outline: none; 
 }
+#progress-bar::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: #fff; border-radius: 50%; border: 2px solid var(--accent); }
 
-#progress-bar::-webkit-slider-thumb { 
-    -webkit-appearance: none; width: 12px; height: 12px; 
-    background: #fff; border-radius: 50%; cursor: pointer; 
-    border: 2px solid var(--accent);
-}
-
-/* RESPONSIVIDADE DESKTOP */
 @media (min-width: 769px) {
-    .player { height: 90px; flex-direction: row; justify-content: space-between; gap: 40px; }
-    .now-playing { width: 280px; }
-    .p-controls { flex: 1; max-width: 600px; flex-direction: column-reverse; gap: 8px; }
-    .beat-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-    .hero h1 { font-size: 3rem; }
+    .player { height: 90px; flex-direction: row; justify-content: space-between; }
+    .p-controls { flex: 1; max-width: 600px; flex-direction: column-reverse; }
+    .beat-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
 }
