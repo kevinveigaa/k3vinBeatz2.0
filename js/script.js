@@ -9,31 +9,36 @@ const beats = [
     { id: 8, name: "Desista", cat: "rnb", price: "R$ 130", link: "https://chk.eduzz.com/Q9N5JZ4K01", img: "capas/rnb.png" }
 ];
 
+let currentBeatIndex = 0;
 const audioPlayer = document.getElementById('main-audio');
-const masterPlay = document.getElementById('masterPlay');
+const playIcon = document.getElementById('masterPlayIcon');
+const progressBar = document.getElementById('progress-bar');
+const currentTimeDisplay = document.getElementById('current-time');
+const durationTimeDisplay = document.getElementById('duration-time');
 
-// Função para formatar o nome do ficheiro conforme a tua regra
+// Limpador de nomes (tudo junto, sem acento, sem ç)
 function formatFileName(text) {
-    return text.toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") // Remove acentos
-        .replace(/ç/g, "c")              // Troca ç por c
-        .replace(/\s+/g, "");            // Remove espaços (tudo junto)
+    return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ç/g, "c").replace(/\s+/g, "");
+}
+
+function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60);
+    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
 }
 
 function renderBeats(filterCat = 'all') {
     const grid = document.getElementById('beatGrid');
     if(!grid) return;
     grid.innerHTML = '';
-    
     const filtered = filterCat === 'all' ? beats : beats.filter(b => b.cat === filterCat);
 
-    filtered.forEach(beat => {
+    filtered.forEach((beat, index) => {
         grid.innerHTML += `
             <article class="card">
                 <div class="cover-box">
                     <img src="${beat.img}" alt="${beat.name}" onerror="this.src='https://via.placeholder.com/400?text=Beat'">
-                    <button class="play-btn" onclick="setPlayer('${beat.name}', '${beat.img}')">
+                    <button class="play-btn" onclick="startBeat(${index})">
                         <i data-lucide="play" fill="black" size="20"></i>
                     </button>
                 </div>
@@ -49,28 +54,59 @@ function renderBeats(filterCat = 'all') {
     lucide.createIcons();
 }
 
-function setPlayer(name, img) {
-    document.getElementById('p-title').innerText = name;
-    document.getElementById('p-img').src = img;
+function startBeat(index) {
+    currentBeatIndex = index;
+    const beat = beats[currentBeatIndex];
+    document.getElementById('p-title').innerText = beat.name;
+    document.getElementById('p-img').src = beat.img;
 
-    const fileName = formatFileName(name);
+    const fileName = formatFileName(beat.name);
     audioPlayer.src = `beats/${fileName}.mp3`;
-    
     audioPlayer.play();
-    masterPlay.setAttribute('data-lucide', 'pause-circle');
-    lucide.createIcons();
+    
+    updatePlayIcon(true);
 }
 
 function toggleAudio() {
     if (audioPlayer.paused) {
         audioPlayer.play();
-        masterPlay.setAttribute('data-lucide', 'pause-circle');
+        updatePlayIcon(true);
     } else {
         audioPlayer.pause();
-        masterPlay.setAttribute('data-lucide', 'play-circle');
+        updatePlayIcon(false);
     }
+}
+
+function updatePlayIcon(playing) {
+    playIcon.setAttribute('data-lucide', playing ? 'pause' : 'play');
     lucide.createIcons();
 }
+
+audioPlayer.ontimeupdate = () => {
+    if (audioPlayer.duration) {
+        const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+        progressBar.value = percent;
+        currentTimeDisplay.innerText = formatTime(audioPlayer.currentTime);
+        durationTimeDisplay.innerText = formatTime(audioPlayer.duration);
+    }
+};
+
+progressBar.oninput = () => {
+    const seekTime = (progressBar.value / 100) * audioPlayer.duration;
+    audioPlayer.currentTime = seekTime;
+};
+
+function nextBeat() {
+    currentBeatIndex = (currentBeatIndex + 1) % beats.length;
+    startBeat(currentBeatIndex);
+}
+
+function prevBeat() {
+    currentBeatIndex = (currentBeatIndex - 1 + beats.length) % beats.length;
+    startBeat(currentBeatIndex);
+}
+
+audioPlayer.onended = () => nextBeat();
 
 function filter(cat) {
     renderBeats(cat);

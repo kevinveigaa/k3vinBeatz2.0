@@ -43,16 +43,24 @@
         <div class="now-playing">
             <img src="https://i.imgur.com/1hoKT24.jpeg" id="p-img">
             <div class="p-info">
-                <strong id="p-title">Seleciona um beat</strong>
+                <strong id="p-title">Selecione um beat</strong>
                 <small>k3vin Beatz</small>
             </div>
         </div>
 
         <div class="p-controls">
-            <div class="p-btns">
-                <i data-lucide="skip-back" class="btn-ctrl"></i>
-                <i data-lucide="play-circle" class="play-main" id="masterPlay" onclick="toggleAudio()"></i>
-                <i data-lucide="skip-forward" class="btn-ctrl"></i>
+            <div class="p-btns-wrapper">
+                <i data-lucide="skip-back" class="btn-ctrl" onclick="prevBeat()"></i>
+                <div class="play-main-wrapper" onclick="toggleAudio()">
+                    <i data-lucide="play" id="masterPlayIcon" fill="black"></i>
+                </div>
+                <i data-lucide="skip-forward" class="btn-ctrl" onclick="nextBeat()"></i>
+            </div>
+            
+            <div class="p-progress-container">
+                <span id="current-time">0:00</span>
+                <input type="range" id="progress-bar" value="0" min="0" max="100">
+                <span id="duration-time">0:00</span>
             </div>
         </div>
     </footer>
