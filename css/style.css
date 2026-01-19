@@ -1,327 +1,64 @@
 :root {
-    --accent: #1DB954;
+    --accent: #1DB954; /* Verde Estilo Spotify */
     --black: #000000;
-    --dark-grey: #121212;
     --card-bg: #181818;
     --text-white: #ffffff;
     --text-dim: #b3b3b3;
-    --player-bg: #0a0a0a;
 }
 
-/* RESET GERAL */
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-    -webkit-tap-highlight-color: transparent; 
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
 
-body { 
-    background-color: var(--black); 
-    color: var(--text-white); 
-    padding-top: 80px; 
-    padding-bottom: 160px; /* Espaço para o player não cobrir conteúdo */
-    overflow-x: hidden; 
-}
+body { background: var(--black); color: var(--text-white); padding-top: 80px; padding-bottom: 160px; }
 
-/* NAVBAR */
-.navbar {
-    position: fixed; 
-    top: 0; 
-    width: 100%; 
-    height: 70px;
-    background: rgba(0, 0, 0, 0.9); 
-    backdrop-filter: blur(15px);
-    z-index: 1000; 
-    border-bottom: 1px solid #1a1a1a;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-}
-.logo { 
-    display: flex; 
-    align-items: center; 
-    gap: 10px; 
-    font-weight: 800; 
-    font-size: 1.2rem; 
-    letter-spacing: -0.5px;
-}
+.navbar { position: fixed; top: 0; width: 100%; height: 70px; background: #000; display: flex; align-items: center; justify-content: center; z-index: 1000; border-bottom: 1px solid #1a1a1a; }
+.logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; }
 .logo b { color: var(--accent); }
 
-/* HERO SECTION */
-.hero {
-    text-align: center;
-    padding: 40px 20px;
-}
-.hero h1 {
-    font-size: 2.2rem;
-    font-weight: 800;
-    margin-bottom: 10px;
-    letter-spacing: -1px;
-}
+/* Filtros */
+.filter-wrapper { display: flex; justify-content: center; margin: 20px 0; }
+.tabs { background: #121212; padding: 5px; border-radius: 50px; display: flex; gap: 5px; }
+.tab-btn { background: transparent; border: none; color: var(--text-dim); padding: 8px 20px; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+.tab-btn.active { background: #fff; color: #000; }
 
-/* FILTROS (TABS) */
-.filter-wrapper { 
-    display: flex; 
-    justify-content: center; 
-    margin: 20px 0 30px 0; 
-    padding: 0 10px; 
-}
-.tabs { 
-    background: #121212; 
-    padding: 5px; 
-    border-radius: 50px; 
-    display: flex; 
-    gap: 5px; 
-    border: 1px solid #282828; 
-}
-.tab-btn { 
-    background: transparent; 
-    border: none; 
-    color: var(--text-dim); 
-    padding: 10px 20px; 
-    border-radius: 50px; 
-    font-size: 0.8rem; 
-    font-weight: 700; 
-    cursor: pointer; 
-    transition: 0.3s; 
-}
-.tab-btn.active { 
-    background: var(--text-white); 
-    color: var(--black); 
-}
+/* Grid */
+.beat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 20px; padding: 0 20px; max-width: 1100px; margin: 0 auto; }
 
-/* GRID DE BEATS */
-.beat-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; /* 2 colunas no mobile */
-    gap: 15px; 
-    max-width: 1200px; 
-    margin: 0 auto; 
-    padding: 0 15px; 
-}
+/* Card */
+.card { background: var(--card-bg); padding: 15px; border-radius: 10px; transition: 0.3s; }
+.card:hover { background: #282828; }
+.cover-box { position: relative; border-radius: 6px; overflow: hidden; aspect-ratio: 1/1; }
+.cover-box img { width: 100%; height: 100%; object-fit: cover; }
+.play-btn { position: absolute; bottom: 10px; right: 10px; width: 40px; height: 40px; background: var(--accent); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 5px 10px rgba(0,0,0,0.3); }
 
-/* CARD DO BEAT */
-.card { 
-    background: var(--card-bg); 
-    padding: 12px; 
-    border-radius: 12px; 
-    display: flex; 
-    flex-direction: column; 
-    transition: transform 0.2s;
-}
-.card:active { transform: scale(0.98); }
+.card h3 { font-size: 1rem; margin: 12px 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card p { font-size: 0.75rem; color: var(--accent); font-weight: bold; margin-bottom: 12px; }
+.price { display: block; margin-bottom: 10px; font-weight: 800; }
+.buy-link { display: block; background: #fff; color: #000; text-decoration: none; text-align: center; padding: 10px; border-radius: 5px; font-size: 0.8rem; font-weight: 900; }
 
-.cover-box { 
-    position: relative; 
-    border-radius: 8px; 
-    overflow: hidden; 
-    aspect-ratio: 1/1; 
-    margin-bottom: 12px; 
-    box-shadow: 0 8px 15px rgba(0,0,0,0.3);
-}
-.cover-box img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; 
-}
+/* Player Fixado */
+.player { position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid #222; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.now-playing { display: flex; align-items: center; gap: 15px; width: 100%; }
+.now-playing img { width: 50px; height: 50px; border-radius: 4px; }
+.p-info strong { display: block; font-size: 0.9rem; }
+.p-info small { color: var(--text-dim); font-size: 0.75rem; }
 
-/* BOTÃO PLAY NO CARD */
-.play-btn { 
-    position: absolute; 
-    bottom: 10px; 
-    right: 10px; 
-    width: 40px; 
-    height: 40px; 
-    background: var(--accent); 
-    border: none; 
-    border-radius: 50%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    cursor: pointer; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-}
-
-.card h3 { 
-    font-size: 0.9rem; 
-    font-weight: 700; 
-    margin-bottom: 4px; 
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis;
-}
-.card p { 
-    font-size: 0.7rem; 
-    color: var(--accent); 
-    font-weight: 700; 
-    margin-bottom: 15px; 
-    text-transform: uppercase; 
-}
-
-.card-footer { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 10px; 
-    margin-top: auto; 
-}
-.price { 
-    color: #fff; 
-    font-weight: 800; 
-    font-size: 1rem; 
-}
-.buy-link { 
-    background: #fff; 
-    color: #000; 
-    text-decoration: none; 
-    text-align: center; 
-    padding: 10px; 
-    border-radius: 6px; 
-    font-size: 0.75rem; 
-    font-weight: 800; 
-    transition: 0.2s;
-}
-.buy-link:hover { background: #e0e0e0; }
-
-/* PLAYER FIXO NO RODAPÉ */
-.player {
-    position: fixed; 
-    bottom: 0; 
-    left: 0; 
-    width: 100%;
-    background: var(--player-bg); 
-    border-top: 1px solid #1a1a1a;
-    padding: 15px 20px; 
-    z-index: 2000;
-    display: flex; 
-    flex-direction: column; 
-    gap: 15px;
-}
-
-/* INFO DA MÚSICA NO PLAYER */
-.now-playing { 
-    display: flex; 
-    align-items: center; 
-    gap: 12px; 
-    width: 100%;
-}
-.now-playing img { 
-    width: 45px; 
-    height: 45px; 
-    border-radius: 4px; 
-    border: 1px solid #222;
-}
-.p-info { flex: 1; min-width: 0; }
-.p-info strong { 
-    display: block; 
-    font-size: 0.9rem; 
-    color: #fff; 
-    white-space: nowrap; 
-    overflow: hidden; 
-    text-overflow: ellipsis; 
-}
-.p-info small { 
-    color: var(--text-dim); 
-    font-size: 0.75rem; 
-}
-
-/* CONTROLES DO PLAYER */
-.p-controls { 
-    width: 100%; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 12px; 
-}
-
-.p-btns-wrapper { 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    gap: 40px; 
-}
-.btn-ctrl { 
-    color: var(--text-dim); 
-    cursor: pointer; 
-    background: none; 
-    border: none; 
-    transition: 0.2s; 
-}
-.btn-ctrl:hover { color: #fff; }
-
-.play-main-wrapper { 
-    width: 48px; 
-    height: 48px; 
-    background: #fff; 
-    border-radius: 50%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    cursor: pointer; 
-    transition: 0.2s;
-}
-.play-main-wrapper:active { transform: scale(0.9); }
-
-/* BARRA DE PROGRESSO COM LINHA VERDE */
-.p-progress-container { 
-    display: flex; 
-    align-items: center; 
-    gap: 12px; 
-    width: 100%; 
-}
-.p-progress-container span { 
-    font-size: 0.7rem; 
-    color: var(--text-dim); 
-    min-width: 35px; 
-    font-family: monospace; 
-}
+.p-controls { width: 100%; max-width: 500px; }
+.p-progress-container { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.p-progress-container span { font-size: 0.7rem; color: var(--text-dim); min-width: 35px; }
 
 #progress-bar { 
-    flex: 1; 
-    -webkit-appearance: none; 
-    /* O gradiente é controlado pelo JavaScript para ficar verde onde já passou */
-    background: linear-gradient(to right, var(--accent) 0%, #333 0%);
-    height: 5px; 
-    border-radius: 10px; 
-    outline: none; 
+    flex: 1; -webkit-appearance: none; height: 4px; border-radius: 2px; 
+    background: linear-gradient(to right, var(--accent) 0%, #333 0%); 
     cursor: pointer;
 }
+#progress-bar::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: #fff; border-radius: 50%; }
 
-/* "BOLINHA" DA BARRA */
-#progress-bar::-webkit-slider-thumb { 
-    -webkit-appearance: none; 
-    width: 14px; 
-    height: 14px; 
-    background: #fff; 
-    border-radius: 50%; 
-    cursor: pointer; 
-    border: 2px solid var(--accent);
-}
+.p-btns-wrapper { display: flex; justify-content: center; align-items: center; gap: 30px; }
+.btn-ctrl { background: none; border: none; color: #fff; cursor: pointer; }
+.play-main-wrapper { width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-/* RESPONSIVIDADE PARA PC (DESKTOP) */
-@media (min-width: 769px) {
-    body { padding-bottom: 100px; }
-    
-    .player { 
-        height: 90px; 
-        flex-direction: row; 
-        justify-content: space-between; 
-        padding: 0 40px;
-    }
-    
+@media (min-width: 768px) {
+    .player { flex-direction: row; justify-content: space-between; height: 100px; padding: 0 30px; }
     .now-playing { width: 300px; }
-    
-    .p-controls { 
-        flex: 1; 
-        max-width: 600px; 
-        flex-direction: column-reverse; /* Inverte para barra ficar em cima */
-        gap: 8px;
-    }
-    
-    .beat-grid { 
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-        gap: 25px; 
-    }
-    
-    .hero h1 { font-size: 3.5rem; }
+    .p-controls { flex: 1; }
 }

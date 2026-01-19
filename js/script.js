@@ -1,16 +1,16 @@
 const beats = [
-    { id: 1, name: "Retroceder", cat: "trap", bpm: "132", price: "R$ 120", link: "https://sun.eduzz.com/60EEP52303", img: "https://i.imgur.com/WjvDH0b.jpeg" },
-    { id: 2, name: "Prodígio", cat: "rnb", bpm: "120", price: "R$ 90", link: "https://sun.eduzz.com/7WXQRKNO9A", img: "https://i.imgur.com/cyHzDoM.jpeg" },
-    { id: 3, name: "Desista", cat: "rnb", bpm: "91", price: "R$ 130", link: "https://chk.eduzz.com/Q9N5JZ4K01", img: "https://i.imgur.com/YDgwkli.jpeg" },
-    { id: 4, name: "Te Esperando", cat: "rap", bpm: "130", price: "R$ 95", link: "https://chk.eduzz.com/n5j7fdbb", img: "https://i.imgur.com/BA6SDme.png" },
-    { id: 5, name: "Auto Confiança", cat: "trap", bpm: "128", price: "R$ 82", link: "https://chk.eduzz.com/G92E6XZZWE", img: "https://i.imgur.com/wAOKpZ5.jpeg" },
-    { id: 6, name: "Lentamente", cat: "trap", bpm: "101", price: "R$ 98", link: "https://chk.eduzz.com/G96132EAW1", img: "https://i.imgur.com/BRJxp0L.jpeg" },
-    { id: 7, name: "Sentimento Impuro", cat: "rnb", bpm: "110", price: "R$ 110", link: "https://chk.eduzz.com/39YDPG6Q9O", img: "https://i.imgur.com/U4eTmbn.jpeg" },
-    { id: 8, name: "Espanhola", cat: "trap", bpm: "140", price: "R$ 130", link: "https://chk.eduzz.com/Q9N5JQ7P01", img: "https://i.imgur.com/y7VdvOD.jpeg" }
+    { id: 1, name: "Retroceder", cat: "trap", bpm: "132", price: "R$ 120", link: "LINK_KIWIFY", img: "https://i.imgur.com/WjvDH0b.jpeg" },
+    { id: 2, name: "Prodígio", cat: "rnb", bpm: "120", price: "R$ 90", link: "LINK_KIWIFY", img: "https://i.imgur.com/cyHzDoM.jpeg" },
+    { id: 3, name: "Desista", cat: "rnb", bpm: "91", price: "R$ 130", link: "LINK_KIWIFY", img: "https://i.imgur.com/YDgwkli.jpeg" },
+    { id: 4, name: "Te Esperando", cat: "rap", bpm: "130", price: "R$ 95", link: "LINK_KIWIFY", img: "https://i.imgur.com/BA6SDme.png" },
+    { id: 5, name: "Auto Confiança", cat: "trap", bpm: "128", price: "R$ 82", link: "LINK_KIWIFY", img: "https://i.imgur.com/wAOKpZ5.jpeg" },
+    { id: 6, name: "Lentamente", cat: "trap", bpm: "101", price: "R$ 98", link: "LINK_KIWIFY", img: "https://i.imgur.com/BRJxp0L.jpeg" },
+    { id: 7, name: "Sentimento Impuro", cat: "rnb", bpm: "110", price: "R$ 110", link: "LINK_KIWIFY", img: "https://i.imgur.com/U4eTmbn.jpeg" },
+    { id: 8, name: "Espanhola", cat: "trap", bpm: "140", price: "R$ 130", link: "LINK_KIWIFY", img: "https://i.imgur.com/y7VdvOD.jpeg" }
 ];
 
 let currentBeatIndex = 0;
-const audioPlayer = document.getElementById('main-audio');
+const audioPlayer = new Audio();
 const playIcon = document.getElementById('masterPlayIcon');
 const progressBar = document.getElementById('progress-bar');
 const currentTimeDisplay = document.getElementById('current-time');
@@ -29,7 +29,6 @@ function formatTime(seconds) {
 
 function renderBeats(filterCat = 'all') {
     const grid = document.getElementById('beatGrid');
-    if(!grid) return;
     grid.innerHTML = '';
     const filtered = filterCat === 'all' ? beats : beats.filter(b => b.cat === filterCat);
 
@@ -40,7 +39,7 @@ function renderBeats(filterCat = 'all') {
                 <div class="cover-box">
                     <img src="${beat.img}" alt="${beat.name}">
                     <button class="play-btn" onclick="startBeat(${realIndex})">
-                        <i data-lucide="play" fill="black" size="18"></i>
+                        <i data-lucide="play" fill="black" size="20"></i>
                     </button>
                 </div>
                 <h3>${beat.name}</h3>
@@ -52,14 +51,14 @@ function renderBeats(filterCat = 'all') {
             </article>
         `;
     });
-    if(window.lucide) lucide.createIcons();
+    lucide.createIcons();
 }
 
 function startBeat(index) {
     currentBeatIndex = index;
     const beat = beats[currentBeatIndex];
     document.getElementById('p-title').innerText = beat.name;
-    document.querySelector('.p-info small').innerText = `k3vin Beatz | ${beat.bpm} BPM`;
+    document.querySelector('.p-info small').innerText = `${beat.bpm} BPM | k3vin Beatz`;
     document.getElementById('p-img').src = beat.img;
     audioPlayer.src = `beats/${formatFileName(beat.name)}.mp3`;
     audioPlayer.play();
@@ -73,10 +72,8 @@ function toggleAudio() {
 }
 
 function updatePlayIcon(playing) {
-    if(playIcon) {
-        playIcon.setAttribute('data-lucide', playing ? 'pause' : 'play');
-        if(window.lucide) lucide.createIcons();
-    }
+    playIcon.setAttribute('data-lucide', playing ? 'pause' : 'play');
+    lucide.createIcons();
 }
 
 audioPlayer.ontimeupdate = () => {
@@ -90,8 +87,7 @@ audioPlayer.ontimeupdate = () => {
 };
 
 progressBar.oninput = () => {
-    const percent = progressBar.value;
-    audioPlayer.currentTime = (percent / 100) * audioPlayer.duration;
+    audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
 };
 
 function nextBeat() {
@@ -102,6 +98,13 @@ function nextBeat() {
 function prevBeat() {
     currentBeatIndex = (currentBeatIndex - 1 + beats.length) % beats.length;
     startBeat(currentBeatIndex);
+}
+
+function filter(cat) {
+    renderBeats(cat);
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.innerText.toLowerCase() === cat || (cat === 'all' && btn.innerText === 'TODOS'));
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => renderBeats());
