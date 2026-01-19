@@ -1,64 +1,88 @@
 :root {
-    --accent: #1DB954; /* Verde Estilo Spotify */
+    --accent: #1DB954; /* Verde Kiwify/Spotify */
     --black: #000000;
-    --card-bg: #181818;
+    --card-bg: #121212;
     --text-white: #ffffff;
     --text-dim: #b3b3b3;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+body { background: var(--black); color: var(--text-white); padding-top: 90px; padding-bottom: 160px; }
 
-body { background: var(--black); color: var(--text-white); padding-top: 80px; padding-bottom: 160px; }
-
+/* Header */
 .navbar { position: fixed; top: 0; width: 100%; height: 70px; background: #000; display: flex; align-items: center; justify-content: center; z-index: 1000; border-bottom: 1px solid #1a1a1a; }
 .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; }
 .logo b { color: var(--accent); }
 
 /* Filtros */
-.filter-wrapper { display: flex; justify-content: center; margin: 20px 0; }
-.tabs { background: #121212; padding: 5px; border-radius: 50px; display: flex; gap: 5px; }
-.tab-btn { background: transparent; border: none; color: var(--text-dim); padding: 8px 20px; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-.tab-btn.active { background: #fff; color: #000; }
+.filter-wrapper { display: flex; justify-content: center; margin-bottom: 30px; }
+.tabs { background: #1a1a1a; padding: 5px; border-radius: 50px; display: flex; gap: 5px; }
+.tab-btn { background: transparent; border: none; color: var(--text-dim); padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 0.8rem; transition: 0.3s; }
+.tab-btn.active { background: var(--text-white); color: #000; }
 
-/* Grid */
-.beat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 20px; padding: 0 20px; max-width: 1100px; margin: 0 auto; }
+/* Grid Geral */
+.beat-grid { display: grid; gap: 12px; padding: 0 15px; max-width: 1100px; margin: 0 auto; }
 
-/* Card */
-.card { background: var(--card-bg); padding: 15px; border-radius: 10px; transition: 0.3s; }
-.card:hover { background: #282828; }
-.cover-box { position: relative; border-radius: 6px; overflow: hidden; aspect-ratio: 1/1; }
-.cover-box img { width: 100%; height: 100%; object-fit: cover; }
-.play-btn { position: absolute; bottom: 10px; right: 10px; width: 40px; height: 40px; background: var(--accent); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 5px 10px rgba(0,0,0,0.3); }
+/* --- MOBILE: Estilo Lista (Deitado) --- */
+@media (max-width: 767px) {
+    .card {
+        display: flex;
+        flex-direction: row; 
+        align-items: center;
+        background: var(--card-bg);
+        padding: 10px;
+        border-radius: 10px;
+        gap: 15px;
+    }
+    .cover-box { width: 80px; height: 80px; min-width: 80px; position: relative; }
+    .card-info { flex: 1; }
+    .card-info h3 { font-size: 1rem; margin-bottom: 4px; }
+    .card-info p { font-size: 0.75rem; color: var(--text-dim); }
+    .card-right { text-align: right; }
+    .price { font-size: 0.9rem; display: block; margin-bottom: 6px; font-weight: bold; color: var(--accent); }
+    .buy-link { padding: 6px 12px; font-size: 0.7rem; }
+}
 
-.card h3 { font-size: 1rem; margin: 12px 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card p { font-size: 0.75rem; color: var(--accent); font-weight: bold; margin-bottom: 12px; }
-.price { display: block; margin-bottom: 10px; font-weight: 800; }
-.buy-link { display: block; background: #fff; color: #000; text-decoration: none; text-align: center; padding: 10px; border-radius: 5px; font-size: 0.8rem; font-weight: 900; }
+/* --- DESKTOP: Estilo Grade --- */
+@media (min-width: 768px) {
+    .beat-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
+    .card { background: var(--card-bg); padding: 15px; border-radius: 12px; text-align: center; transition: 0.3s; border: 1px solid transparent; }
+    .card:hover { border-color: #333; background: #181818; }
+    .cover-box { width: 100%; aspect-ratio: 1/1; margin-bottom: 15px; position: relative; }
+    .card-info h3 { margin-bottom: 5px; font-size: 1.1rem; }
+    .card-info p { margin-bottom: 15px; color: var(--text-dim); }
+    .price { display: block; margin-bottom: 15px; font-size: 1.2rem; font-weight: 800; color: var(--accent); }
+    .buy-link { display: block; width: 100%; padding: 10px; }
+}
 
-/* Player Fixado */
-.player { position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid #222; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-.now-playing { display: flex; align-items: center; gap: 15px; width: 100%; }
-.now-playing img { width: 50px; height: 50px; border-radius: 4px; }
-.p-info strong { display: block; font-size: 0.9rem; }
-.p-info small { color: var(--text-dim); font-size: 0.75rem; }
+.cover-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+.play-btn { position: absolute; bottom: 8px; right: 8px; width: 40px; height: 40px; background: var(--accent); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 
-.p-controls { width: 100%; max-width: 500px; }
-.p-progress-container { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.p-progress-container span { font-size: 0.7rem; color: var(--text-dim); min-width: 35px; }
+.buy-link { background: #fff; color: #000; text-decoration: none; border-radius: 50px; font-weight: 900; text-transform: uppercase; }
+
+/* Player */
+.player { position: fixed; bottom: 0; width: 100%; background: #0b0b0b; border-top: 1px solid #222; padding: 20px; z-index: 1001; }
+.now-playing { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+.now-playing img { width: 50px; height: 50px; border-radius: 4px; object-fit: cover; }
+.p-info strong { display: block; font-size: 1rem; }
+.p-info small { color: var(--accent); font-size: 0.8rem; }
 
 #progress-bar { 
-    flex: 1; -webkit-appearance: none; height: 4px; border-radius: 2px; 
-    background: linear-gradient(to right, var(--accent) 0%, #333 0%); 
-    cursor: pointer;
+    width: 100%; -webkit-appearance: none; height: 4px; border-radius: 2px;
+    background: #333; cursor: pointer;
 }
 #progress-bar::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; background: #fff; border-radius: 50%; }
 
-.p-btns-wrapper { display: flex; justify-content: center; align-items: center; gap: 30px; }
-.btn-ctrl { background: none; border: none; color: #fff; cursor: pointer; }
+.p-btns-wrapper { display: flex; justify-content: center; align-items: center; gap: 30px; margin-top: 15px; }
+.btn-ctrl { background: none; border: none; color: #fff; cursor: pointer; opacity: 0.8; }
+.btn-ctrl:hover { opacity: 1; }
 .play-main-wrapper { width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
+.p-progress-container { display: flex; align-items: center; gap: 10px; }
+.p-progress-container span { font-size: 0.75rem; color: var(--text-dim); min-width: 35px; }
+
 @media (min-width: 768px) {
-    .player { flex-direction: row; justify-content: space-between; height: 100px; padding: 0 30px; }
-    .now-playing { width: 300px; }
-    .p-controls { flex: 1; }
+    .player { display: flex; justify-content: space-between; align-items: center; height: 100px; padding: 0 40px; }
+    .now-playing { margin-bottom: 0; width: 300px; }
+    .p-controls { flex: 1; max-width: 600px; }
 }

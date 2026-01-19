@@ -13,23 +13,16 @@ let currentBeatIndex = 0;
 const audioPlayer = new Audio();
 const playIcon = document.getElementById('masterPlayIcon');
 const progressBar = document.getElementById('progress-bar');
-const currentTimeDisplay = document.getElementById('current-time');
-const durationTimeDisplay = document.getElementById('duration-time');
 
 function formatFileName(text) {
     return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ç/g, "c").replace(/\s+/g, "");
 }
 
-function formatTime(seconds) {
-    if (isNaN(seconds)) return "0:00";
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60);
-    return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-}
-
 function renderBeats(filterCat = 'all') {
     const grid = document.getElementById('beatGrid');
+    if(!grid) return;
     grid.innerHTML = '';
+    
     const filtered = filterCat === 'all' ? beats : beats.filter(b => b.cat === filterCat);
 
     filtered.forEach((beat) => {
@@ -42,31 +35,38 @@ function renderBeats(filterCat = 'all') {
                         <i data-lucide="play" fill="black" size="20"></i>
                     </button>
                 </div>
-                <h3>${beat.name}</h3>
-                <p>${beat.cat.toUpperCase()} • ${beat.bpm} BPM</p>
-                <div class="card-footer">
+                <div class="card-info">
+                    <h3>${beat.name}</h3>
+                    <p>${beat.cat.toUpperCase()} • ${beat.bpm} BPM</p>
+                </div>
+                <div class="card-right">
                     <span class="price">${beat.price}</span>
                     <a href="${beat.link}" target="_blank" class="buy-link">COMPRAR</a>
                 </div>
             </article>
         `;
     });
-    lucide.createIcons();
+    if(window.lucide) lucide.createIcons();
 }
 
 function startBeat(index) {
     currentBeatIndex = index;
     const beat = beats[currentBeatIndex];
+    
     document.getElementById('p-title').innerText = beat.name;
-    document.querySelector('.p-info small').innerText = `${beat.bpm} BPM | k3vin Beatz`;
+    document.getElementById('p-bpm').innerText = `${beat.cat.toUpperCase()} | ${beat.bpm} BPM`;
     document.getElementById('p-img').src = beat.img;
+
     audioPlayer.src = `beats/${formatFileName(beat.name)}.mp3`;
     audioPlayer.play();
     updatePlayIcon(true);
 }
 
 function toggleAudio() {
-    if (!audioPlayer.src) return;
+    if (!audioPlayer.src) {
+        startBeat(0);
+        return;
+    }
     audioPlayer.paused ? audioPlayer.play() : audioPlayer.pause();
     updatePlayIcon(!audioPlayer.paused);
 }
@@ -81,8 +81,14 @@ audioPlayer.ontimeupdate = () => {
         const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
         progressBar.value = percent;
         progressBar.style.background = `linear-gradient(to right, var(--accent) ${percent}%, #333 ${percent}%)`;
-        currentTimeDisplay.innerText = formatTime(audioPlayer.currentTime);
-        durationTimeDisplay.innerText = formatTime(audioPlayer.duration);
+        
+        const curMin = Math.floor(audioPlayer.currentTime / 60);
+        const curSec = Math.floor(audioPlayer.currentTime % 60);
+        const durMin = Math.floor(audioPlayer.duration / 60);
+        const durSec = Math.floor(audioPlayer.duration % 60);
+        
+        document.getElementById('current-time').innerText = `${curMin}:${curSec < 10 ? '0' : ''}${curSec}`;
+        document.getElementById('duration-time').innerText = `${durMin}:${durSec < 10 ? '0' : ''}${durSec}`;
     }
 };
 
