@@ -9,53 +9,60 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
 body { background: var(--black); color: var(--text-white); padding-top: 90px; padding-bottom: 160px; }
 
-.navbar { position: fixed; top: 0; width: 100%; height: 70px; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 1000; border-bottom: 1px solid #1a1a1a; backdrop-filter: blur(10px); }
+.navbar { position: fixed; top: 0; width: 100%; height: 70px; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center; z-index: 1000; border-bottom: 1px solid #1a1a1a; backdrop-filter: blur(10px); }
 .logo { font-size: 1.5rem; font-weight: 800; }
 .logo b { color: var(--accent); }
 
 .filter-wrapper { display: flex; justify-content: center; margin-bottom: 30px; }
 .tabs { background: #1a1a1a; padding: 5px; border-radius: 50px; display: flex; gap: 5px; }
-.tab-btn { background: transparent; border: none; color: var(--text-dim); padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: bold; }
+.tab-btn { background: transparent; border: none; color: var(--text-dim); padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: bold; font-size: 0.8rem; transition: 0.3s; }
 .tab-btn.active { background: var(--text-white); color: #000; }
 
 .beat-grid { display: grid; gap: 15px; padding: 0 20px; max-width: 1100px; margin: 0 auto; }
 
 /* Mobile Lista */
 @media (max-width: 767px) {
-    .card { display: flex; align-items: center; background: var(--card-bg); padding: 10px; border-radius: 10px; gap: 15px; }
-    .cover-box { width: 80px; height: 80px; min-width: 80px; position: relative; }
-    .card-info { flex: 1; }
-    .card-info h3 { font-size: 1rem; }
-    .price { color: var(--accent); font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; display: block; }
+    .card { display: flex; align-items: center; background: var(--card-bg); padding: 12px; border-radius: 12px; gap: 15px; }
+    .cover-box { width: 85px; height: 85px; min-width: 85px; position: relative; }
+    .card-info { flex: 1; overflow: hidden; }
+    .card-info h3 { font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-info p { font-size: 0.75rem; color: var(--text-dim); }
+    .card-right { text-align: right; }
+    .price { font-size: 0.95rem; font-weight: bold; color: var(--accent); display: block; margin-bottom: 6px; }
 }
 
 /* Desktop Grade */
 @media (min-width: 768px) {
     .beat-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
-    .card { background: var(--card-bg); padding: 15px; border-radius: 12px; text-align: center; }
-    .cover-box { width: 100%; aspect-ratio: 1/1; position: relative; margin-bottom: 10px; }
-    .price { color: var(--accent); font-weight: 800; font-size: 1.2rem; margin: 10px 0; display: block; }
+    .card { background: var(--card-bg); padding: 18px; border-radius: 15px; text-align: center; border: 1px solid #1a1a1a; transition: 0.3s; }
+    .card:hover { transform: translateY(-5px); border-color: #333; }
+    .cover-box { width: 100%; aspect-ratio: 1/1; position: relative; margin-bottom: 15px; }
+    .price { font-size: 1.25rem; font-weight: 800; color: var(--accent); display: block; margin: 15px 0; }
 }
 
-.cover-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
-.play-btn { position: absolute; bottom: 8px; right: 8px; width: 35px; height: 35px; background: var(--accent); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.cover-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.play-btn { position: absolute; bottom: 8px; right: 8px; width: 42px; height: 42px; background: var(--accent); border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 
 .buy-link { 
-    background: #fff; color: #000; border: none; border-radius: 50px; padding: 8px 15px; 
-    font-weight: 900; text-transform: uppercase; cursor: pointer; font-size: 0.75rem;
+    display: inline-block; background: #fff; color: #000; text-decoration: none; border-radius: 50px; 
+    padding: 10px 20px; font-weight: 900; text-transform: uppercase; font-size: 0.75rem; transition: 0.2s;
 }
+.buy-link:hover { background: var(--accent); color: white; transform: scale(1.05); }
 
 /* Player */
-.player { position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid #222; padding: 15px; z-index: 1001; }
-.now-playing { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.now-playing img { width: 45px; height: 45px; border-radius: 4px; }
-.p-progress-container { display: flex; align-items: center; gap: 10px; width: 100%; }
-#progress-bar { flex: 1; accent-color: var(--accent); cursor: pointer; }
-.p-btns-wrapper { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 10px; }
-.play-main-wrapper { width: 40px; height: 40px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.player { position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid #222; padding: 15px 25px; z-index: 1001; }
+.now-playing { display: flex; align-items: center; gap: 12px; }
+.now-playing img { width: 50px; height: 50px; border-radius: 6px; }
+.p-info strong { display: block; font-size: 0.95rem; }
+.p-info small { color: var(--accent); font-size: 0.8rem; }
+.p-progress-container { display: flex; align-items: center; gap: 10px; width: 100%; margin: 10px 0; }
+#progress-bar { flex: 1; accent-color: var(--accent); cursor: pointer; height: 4px; }
+.p-btns-wrapper { display: flex; justify-content: center; align-items: center; gap: 25px; }
+.btn-ctrl { background: none; border: none; color: #fff; cursor: pointer; }
+.play-main-wrapper { width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
 @media (min-width: 768px) {
-    .player { display: flex; justify-content: space-between; align-items: center; height: 90px; }
-    .now-playing { margin-bottom: 0; width: 250px; }
-    .p-controls { flex: 1; max-width: 500px; }
+    .player { display: flex; justify-content: space-between; align-items: center; height: 100px; }
+    .p-controls { flex: 1; max-width: 600px; display: flex; flex-direction: column; align-items: center; }
+    .p-progress-container { margin: 5px 0; }
 }

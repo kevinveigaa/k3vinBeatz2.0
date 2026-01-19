@@ -40,19 +40,12 @@ function renderBeats(filterCat = 'all') {
                 </div>
                 <div class="card-right">
                     <span class="price">${beat.price}</span>
-                    <button data-kiwify-checkout="${beat.link}" data-kiwify-magical="true" class="buy-link">COMPRAR</button>
+                    <a href="${beat.link}" target="_blank" class="buy-link">COMPRAR</a>
                 </div>
             </article>
         `;
     });
-
     lucide.createIcons();
-    
-    // FORÇA O POPUP DA KIWIFY A FUNCIONAR
-    if (typeof KiwifyWidget !== 'undefined') {
-        KiwifyWidget.init();
-    }
-    
     syncUI();
 }
 
@@ -73,8 +66,8 @@ function toggleAudio() {
 
 function syncUI() {
     const isPlaying = !audioPlayer.paused && audioPlayer.src !== "";
-    const masterPlayBtn = document.getElementById('masterPlayIcon');
-    if (masterPlayBtn) masterPlayBtn.setAttribute('data-lucide', isPlaying ? 'pause' : 'play');
+    const masterPlayIcon = document.getElementById('masterPlayIcon');
+    if (masterPlayIcon) masterPlayIcon.setAttribute('data-lucide', isPlaying ? 'pause' : 'play');
 
     document.querySelectorAll('.card-icon').forEach((icon) => {
         const idx = parseInt(icon.getAttribute('data-index'));
