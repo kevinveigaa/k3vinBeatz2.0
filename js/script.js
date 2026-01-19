@@ -13,10 +13,12 @@ let currentBeatIndex = null;
 const audioPlayer = new Audio();
 const progressBar = document.getElementById('progress-bar');
 
+// Formata o nome para buscar o arquivo .mp3 (ex: "Retroceder" -> "retroceder.mp3")
 function formatFileName(text) {
     return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ç/g, "c").replace(/\s+/g, "");
 }
 
+// Renderiza os cards na tela
 function renderBeats(filterCat = 'all') {
     const grid = document.getElementById('beatGrid');
     grid.innerHTML = '';
@@ -49,33 +51,51 @@ function renderBeats(filterCat = 'all') {
     syncUI();
 }
 
+// Inicia um novo beat ou alterna Play/Pause se for o mesmo
 function startBeat(index) {
-    if (currentBeatIndex === index) { toggleAudio(); return; }
+    if (currentBeatIndex === index) {
+        toggleAudio();
+        return;
+    }
     currentBeatIndex = index;
     const beat = beats[currentBeatIndex];
     document.getElementById('p-title').innerText = beat.name;
+    document.getElementById('p-bpm').innerText = `${beat.bpm} BPM | k3vin Beatz`;
     document.getElementById('p-img').src = beat.img;
     audioPlayer.src = `beats/${formatFileName(beat.name)}.mp3`;
     audioPlayer.play();
 }
 
+// Alterna entre Play e Pause
 function toggleAudio() {
     if (currentBeatIndex === null) { startBeat(0); return; }
     audioPlayer.paused ? audioPlayer.play() : audioPlayer.pause();
 }
 
+// Sincroniza os ícones de Play/Pause em toda a página
 function syncUI() {
     const isPlaying = !audioPlayer.paused && audioPlayer.src !== "";
+    
+    // Ícone do Player principal
     const masterPlayIcon = document.getElementById('masterPlayIcon');
-    if (masterPlayIcon) masterPlayIcon.setAttribute('data-lucide', isPlaying ? 'pause' : 'play');
+    if (masterPlayIcon) {
+        masterPlayIcon.setAttribute('data-lucide', isPlaying ? 'pause' : 'play');
+    }
 
+    // Ícones dos Cards
     document.querySelectorAll('.card-icon').forEach((icon) => {
         const idx = parseInt(icon.getAttribute('data-index'));
-        icon.setAttribute('data-lucide', (isPlaying && idx === currentBeatIndex) ? 'pause' : 'play');
+        if (isPlaying && idx === currentBeatIndex) {
+            icon.setAttribute('data-lucide', 'pause');
+        } else {
+            icon.setAttribute('data-lucide', 'play');
+        }
     });
+
     lucide.createIcons();
 }
 
+// Eventos do Audio Player
 audioPlayer.onplay = syncUI;
 audioPlayer.onpause = syncUI;
 audioPlayer.onended = () => { syncUI(); nextBeat(); };
@@ -89,15 +109,38 @@ audioPlayer.ontimeupdate = () => {
     }
 };
 
-progressBar.oninput = () => { audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration; };
-function nextBeat() { startBeat((currentBeatIndex + 1) % beats.length); }
-function prevBeat() { startBeat((currentBeatIndex - 1 + beats.length) % beats.length); }
+progressBar.oninput = () => {
+    audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
+};
 
+// Funções de Próximo e Anterior
+function nextBeat() {
+    startBeat((currentBeatIndex + 1) % beats.length);
+}
+
+function prevBeat() {
+    startBeat((currentBeatIndex - 1 + beats.length) % beats.length);
+}
+
+// Função de Filtro com correção para o botão R&B
 function filter(cat) {
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.innerText.toLowerCase() === cat || (cat === 'all' && btn.innerText === 'TODOS'));
+    const tabs = document.querySelectorAll('.tab-btn');
+    
+    tabs.forEach(btn => {
+        // Normaliza o texto do botão para comparar (Ex: "R&B" vira "rnb")
+        const btnText = btn.innerText.toLowerCase().replace('&', 'n').replace('todos', 'all');
+        
+        if (btnText === cat) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
     });
+
     renderBeats(cat);
 }
 
-document.addEventListener('DOMContentLoaded', () => renderBeats());
+// Inicialização ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    renderBeats();
+});
