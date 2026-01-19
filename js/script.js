@@ -9,22 +9,36 @@ const beats = [
     { id: 8, name: "Desista", cat: "rnb", price: "R$ 130", link: "https://chk.eduzz.com/Q9N5JZ4K01", img: "capas/rnb.png" }
 ];
 
+const audioPlayer = document.getElementById('main-audio');
+const masterPlay = document.getElementById('masterPlay');
+
+// Função para formatar o nome do ficheiro conforme a tua regra
+function formatFileName(text) {
+    return text.toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // Remove acentos
+        .replace(/ç/g, "c")              // Troca ç por c
+        .replace(/\s+/g, "");            // Remove espaços (tudo junto)
+}
+
 function renderBeats(filterCat = 'all') {
     const grid = document.getElementById('beatGrid');
+    if(!grid) return;
     grid.innerHTML = '';
+    
     const filtered = filterCat === 'all' ? beats : beats.filter(b => b.cat === filterCat);
 
     filtered.forEach(beat => {
         grid.innerHTML += `
             <article class="card">
                 <div class="cover-box">
-                    <img src="${beat.img}" alt="${beat.name}" onerror="this.src='https://via.placeholder.com/400?text=Capa+Indisponivel'">
+                    <img src="${beat.img}" alt="${beat.name}" onerror="this.src='https://via.placeholder.com/400?text=Beat'">
                     <button class="play-btn" onclick="setPlayer('${beat.name}', '${beat.img}')">
-                        <i data-lucide="play" fill="black"></i>
+                        <i data-lucide="play" fill="black" size="20"></i>
                     </button>
                 </div>
                 <h3>${beat.name}</h3>
-                <p>${beat.cat.toUpperCase()} • k3vin Beatz</p>
+                <p>${beat.cat.toUpperCase()}</p>
                 <div class="card-footer">
                     <span class="price">${beat.price}</span>
                     <a href="${beat.link}" target="_blank" class="buy-link">COMPRAR</a>
@@ -32,6 +46,29 @@ function renderBeats(filterCat = 'all') {
             </article>
         `;
     });
+    lucide.createIcons();
+}
+
+function setPlayer(name, img) {
+    document.getElementById('p-title').innerText = name;
+    document.getElementById('p-img').src = img;
+
+    const fileName = formatFileName(name);
+    audioPlayer.src = `beats/${fileName}.mp3`;
+    
+    audioPlayer.play();
+    masterPlay.setAttribute('data-lucide', 'pause-circle');
+    lucide.createIcons();
+}
+
+function toggleAudio() {
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+        masterPlay.setAttribute('data-lucide', 'pause-circle');
+    } else {
+        audioPlayer.pause();
+        masterPlay.setAttribute('data-lucide', 'play-circle');
+    }
     lucide.createIcons();
 }
 
@@ -43,15 +80,4 @@ function filter(cat) {
     });
 }
 
-function setPlayer(name, img) {
-    document.getElementById('p-title').innerText = name;
-    document.getElementById('p-img').src = img;
-    
-    const imgEl = document.getElementById('p-img');
-    imgEl.style.transform = 'scale(1.1)';
-    setTimeout(() => imgEl.style.transform = 'scale(1)', 200);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    renderBeats();
-});
+document.addEventListener('DOMContentLoaded', () => renderBeats());

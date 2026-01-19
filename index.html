@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>k3vin Beatz | Loja Oficial</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
@@ -17,25 +17,14 @@
                 </div>
                 <span>k3vin <b>Beatz</b></span>
             </div>
-            
-            <nav class="tabs-header">
-                <a href="#" class="active">HOME</a>
-                <a href="#">BEATS</a>
-                <a href="#">LICENÇAS</a>
-                <a href="#">CONTATO</a>
-            </nav>
-
-            <div class="cart-btn">
-                <i data-lucide="shopping-cart"></i>
-            </div>
         </div>
     </header>
 
     <main>
         <section class="hero">
-            <span class="badge">PREMIUM BEAT STORE</span>
+            <span class="badge">PREMIUM BEATS</span>
             <h1>TRANSFORME SUA LETRA EM HIT</h1>
-            <p>Beats exclusivos de Trap, Funk e R&B. Entrega imediata via Eduzz.</p>
+            <p>Beats exclusivos para a tua próxima track.</p>
         </section>
 
         <div class="filter-wrapper">
@@ -43,7 +32,6 @@
                 <button class="tab-btn active" onclick="filter('all')">Todos</button>
                 <button class="tab-btn" onclick="filter('trap')">Trap</button>
                 <button class="tab-btn" onclick="filter('rnb')">R&B</button>
-                <button class="tab-btn" onclick="filter('rap')">Rap</button>
                 <button class="tab-btn" onclick="filter('funk')">Funk</button>
             </div>
         </div>
@@ -55,27 +43,21 @@
         <div class="now-playing">
             <img src="https://i.imgur.com/1hoKT24.jpeg" id="p-img">
             <div class="p-info">
-                <strong id="p-title">Selecione um beat</strong>
+                <strong id="p-title">Seleciona um beat</strong>
                 <small>k3vin Beatz</small>
             </div>
         </div>
 
         <div class="p-controls">
             <div class="p-btns">
-                <i data-lucide="shuffle" size="18"></i>
-                <i data-lucide="skip-back"></i>
-                <i data-lucide="play-circle" class="play-main"></i>
-                <i data-lucide="skip-forward"></i>
-                <i data-lucide="repeat" size="18"></i>
+                <i data-lucide="skip-back" class="btn-ctrl"></i>
+                <i data-lucide="play-circle" class="play-main" id="masterPlay" onclick="toggleAudio()"></i>
+                <i data-lucide="skip-forward" class="btn-ctrl"></i>
             </div>
-            <div class="playback-bar"><div class="progress"></div></div>
-        </div>
-
-        <div class="p-volume">
-            <i data-lucide="volume-2" size="18"></i>
-            <div class="vol-bar"></div>
         </div>
     </footer>
+
+    <audio id="main-audio"></audio>
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/script.js"></script>
