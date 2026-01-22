@@ -12,7 +12,7 @@ const beats = [
 let audio = new Audio();
 let current = null;
 
-// Normaliza o nome do arquivo
+// Normaliza nome do arquivo
 function normalizeFileName(name){
     return name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/ç/g,"c").replace(/\s+/g,"");
 }
@@ -49,11 +49,11 @@ function render(list){
         </article>
         `;
     });
-    lucide.createIcons(); // renderiza ícones do Lucide
+    lucide.createIcons();
     updatePlayIcons();
 }
 
-// Toca o preview de 45 segundos e alterna ícone play/pause
+// Toca preview de 45s e alterna ícone Play/Pause
 function playPreview(i){
     if(current === i && !audio.paused){
         audio.pause();
@@ -68,16 +68,14 @@ function playPreview(i){
     audio.ontimeupdate = () => {
         let p = (audio.currentTime / 45) * 100;
         document.getElementById(`bar-${i}`).style.width = p + "%";
-        if(audio.currentTime >= 45){
-            audio.pause();
-        }
+        if(audio.currentTime >= 45) audio.pause();
     };
 
     audio.onpause = updatePlayIcons;
     audio.onended = updatePlayIcons;
 }
 
-// Atualiza os ícones play/pause
+// Atualiza os ícones Play/Pause
 function updatePlayIcons(){
     beats.forEach((b,i)=>{
         const icon = document.getElementById(`icon-${i}`);
@@ -93,10 +91,19 @@ function updatePlayIcons(){
 
 // Filtra por categoria
 function filterCat(cat){
+    const tabs = document.querySelectorAll('.tab-btn');
+    tabs.forEach(btn=>{
+        const btnText = btn.innerText.toLowerCase().replace('&','n').replace('todos','all');
+        if(btnText === cat){
+            btn.classList.add('active'); // botão ativo fica branco
+        } else {
+            btn.classList.remove('active'); // outros voltam ao normal
+        }
+    });
     render(cat==="all"?beats:beats.filter(b=>b.cat===cat));
 }
 
-// Filtra por BPM
+// Filtra por BPM acima ou abaixo de 120
 function filterBpm(type){
     if(type==="above"){
         render(beats.filter(b=>b.bpm > 120));
@@ -108,7 +115,7 @@ function filterBpm(type){
 // Mostra todos
 function filterAll(){render(beats)}
 
-// Inicializa
+// Inicializa ao carregar a página
 document.addEventListener("DOMContentLoaded", ()=>{
     render(beats);
 });
