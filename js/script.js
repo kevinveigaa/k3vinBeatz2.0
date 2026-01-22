@@ -12,13 +12,9 @@ const beats = [
 let audio = new Audio();
 let current = null;
 
-// Normaliza o nome do arquivo para combinar com seus arquivos mp3
+// Normaliza o nome do arquivo
 function normalizeFileName(name){
-    return name.toLowerCase()
-               .normalize("NFD")
-               .replace(/[\u0300-\u036f]/g,"") // remove acentos
-               .replace(/ç/g,"c")
-               .replace(/\s+/g,""); // remove espaços
+    return name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/ç/g,"c").replace(/\s+/g,"");
 }
 
 // Renderiza todos os beats
@@ -31,9 +27,12 @@ function render(list){
             <div class="cover-box">
                 <img src="${b.img}">
                 ${b.badge?`<span class="badge ${b.badge}">${b.badge==="best"?"Mais vendido":b.badge==="new"?"Novo":"Exclusivo"}</span>`:""}
+                <button class="play-btn" id="play-btn-${i}" onclick="playPreview(${i})">
+                    <i id="icon-${i}" data-lucide="play" fill="black"></i>
+                </button>
             </div>
 
-            <div class="preview-box" onclick="playPreview(${i})">
+            <div class="preview-box">
                 <div class="preview-label">Escutar preview</div>
                 <div class="preview-progress"><span id="bar-${i}"></span></div>
             </div>
@@ -50,9 +49,11 @@ function render(list){
         </article>
         `;
     });
+    lucide.createIcons(); // renderiza ícones do Lucide
+    updatePlayIcons();
 }
 
-// Toca o preview de 45 segundos
+// Toca o preview de 45 segundos e alterna ícone play/pause
 function playPreview(i){
     if(current === i && !audio.paused){
         audio.pause();
@@ -62,6 +63,8 @@ function playPreview(i){
     audio.src = `beats/${normalizeFileName(beats[i].name)}.mp3`;
     audio.currentTime = 0;
     audio.play();
+    updatePlayIcons();
+
     audio.ontimeupdate = () => {
         let p = (audio.currentTime / 45) * 100;
         document.getElementById(`bar-${i}`).style.width = p + "%";
@@ -69,6 +72,23 @@ function playPreview(i){
             audio.pause();
         }
     };
+
+    audio.onpause = updatePlayIcons;
+    audio.onended = updatePlayIcons;
+}
+
+// Atualiza os ícones play/pause
+function updatePlayIcons(){
+    beats.forEach((b,i)=>{
+        const icon = document.getElementById(`icon-${i}`);
+        if(!icon) return;
+        if(current === i && !audio.paused){
+            icon.setAttribute("data-lucide","pause");
+        } else {
+            icon.setAttribute("data-lucide","play");
+        }
+    });
+    lucide.createIcons();
 }
 
 // Filtra por categoria
