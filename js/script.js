@@ -57,6 +57,7 @@ if(audio.currentTime>=45){audio.pause();}
 };
 }
 
+
 function filterCat(cat){render(beats.filter(b=>cat==='all'?true:b.cat===cat))}
 function filterBpm(type){
 if(type==='above') render(beats.filter(b=>b.bpm>120))
