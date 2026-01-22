@@ -29,7 +29,7 @@ body {
 .bpm-filter { display: flex; gap: 8px; }
 
 /* Títulos */
-h2 { text-align: center; font-size: 1.8rem; margin: 40px 0 25px; text-transform: uppercase; letter-spacing: 2px; }
+h2 { text-align: center; font-size: 1.0rem; margin: 40px 0 25px; text-transform: uppercase; letter-spacing: 2px; }
 
 /* Grid */
 .beat-grid { display: grid; gap: 20px; padding: 0 20px; max-width: 1200px; margin: 0 auto 60px; }
