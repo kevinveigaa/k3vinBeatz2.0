@@ -1,57 +1,46 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K3VIN BEATZ | Loja Oficial</title>
-    <link rel="stylesheet" href="css/style.css">
-    
-    <script src="https://unpkg.com/lucide@latest"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K3VIN BEATZ | Loja Oficial</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
 
-    <header class="navbar">
-        <div class="logo">K3VIN <b>BEATZ</b></div>
-    </header>
+<header class="navbar">
+    <div class="logo">K3VIN <b>BEATZ</b></div>
+    <div class="social-links">
+        <a href="https://wa.me/+5511943750307" target="_blank" class="whatsapp">
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" alt="WhatsApp">
+        </a>
+        <a href="https://www.instagram.com/prod_k3vinbeatz" target="_blank" class="instagram">
+            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram">
+        </a>
+    </div>
+</header>
 
-    <section class="filter-wrapper">
-        <div class="tabs">
-            <button class="tab-btn active" onclick="filter('all')">TODOS</button>
-            <button class="tab-btn" onclick="filter('trap')">TRAP</button>
-            <button class="tab-btn" onclick="filter('rnb')">R&B</button>
-            <button class="tab-btn" onclick="filter('rap')">RAP</button>
-        </div>
-    </section>
+<section class="filter-wrapper">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="filterCat('all')">TODOS</button>
+        <button class="tab-btn" onclick="filterCat('trap')">TRAP</button>
+        <button class="tab-btn" onclick="filterCat('rnb')">R&B</button>
+        <button class="tab-btn" onclick="filterCat('rap')">RAP</button>
+    </div>
+    <div class="bpm-filter">
+        <button onclick="filterBpm('above')">Acima 120 BPM</button>
+        <button onclick="filterBpm('below')">Abaixo 120 BPM</button>
+    </div>
+</section>
 
-    <main id="beatGrid" class="beat-grid">
-        </main>
+<main id="beatGrid" class="beat-grid"></main>
 
-    <footer class="player">
-        <div class="now-playing">
-            <img src="https://i.imgur.com/WjvDH0b.jpeg" id="p-img">
-            <div class="p-info">
-                <strong id="p-title">Selecione um beat</strong>
-                <small id="p-bpm">k3vin Beatz</small>
-            </div>
-        </div>
+<footer class="license-footer">
+    <p>Licença básica inclui uso no Spotify, YouTube e redes sociais.</p>
+    <small>Big Exclusivo: Espanhola</small>
+</footer>
 
-        <div class="p-controls">
-            <div class="p-progress-container">
-                <span id="current-time">0:00</span>
-                <input type="range" id="progress-bar" value="0" min="0" max="100">
-                <span id="duration-time">0:00</span>
-            </div>
-
-            <div class="p-btns-wrapper">
-                <button class="btn-ctrl" onclick="prevBeat()"><i data-lucide="skip-back"></i></button>
-                <div class="play-main-wrapper" onclick="toggleAudio()">
-                    <i data-lucide="play" id="masterPlayIcon" fill="black"></i>
-                </div>
-                <button class="btn-ctrl" onclick="nextBeat()"><i data-lucide="skip-forward"></i></button>
-            </div>
-        </div>
-    </footer>
-
-    <script src="js/script.js"></script>
+<script src="js/script.js"></script>
 </body>
 </html>
