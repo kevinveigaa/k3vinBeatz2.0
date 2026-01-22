@@ -1,44 +1,61 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>K3VIN BEATZ | Loja Oficial</title>
-<link rel="stylesheet" href="css/style.css">
-<script src="https://unpkg.com/lucide@latest"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K3VIN BEATZ | Loja Oficial</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
 
 <header class="navbar">
-    <div class="logo">K3VIN <b>BEATZ</b></div>
-    <div class="social-links">
-        <a href="https://wa.me/+5511943750307" target="_blank" class="whatsapp">
-            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/whatsapp.svg" alt="WhatsApp">
-        </a>
-        <a href="https://www.instagram.com/prod_k3vinbeatz" target="_blank" class="instagram">
-            <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram">
-        </a>
-    </div>
+  <div class="logo">K3VIN <b>BEATZ</b></div>
+  <div class="social-icons">
+    <a href="https://wa.me/+5511943750307" target="_blank"><img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp"/></a>
+    <a href="https://www.instagram.com/prod_k3vinbeatz" target="_blank"><img src="https://img.icons8.com/ios-glyphs/24/ffffff/instagram-new.png" alt="Instagram"/></a>
+  </div>
 </header>
 
 <section class="filter-wrapper">
-    <div class="tabs">
-        <button class="tab-btn active" onclick="filterCat('all')">TODOS</button>
-        <button class="tab-btn" onclick="filterCat('trap')">TRAP</button>
-        <button class="tab-btn" onclick="filterCat('rnb')">R&B</button>
-        <button class="tab-btn" onclick="filterCat('rap')">RAP</button>
-    </div>
-    <div class="bpm-filter">
-        <button onclick="filterBpm('above')">Acima 120 BPM</button>
-        <button onclick="filterBpm('below')">Abaixo 120 BPM</button>
-    </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="filterCat('all', event)">Todos</button>
+    <button class="tab-btn" onclick="filterCat('trap', event)">Trap</button>
+    <button class="tab-btn" onclick="filterCat('rnb', event)">R&B</button>
+    <button class="tab-btn" onclick="filterCat('rap', event)">Rap</button>
+  </div>
+  <div class="bpm-filter">
+    <button class="tab-btn" onclick="filterBpm('above', event)">Acima de 120 BPM</button>
+    <button class="tab-btn" onclick="filterBpm('below', event)">Abaixo de 120 BPM</button>
+  </div>
 </section>
 
+<section class="highlights">
+  <h2>Destaques</h2>
+  <div class="highlight-grid" id="highlightGrid"></div>
+</section>
+
+<h2 style="text-align:center; margin-bottom:25px;">Catálogo</h2>
 <main id="beatGrid" class="beat-grid"></main>
 
+<section class="testimonials">
+  <h2>Depoimentos</h2>
+  <div class="testimonial-grid">
+    <div class="testimonial-card"><p>"Os beats são incríveis!"</p><strong>Lucas M.</strong></div>
+    <div class="testimonial-card"><p>"Perfeito para minhas produções!"</p><strong>Ana S.</strong></div>
+    <div class="testimonial-card"><p>"Muito profissional e rápido."</p><strong>Thiago P.</strong></div>
+    <div class="testimonial-card"><p>"Recomendo demais!"</p><strong>Mariana L.</strong></div>
+    <div class="testimonial-card"><p>"Qualidade top."</p><strong>Rafael F.</strong></div>
+    <div class="testimonial-card"><p>"Timbre único nos graves."</p><strong>Bruno K.</strong></div>
+    <div class="testimonial-card"><p>"Melhor custo benefício."</p><strong>Vitor J.</strong></div>
+    <div class="testimonial-card"><p>"Os beats são incríveis!"</p><strong>Lucas M.</strong></div>
+    <div class="testimonial-card"><p>"Perfeito para minhas produções!"</p><strong>Ana S.</strong></div>
+  </div>
+</section>
+
 <footer class="license-footer">
-    <p>Licença básica inclui uso no Spotify, YouTube e redes sociais.</p>
-    <small>Big Exclusivo: Espanhola</small>
+  <p>Licença básica inclui uso no Spotify, YouTube e redes sociais.</p>
+  <small>Mais vendido, Novo e Exclusivo garantidos.</small>
 </footer>
 
 <script src="js/script.js"></script>
