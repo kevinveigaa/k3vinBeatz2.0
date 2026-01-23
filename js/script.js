@@ -13,13 +13,8 @@ let favorites = JSON.parse(localStorage.getItem('favBeats')) || [];
 let currentId = null;
 
 const wavesurfer = WaveSurfer.create({
-    container: '#waveform',
-    waveColor: '#222',
-    progressColor: '#8a2be2',
-    cursorColor: '#fff',
-    barWidth: 2,
-    height: 35,
-    responsive: true
+    container: '#waveform', waveColor: '#222', progressColor: '#8a2be2',
+    cursorColor: '#fff', barWidth: 2, height: 35, responsive: true
 });
 
 function render(list) {
@@ -39,7 +34,7 @@ function render(list) {
             <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(event, ${b.id})">❤</button>
             <div class="price-area">
                 <span class="price-tag">${b.price}</span>
-                <a href="${b.link}" class="btn-buy" target="_blank" id="btn-buy-${b.id}">COMPRAR</a>
+                <a href="${b.link}" class="btn-buy" target="_blank">COMPRAR</a>
             </div>
         </div>`;
     });
@@ -54,32 +49,31 @@ function loadBeat(id) {
     document.getElementById('p-img-player').src = beat.img;
     document.getElementById('p-name-player').innerText = beat.name;
     
-    // Reseta visual ao carregar novo beat
+    // AVISO APARECE EM CINZA AO DAR PLAY
     const msg = document.getElementById('preview-msg');
+    msg.style.visibility = "visible";
     msg.innerText = "Você está ouvindo um preview, compre o beat completo!";
-    msg.style.color = "#666";
+    msg.style.color = "var(--gray)";
+    
     document.querySelectorAll('.btn-buy').forEach(b => b.classList.remove('blink'));
 
     wavesurfer.load(beat.file);
     wavesurfer.once('ready', () => wavesurfer.play());
 }
 
-// TRAVA EXATA 45 SEGUNDOS
+// LÓGICA 45S + MUDANÇA PARA ROXO + TODOS BOTÕES PISCANDO
 wavesurfer.on('audioprocess', () => {
     if (wavesurfer.getCurrentTime() >= 45) {
         wavesurfer.pause();
         wavesurfer.setTime(0);
         
-        // MENSAGEM MUDA PARA ROXO
         const msg = document.getElementById('preview-msg');
-        msg.innerText = "PREVIEW ENCERRADO! COMPRE O BEAT COMPLETO.";
-        msg.style.color = "#8a2be2";
+        msg.innerText = "PREVIEW ENCERRADO! COMPRE O BEAT COMPLETO PARA LIBERAR.";
+        msg.style.color = "var(--primary)"; 
         
-        // APENAS O BOTÃO DO BEAT QUE PAROU PISCA SEM PARAR
-        const targetBtn = document.getElementById(`btn-buy-${currentId}`);
-        if (targetBtn) {
-            targetBtn.classList.add('blink');
-        }
+        document.querySelectorAll('.btn-buy').forEach(btn => {
+            btn.classList.add('blink');
+        });
     }
 });
 
@@ -105,7 +99,6 @@ function filterFavs(e) {
 
 wavesurfer.on('play', () => { 
     document.getElementById('pp-btn').innerText = "II"; 
-    // Remove o piscar ao reiniciar o áudio
     document.querySelectorAll('.btn-buy').forEach(b => b.classList.remove('blink'));
     render(beats); 
 });
@@ -116,3 +109,4 @@ wavesurfer.on('pause', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => render(beats));
+
