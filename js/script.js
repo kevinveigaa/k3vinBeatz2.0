@@ -43,13 +43,13 @@ function render(list) {
 
 function loadBeat(id) {
     const beat = beats.find(x => x.id === id);
-    document.getElementById('stickyPlayer').style.display = 'block';
     if (currentId === id) { wavesurfer.playPause(); return; }
     currentId = id;
+    document.getElementById('stickyPlayer').style.display = 'block';
     document.getElementById('p-img-player').src = beat.img;
     document.getElementById('p-name-player').innerText = beat.name;
     wavesurfer.load(beat.file);
-    wavesurfer.on('ready', () => wavesurfer.play());
+    wavesurfer.once('ready', () => wavesurfer.play());
 }
 
 function toggleFav(e, id) {
@@ -60,16 +60,16 @@ function toggleFav(e, id) {
     render(beats);
 }
 
-function filterFavs(e) {
-    document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-    render(beats.filter(b => favorites.includes(b.id)));
-}
-
 function filterCat(cat, e) {
     document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
     e.target.classList.add('active');
     render(cat === 'all' ? beats : beats.filter(b => b.cat === cat));
+}
+
+function filterFavs(e) {
+    document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    render(beats.filter(b => favorites.includes(b.id)));
 }
 
 wavesurfer.on('play', () => { document.getElementById('pp-btn').innerText = "II"; render(beats); });
