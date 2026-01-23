@@ -1,12 +1,12 @@
 const beats = [
-    {id:1, name:"Retroceder", cat:"trap", vibe:"Dark", bpm:132, price:"R$120", link:"https://pay.kiwify.com.br/0YaIpFV", img:"https://i.imgur.com/WjvDH0b.jpeg", file:"beats/retroceder.mp3"},
-    {id:2, name:"Prodígio", cat:"rnb", vibe:"Smooth", bpm:120, price:"R$90", link:"https://pay.kiwify.com.br/jXHrjSr", img:"https://i.imgur.com/cyHzDoM.jpeg", file:"beats/prodigio.mp3"},
-    {id:3, name:"Desista", cat:"rnb", vibe:"Sad", bpm:91, price:"R$130", link:"https://pay.kiwify.com.br/rqdgNG1", img:"https://i.imgur.com/YDgwkli.jpeg", file:"beats/desista.mp3"},
-    {id:4, name:"Te Esperando", cat:"rap", vibe:"Lo-fi", bpm:130, price:"R$95", link:"https://pay.kiwify.com.br/509sDIs", img:"https://i.imgur.com/BA6SDme.png", file:"beats/teesperando.mp3"},
-    {id:5, name:"Auto Confiança", cat:"trap", vibe:"Aggressive", bpm:128, price:"R$82", link:"https://pay.kiwify.com.br/BXai069", img:"https://i.imgur.com/wAOKpZ5.jpeg", file:"beats/autoconfianca.mp3"},
-    {id:6, name:"Lentamente", cat:"trap", vibe:"Chill", bpm:101, price:"R$98", link:"https://pay.kiwify.com.br/tsbZm3G", img:"https://i.imgur.com/BRJxp0L.jpeg", file:"beats/lentamente.mp3"},
-    {id:7, name:"Sentimento Impuro", cat:"rnb", vibe:"Romantic", bpm:110, price:"R$110", link:"https://pay.kiwify.com.br/MlLKd8v", img:"https://i.imgur.com/U4eTmbn.jpeg", file:"beats/sentimentoimpuro.mp3"},
-    {id:8, name:"Espanhola", cat:"trap", vibe:"Club", bpm:140, price:"R$130", link:"https://pay.kiwify.com.br/lkhizZS", img:"https://i.imgur.com/y7VdvOD.jpeg", file:"beats/espanhola.mp3"}
+    {id:1, name:"Retroceder", cat:"trap", bpm:132, price:"R$120", link:"#", img:"https://i.imgur.com/WjvDH0b.jpeg", file:"beats/retroceder.mp3"},
+    {id:2, name:"Prodígio", cat:"rnb", bpm:120, price:"R$90", link:"#", img:"https://i.imgur.com/cyHzDoM.jpeg", file:"beats/prodigio.mp3"},
+    {id:3, name:"Desista", cat:"rnb", bpm:91, price:"R$130", link:"#", img:"https://i.imgur.com/YDgwkli.jpeg", file:"beats/desista.mp3"},
+    {id:4, name:"Te Esperando", cat:"rap", bpm:130, price:"R$95", link:"#", img:"https://i.imgur.com/BA6SDme.png", file:"beats/teesperando.mp3"},
+    {id:5, name:"Auto Confiança", cat:"trap", bpm:128, price:"R$82", link:"#", img:"https://i.imgur.com/wAOKpZ5.jpeg", file:"beats/autoconfianca.mp3"},
+    {id:6, name:"Lentamente", cat:"trap", bpm:101, price:"R$98", link:"#", img:"https://i.imgur.com/BRJxp0L.jpeg", file:"beats/lentamente.mp3"},
+    {id:7, name:"Sentimento Impuro", cat:"rnb", bpm:110, price:"R$110", link:"#", img:"https://i.imgur.com/U4eTmbn.jpeg", file:"beats/sentimentoimpuro.mp3"},
+    {id:8, name:"Espanhola", cat:"trap", bpm:140, price:"R$130", link:"#", img:"https://i.imgur.com/y7VdvOD.jpeg", file:"beats/espanhola.mp3"}
 ];
 
 let favorites = JSON.parse(localStorage.getItem('favBeats')) || [];
@@ -49,11 +49,11 @@ function loadBeat(id) {
     document.getElementById('p-img-player').src = beat.img;
     document.getElementById('p-name-player').innerText = beat.name;
     
-    // AVISO APARECE EM CINZA AO DAR PLAY
+    // AVISO APARECE EM CINZA AO DAR O PRIMEIRO PLAY
     const msg = document.getElementById('preview-msg');
     msg.style.visibility = "visible";
     msg.innerText = "Você está ouvindo um preview, compre o beat completo!";
-    msg.style.color = "var(--gray)";
+    msg.style.color = "#666"; // Cinza
     
     document.querySelectorAll('.btn-buy').forEach(b => b.classList.remove('blink'));
 
@@ -61,19 +61,19 @@ function loadBeat(id) {
     wavesurfer.once('ready', () => wavesurfer.play());
 }
 
-// LÓGICA 45S + MUDANÇA PARA ROXO + TODOS BOTÕES PISCANDO
+// LOGICA DOS 45 SEGUNDOS
 wavesurfer.on('audioprocess', () => {
     if (wavesurfer.getCurrentTime() >= 45) {
         wavesurfer.pause();
         wavesurfer.setTime(0);
         
+        // MUDANÇA PARA ROXO E TEXTO NOVO
         const msg = document.getElementById('preview-msg');
         msg.innerText = "PREVIEW ENCERRADO! COMPRE O BEAT COMPLETO PARA LIBERAR.";
-        msg.style.color = "var(--primary)"; 
+        msg.style.color = "#8a2be2"; // Roxo
         
-        document.querySelectorAll('.btn-buy').forEach(btn => {
-            btn.classList.add('blink');
-        });
+        // TODOS BOTÕES PISCANDO
+        document.querySelectorAll('.btn-buy').forEach(btn => btn.classList.add('blink'));
     }
 });
 
@@ -99,7 +99,6 @@ function filterFavs(e) {
 
 wavesurfer.on('play', () => { 
     document.getElementById('pp-btn').innerText = "II"; 
-    document.querySelectorAll('.btn-buy').forEach(b => b.classList.remove('blink'));
     render(beats); 
 });
 
@@ -109,4 +108,3 @@ wavesurfer.on('pause', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => render(beats));
-
