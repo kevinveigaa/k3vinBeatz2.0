@@ -54,7 +54,7 @@ function loadBeat(id) {
     document.getElementById('p-img-player').src = beat.img;
     document.getElementById('p-name-player').innerText = beat.name;
     
-    // Reseta mensagens e animações
+    // Reseta visual ao carregar novo beat
     const msg = document.getElementById('preview-msg');
     msg.innerText = "Você está ouvindo um preview, compre o beat completo!";
     msg.style.color = "#666";
@@ -64,21 +64,21 @@ function loadBeat(id) {
     wavesurfer.once('ready', () => wavesurfer.play());
 }
 
-// TRAVA 45 SEGUNDOS
+// TRAVA EXATA 45 SEGUNDOS
 wavesurfer.on('audioprocess', () => {
     if (wavesurfer.getCurrentTime() >= 45) {
         wavesurfer.pause();
         wavesurfer.setTime(0);
         
-        // Mensagem muda para ROXO
+        // MENSAGEM MUDA PARA ROXO
         const msg = document.getElementById('preview-msg');
         msg.innerText = "PREVIEW ENCERRADO! COMPRE O BEAT COMPLETO.";
         msg.style.color = "#8a2be2";
         
-        // APENAS o botão do beat que parou de tocar pisca
-        const currentBtn = document.getElementById(`btn-buy-${currentId}`);
-        if (currentBtn) {
-            currentBtn.classList.add('blink');
+        // APENAS O BOTÃO DO BEAT QUE PAROU PISCA SEM PARAR
+        const targetBtn = document.getElementById(`btn-buy-${currentId}`);
+        if (targetBtn) {
+            targetBtn.classList.add('blink');
         }
     }
 });
@@ -105,7 +105,7 @@ function filterFavs(e) {
 
 wavesurfer.on('play', () => { 
     document.getElementById('pp-btn').innerText = "II"; 
-    // Para de piscar ao reiniciar
+    // Remove o piscar ao reiniciar o áudio
     document.querySelectorAll('.btn-buy').forEach(b => b.classList.remove('blink'));
     render(beats); 
 });
