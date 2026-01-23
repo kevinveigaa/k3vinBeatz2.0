@@ -11,7 +11,6 @@ const beats = [
 
 let favorites = JSON.parse(localStorage.getItem('favBeats')) || [];
 let currentId = null;
-let alertShown = false; // Controle para o alerta não aparecer toda hora
 
 const wavesurfer = WaveSurfer.create({
     container: '#waveform', waveColor: '#222', progressColor: '#8a2be2',
@@ -32,7 +31,6 @@ function render(list) {
                 <h3>${b.name}</h3><span>${b.cat.toUpperCase()} • ${b.bpm} BPM</span>
             </div>
             <div class="col-detail">${b.bpm} BPM</div>
-            <div class="col-detail vibe">${b.vibe}</div>
             <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(event, ${b.id})">❤</button>
             <div class="price-area">
                 <span class="price-tag">${b.price}</span>
@@ -45,30 +43,29 @@ function render(list) {
 function loadBeat(id) {
     const beat = beats.find(x => x.id === id);
     if (currentId === id) { wavesurfer.playPause(); return; }
-    
     currentId = id;
-    alertShown = false; // Reseta o alerta para o novo beat
-    
     document.getElementById('stickyPlayer').style.display = 'block';
     document.getElementById('p-img-player').src = beat.img;
     document.getElementById('p-name-player').innerText = beat.name;
     
+    // ATIVA FRASE CINZA
+    const msg = document.getElementById('preview-msg');
+    msg.style.display = 'block';
+    msg.innerText = "Você está escutando apenas um preview, compre o beat completo!";
+    msg.style.color = "#666";
+
     wavesurfer.load(beat.file);
-    
-    wavesurfer.once('ready', () => {
-        wavesurfer.play();
-        // Exibe o alerta assim que começa
-        alert("Você está escutando apenas um preview. Compre o beat completo para ter acesso total!");
-    });
+    wavesurfer.once('ready', () => wavesurfer.play());
 }
 
-// LOGICA DE CORTE (LIMITE DE 50 SEGUNDOS)
+// TRAVA AUTOMATICA 50S
 wavesurfer.on('audioprocess', () => {
-    const currentTime = wavesurfer.getCurrentTime();
-    if (currentTime >= 50) { // Trava em 50 segundos
+    if (wavesurfer.getCurrentTime() >= 50) {
         wavesurfer.pause();
-        wavesurfer.setTime(0); // Volta para o início ou para o player
-        alert("Fim do preview! Adquira a licença para baixar o beat completo.");
+        wavesurfer.setTime(0);
+        const msg = document.getElementById('preview-msg');
+        msg.innerText = "O PREVIEW ACABOU! COMPRE A LICENÇA COMPLETA.";
+        msg.style.color = "#ff4444";
     }
 });
 
