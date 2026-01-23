@@ -4,7 +4,7 @@ const beats = [
     {id:3, name:"Desista", cat:"rnb", vibe:"Sad", bpm:91, price:"R$130", link:"https://pay.kiwify.com.br/rqdgNG1", img:"https://i.imgur.com/YDgwkli.jpeg", file:"beats/desista.mp3"},
     {id:4, name:"Te Esperando", cat:"rap", vibe:"Lo-fi", bpm:130, price:"R$95", link:"https://pay.kiwify.com.br/509sDIs", img:"https://i.imgur.com/BA6SDme.png", file:"beats/teesperando.mp3"},
     {id:5, name:"Auto Confiança", cat:"trap", vibe:"Aggressive", bpm:128, price:"R$82", link:"https://pay.kiwify.com.br/BXai069", img:"https://i.imgur.com/wAOKpZ5.jpeg", file:"beats/autoconfianca.mp3"},
-    {id:6, name:"Lentamente", cat:"trap", vibe:"Chill", bpm:101, price:"R$98", link:"https://pay.kiwify.com.br/tsbZm3G", img:"https://i.imgur.com/BRJxp0.jpeg", file:"beats/lentamente.mp3"},
+    {id:6, name:"Lentamente", cat:"trap", vibe:"Chill", bpm:101, price:"R$98", link:"https://pay.kiwify.com.br/tsbZm3G", img:"https://i.imgur.com/BRJxp0L.jpeg", file:"beats/lentamente.mp3"},
     {id:7, name:"Sentimento Impuro", cat:"rnb", vibe:"Romantic", bpm:110, price:"R$110", link:"https://pay.kiwify.com.br/MlLKd8v", img:"https://i.imgur.com/U4eTmbn.jpeg", file:"beats/sentimentoimpuro.mp3"},
     {id:8, name:"Espanhola", cat:"trap", vibe:"Club", bpm:140, price:"R$130", link:"https://pay.kiwify.com.br/lkhizZS", img:"https://i.imgur.com/y7VdvOD.jpeg", file:"beats/espanhola.mp3"}
 ];
@@ -39,7 +39,7 @@ function render(list) {
             <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(event, ${b.id})">❤</button>
             <div class="price-area">
                 <span class="price-tag">${b.price}</span>
-                <a href="${b.link}" class="btn-buy" target="_blank" id="buy-${b.id}">COMPRAR</a>
+                <a href="${b.link}" class="btn-buy" target="_blank" id="btn-buy-${b.id}">COMPRAR</a>
             </div>
         </div>`;
     });
@@ -54,9 +54,8 @@ function loadBeat(id) {
     document.getElementById('p-img-player').src = beat.img;
     document.getElementById('p-name-player').innerText = beat.name;
     
-    // Reseta visual
+    // Reseta mensagens e animações
     const msg = document.getElementById('preview-msg');
-    msg.style.display = 'block';
     msg.innerText = "Você está ouvindo um preview, compre o beat completo!";
     msg.style.color = "#666";
     document.querySelectorAll('.btn-buy').forEach(b => b.classList.remove('blink'));
@@ -65,20 +64,22 @@ function loadBeat(id) {
     wavesurfer.once('ready', () => wavesurfer.play());
 }
 
-// TRAVA EXATA 45 SEGUNDOS
+// TRAVA 45 SEGUNDOS
 wavesurfer.on('audioprocess', () => {
     if (wavesurfer.getCurrentTime() >= 45) {
         wavesurfer.pause();
         wavesurfer.setTime(0);
         
+        // Mensagem muda para ROXO
         const msg = document.getElementById('preview-msg');
         msg.innerText = "PREVIEW ENCERRADO! COMPRE O BEAT COMPLETO.";
-        msg.style.color = "#ff4444";
+        msg.style.color = "#8a2be2";
         
-        // Faz todos os botões de comprar piscarem
-        document.querySelectorAll('.btn-buy').forEach(btn => {
-            btn.classList.add('blink');
-        });
+        // APENAS o botão do beat que parou de tocar pisca
+        const currentBtn = document.getElementById(`btn-buy-${currentId}`);
+        if (currentBtn) {
+            currentBtn.classList.add('blink');
+        }
     }
 });
 
@@ -104,7 +105,7 @@ function filterFavs(e) {
 
 wavesurfer.on('play', () => { 
     document.getElementById('pp-btn').innerText = "II"; 
-    // Remove o piscar ao dar play novamente
+    // Para de piscar ao reiniciar
     document.querySelectorAll('.btn-buy').forEach(b => b.classList.remove('blink'));
     render(beats); 
 });
