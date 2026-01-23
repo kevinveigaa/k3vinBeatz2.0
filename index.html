@@ -1,57 +1,120 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>K3VIN BEATZ | Loja Oficial</title>
+
     <link rel="stylesheet" href="css/style.css">
-    
-    <script src="https://unpkg.com/lucide@latest"></script>
+
 </head>
+
 <body>
 
-    <header class="navbar">
-        <div class="logo">K3VIN <b>BEATZ</b></div>
-    </header>
+<header class="navbar">
 
-    <section class="filter-wrapper">
-        <div class="tabs">
-            <button class="tab-btn active" onclick="filter('all')">TODOS</button>
-            <button class="tab-btn" onclick="filter('trap')">TRAP</button>
-            <button class="tab-btn" onclick="filter('rnb')">R&B</button>
-            <button class="tab-btn" onclick="filter('rap')">RAP</button>
-        </div>
-    </section>
+  <div class="logo">K3VIN <b>BEATZ</b></div>
 
-    <main id="beatGrid" class="beat-grid">
-        </main>
+  <div class="social-icons">
 
-    <footer class="player">
-        <div class="now-playing">
-            <img src="https://i.imgur.com/WjvDH0b.jpeg" id="p-img">
-            <div class="p-info">
-                <strong id="p-title">Selecione um beat</strong>
-                <small id="p-bpm">k3vin Beatz</small>
-            </div>
-        </div>
+    <a href="https://wa.me/+5511943750307" target="_blank"><img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp"/></a>
 
-        <div class="p-controls">
-            <div class="p-progress-container">
-                <span id="current-time">0:00</span>
-                <input type="range" id="progress-bar" value="0" min="0" max="100">
-                <span id="duration-time">0:00</span>
-            </div>
+    <a href="https://www.instagram.com/prod_k3vinbeatz" target="_blank"><img src="https://img.icons8.com/ios-glyphs/24/ffffff/instagram-new.png" alt="Instagram"/></a>
 
-            <div class="p-btns-wrapper">
-                <button class="btn-ctrl" onclick="prevBeat()"><i data-lucide="skip-back"></i></button>
-                <div class="play-main-wrapper" onclick="toggleAudio()">
-                    <i data-lucide="play" id="masterPlayIcon" fill="black"></i>
-                </div>
-                <button class="btn-ctrl" onclick="nextBeat()"><i data-lucide="skip-forward"></i></button>
-            </div>
-        </div>
-    </footer>
+  </div>
 
-    <script src="js/script.js"></script>
+</header>
+
+<section class="filter-wrapper">
+
+  <div class="tabs">
+
+    <button class="tab-btn active" onclick="filterCat('all', event)">Todos</button>
+
+    <button class="tab-btn" onclick="filterCat('trap', event)">Trap</button>
+
+    <button class="tab-btn" onclick="filterCat('rnb', event)">R&B</button>
+
+    <button class="tab-btn" onclick="filterCat('rap', event)">Rap</button>
+
+    <button class="tab-btn" onclick="filterFavs(event)" style="color: #ff4b4b;">❤ Favoritos</button>
+
+  </div>
+
+  <div class="bpm-filter">
+
+    <button class="tab-btn" onclick="filterBpm('above', event)">Acima de 120 BPM</button>
+
+    <button class="tab-btn" onclick="filterBpm('below', event)">Abaixo de 120 BPM</button>
+
+  </div>
+
+</section>
+
+<section class="highlights">
+
+  <h2>Destaques</h2>
+
+  <div class="highlight-grid" id="highlightGrid"></div>
+
+</section>
+
+<h2 style="text-align:center; margin-bottom:25px;">Catálogo</h2>
+
+<main id="beatGrid" class="beat-grid"></main>
+
+<section class="testimonials">
+
+  <h2>Comentários</h2>
+
+  <div class="testimonial-grid">
+
+    <div class="testimonial-card"><p>"Os beats são incríveis!"</p><strong>Lucas M.</strong></div>
+
+    <div class="testimonial-card"><p>"Perfeito para minhas produções!"</p><strong>Ana S.</strong></div>
+
+    <div class="testimonial-card"><p>"Muito profissional e rápido."</p><strong>Thiago P.</strong></div>
+
+    <div class="testimonial-card"><p>"Recomendo demais!"</p><strong>Mariana L.</strong></div>
+
+    <div class="testimonial-card"><p>"Qualidade top."</p><strong>Rafael F.</strong></div>
+
+    <div class="testimonial-card"><p>"Timbre único nos graves."</p><strong>Bruno K.</strong></div>
+
+    <div class="testimonial-card"><p>"Melhor custo benefício."</p><strong>Vitor J.</strong></div>
+
+    <div class="testimonial-card"><p>"Os beats são incríveis!"</p><strong>Lucas M.</strong></div>
+
+    <div class="testimonial-card"><p>"Perfeito para minhas produções!"</p><strong>Ana S.</strong></div>
+
+  </div>
+
+  <div class="mini-comment-box">
+
+    <input type="text" id="userComment" placeholder="Deixe seu feedback...">
+
+    <button onclick="sendComment()">Postar</button>
+
+  </div>
+
+</section>
+
+<footer class="license-footer">
+
+  <p>Licença básica inclui uso no Spotify, YouTube e redes sociais.</p>
+
+  <small>Mais vendido, Novo e Exclusivo garantidos.</small>
+
+</footer>
+
+<script src="js/script.js"></script>
+
 </body>
+
 </html>
+

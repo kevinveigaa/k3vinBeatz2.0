@@ -1,146 +1,206 @@
 const beats = [
-    { id: 1, name: "Retroceder", cat: "trap", bpm: "132", price: "R$ 120", link: "https://pay.kiwify.com.br/0YaIpFV", img: "https://i.imgur.com/WjvDH0b.jpeg" },
-    { id: 2, name: "Prodígio", cat: "rnb", bpm: "120", price: "R$ 90", link: "https://pay.kiwify.com.br/jXHrjSr", img: "https://i.imgur.com/cyHzDoM.jpeg" },
-    { id: 3, name: "Desista", cat: "rnb", bpm: "91", price: "R$ 130", link: "https://pay.kiwify.com.br/rqdgNG1", img: "https://i.imgur.com/YDgwkli.jpeg" },
-    { id: 4, name: "Te Esperando", cat: "rap", bpm: "130", price: "R$ 95", link: "https://pay.kiwify.com.br/509sDIs", img: "https://i.imgur.com/BA6SDme.png" },
-    { id: 5, name: "Auto Confiança", cat: "trap", bpm: "128", price: "R$ 82", link: "https://pay.kiwify.com.br/BXai069", img: "https://i.imgur.com/wAOKpZ5.jpeg" },
-    { id: 6, name: "Lentamente", cat: "trap", bpm: "101", price: "R$ 98", link: "https://pay.kiwify.com.br/tsbZm3G", img: "https://i.imgur.com/BRJxp0L.jpeg" },
-    { id: 7, name: "Sentimento Impuro", cat: "rnb", bpm: "110", price: "R$ 110", link: "https://pay.kiwify.com.br/MlLKd8v", img: "https://i.imgur.com/U4eTmbn.jpeg" },
-    { id: 8, name: "Espanhola", cat: "trap", bpm: "140", price: "R$ 130", link: "https://pay.kiwify.com.br/lkhizZS", img: "https://i.imgur.com/y7VdvOD.jpeg" }
+
+    {id:1, name:"Retroceder", cat:"trap", bpm:132, price:"R$120", link:"https://pay.kiwify.com.br/0YaIpFV", img:"https://i.imgur.com/WjvDH0b.jpeg", badge:"best"},
+
+    {id:2, name:"Prodígio", cat:"rnb", bpm:120, price:"R$90", link:"https://pay.kiwify.com.br/jXHrjSr", img:"https://i.imgur.com/cyHzDoM.jpeg", badge:"new"},
+
+    {id:3, name:"Desista", cat:"rnb", bpm:91, price:"R$130", link:"https://pay.kiwify.com.br/rqdgNG1", img:"https://i.imgur.com/YDgwkli.jpeg", badge:"new"},
+
+    {id:4, name:"Te Esperando", cat:"rap", bpm:130, price:"R$95", link:"https://pay.kiwify.com.br/509sDIs", img:"https://i.imgur.com/BA6SDme.png"},
+
+    {id:5, name:"Auto Confiança", cat:"trap", bpm:128, price:"R$82", link:"https://pay.kiwify.com.br/BXai069", img:"https://i.imgur.com/wAOKpZ5.jpeg", badge:"new"},
+
+    {id:6, name:"Lentamente", cat:"trap", bpm:101, price:"R$98", link:"https://pay.kiwify.com.br/tsbZm3G", img:"https://i.imgur.com/BRJxp0L.jpeg"},
+
+    {id:7, name:"Sentimento Impuro", cat:"rnb", bpm:110, price:"R$110", link:"https://pay.kiwify.com.br/MlLKd8v", img:"https://i.imgur.com/U4eTmbn.jpeg"},
+
+    {id:8, name:"Espanhola", cat:"trap", bpm:140, price:"R$130", link:"https://pay.kiwify.com.br/lkhizZS", img:"https://i.imgur.com/y7VdvOD.jpeg", badge:"exclusive"}
+
 ];
 
-let currentBeatIndex = null;
-const audioPlayer = new Audio();
-const progressBar = document.getElementById('progress-bar');
+const highlightsIds = [2, 3, 6];
 
-// Formata o nome para buscar o arquivo .mp3 (ex: "Retroceder" -> "retroceder.mp3")
-function formatFileName(text) {
-    return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ç/g, "c").replace(/\s+/g, "");
-}
+let audio = new Audio();
 
-// Renderiza os cards na tela
-function renderBeats(filterCat = 'all') {
-    const grid = document.getElementById('beatGrid');
-    grid.innerHTML = '';
-    const filtered = filterCat === 'all' ? beats : beats.filter(b => b.cat === filterCat);
+let currentId = null;
 
-    filtered.forEach((beat) => {
-        const realIndex = beats.findIndex(b => b.id === beat.id);
-        const isPlaying = (currentBeatIndex === realIndex && !audioPlayer.paused);
-        
+let likedBeats = []; 
+
+function render(list) {
+
+    const grid = document.getElementById("beatGrid");
+
+    grid.innerHTML = "";
+
+    list.forEach((b) => {
+
+        const isLiked = likedBeats.includes(b.id);
+
         grid.innerHTML += `
-            <article class="card">
-                <div class="cover-box">
-                    <img src="${beat.img}">
-                    <button class="play-btn" onclick="startBeat(${realIndex})">
-                        <i data-lucide="${isPlaying ? 'pause' : 'play'}" class="card-icon" data-index="${realIndex}" fill="black"></i>
-                    </button>
-                </div>
-                <div class="card-info">
-                    <h3>${beat.name}</h3>
-                    <p>${beat.cat.toUpperCase()} • ${beat.bpm} BPM</p>
-                </div>
-                <div class="card-right">
-                    <span class="price">${beat.price}</span>
-                    <a href="${beat.link}" target="_blank" class="buy-link">COMPRAR</a>
-                </div>
-            </article>
-        `;
-    });
-    lucide.createIcons();
-    syncUI();
-}
 
-// Inicia um novo beat ou alterna Play/Pause se for o mesmo
-function startBeat(index) {
-    if (currentBeatIndex === index) {
-        toggleAudio();
-        return;
-    }
-    currentBeatIndex = index;
-    const beat = beats[currentBeatIndex];
-    document.getElementById('p-title').innerText = beat.name;
-    document.getElementById('p-bpm').innerText = `${beat.bpm} BPM | k3vin Beatz`;
-    document.getElementById('p-img').src = beat.img;
-    audioPlayer.src = `beats/${formatFileName(beat.name)}.mp3`;
-    audioPlayer.play();
-}
+        <article class="card" id="beat-card-${b.id}">
 
-// Alterna entre Play e Pause
-function toggleAudio() {
-    if (currentBeatIndex === null) { startBeat(0); return; }
-    audioPlayer.paused ? audioPlayer.play() : audioPlayer.pause();
-}
+            <div class="cover-box">
 
-// Sincroniza os ícones de Play/Pause em toda a página
-function syncUI() {
-    const isPlaying = !audioPlayer.paused && audioPlayer.src !== "";
-    
-    // Ícone do Player principal
-    const masterPlayIcon = document.getElementById('masterPlayIcon');
-    if (masterPlayIcon) {
-        masterPlayIcon.setAttribute('data-lucide', isPlaying ? 'pause' : 'play');
-    }
+                <img src="${b.img}" alt="${b.name}">
 
-    // Ícones dos Cards
-    document.querySelectorAll('.card-icon').forEach((icon) => {
-        const idx = parseInt(icon.getAttribute('data-index'));
-        if (isPlaying && idx === currentBeatIndex) {
-            icon.setAttribute('data-lucide', 'pause');
-        } else {
-            icon.setAttribute('data-lucide', 'play');
-        }
+                <button class="fav-btn ${isLiked ? 'active' : ''}" onclick="toggleFav(this, ${b.id})">❤</button>
+
+                ${b.badge ? `<span class="badge ${b.badge}">${b.badge === "best" ? "Mais vendido" : b.badge === "new" ? "Novo" : "Exclusivo"}</span>` : ""}
+
+            </div>
+
+            <div class="preview-box" onclick="playPreview(${b.id}, this)">
+
+                <div class="preview-label">▶</div>
+
+                <div class="preview-progress"><span id="bar-${b.id}"></span></div>
+
+            </div>
+
+            <div class="card-info">
+
+                <h3>${b.name}</h3>
+
+                <p>${b.cat.toUpperCase()} • ${b.bpm} BPM</p>
+
+            </div>
+
+            <div class="card-right">
+
+                <span class="price">${b.price}</span>
+
+                <a class="buy-link" href="${b.link}" target="_blank">COMPRAR</a>
+
+            </div>
+
+        </article>`;
+
     });
 
-    lucide.createIcons();
 }
 
-// Eventos do Audio Player
-audioPlayer.onplay = syncUI;
-audioPlayer.onpause = syncUI;
-audioPlayer.onended = () => { syncUI(); nextBeat(); };
+function playPreview(id, el) {
 
-audioPlayer.ontimeupdate = () => {
-    if (audioPlayer.duration) {
-        const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-        progressBar.value = percent;
-        document.getElementById('current-time').innerText = Math.floor(audioPlayer.currentTime / 60) + ":" + ("0" + Math.floor(audioPlayer.currentTime % 60)).slice(-2);
-        document.getElementById('duration-time').innerText = Math.floor(audioPlayer.duration / 60) + ":" + ("0" + Math.floor(audioPlayer.duration % 60)).slice(-2);
+    const beat = beats.find(b => b.id === id);
+
+    const label = el.querySelector('.preview-label');
+
+    if (currentId === id && !audio.paused) { audio.pause(); return; }
+
+    document.querySelectorAll('.preview-label').forEach(l => l.innerText = "▶");
+
+    document.querySelectorAll('.preview-progress span').forEach(s => s.style.width = "0%");
+
+    currentId = id;
+
+    const fileName = beat.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s/g, "");
+
+    audio.src = `beats/${fileName}.mp3`;
+
+    audio.play();
+
+    label.innerText = "❚❚";
+
+    audio.ontimeupdate = () => {
+
+        let p = (audio.currentTime / audio.duration) * 100;
+
+        const bar = document.getElementById(`bar-${id}`);
+
+        if (bar) bar.style.width = p + "%";
+
+    };
+
+    audio.onended = () => { label.innerText = "▶"; };
+
+}
+
+function toggleFav(btn, id) {
+
+    if (likedBeats.includes(id)) {
+
+        likedBeats = likedBeats.filter(i => i !== id);
+
+        btn.classList.remove('active');
+
+    } else {
+
+        likedBeats.push(id);
+
+        btn.classList.add('active');
+
     }
-};
 
-progressBar.oninput = () => {
-    audioPlayer.currentTime = (progressBar.value / 100) * audioPlayer.duration;
-};
-
-// Funções de Próximo e Anterior
-function nextBeat() {
-    startBeat((currentBeatIndex + 1) % beats.length);
 }
 
-function prevBeat() {
-    startBeat((currentBeatIndex - 1 + beats.length) % beats.length);
+function filterCat(cat, event) {
+
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+    event.currentTarget.classList.add('active');
+
+    const filtered = cat === 'all' ? beats : beats.filter(b => b.cat === cat);
+
+    render(filtered);
+
 }
 
-// Função de Filtro com correção para o botão R&B
-function filter(cat) {
-    const tabs = document.querySelectorAll('.tab-btn');
-    
-    tabs.forEach(btn => {
-        // Normaliza o texto do botão para comparar (Ex: "R&B" vira "rnb")
-        const btnText = btn.innerText.toLowerCase().replace('&', 'n').replace('todos', 'all');
-        
-        if (btnText === cat) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
+function filterFavs(event) {
+
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+    event.currentTarget.classList.add('active');
+
+    const filtered = beats.filter(b => likedBeats.includes(b.id));
+
+    render(filtered);
+
+}
+
+function filterBpm(type, event) {
+
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+    event.currentTarget.classList.add('active');
+
+    const filtered = beats.filter(b => type === 'above' ? b.bpm > 120 : b.bpm <= 120);
+
+    render(filtered);
+
+}
+
+function sendComment() {
+
+    const input = document.getElementById('userComment');
+
+    if (input.value.trim() !== "") { input.placeholder = "Obrigado!"; input.value = ""; }
+
+}
+
+function renderHighlights() {
+
+    const grid = document.getElementById("highlightGrid");
+
+    grid.innerHTML = "";
+
+    highlightsIds.forEach(id => {
+
+        const b = beats.find(bt => bt.id === id);
+
+        if(b) grid.innerHTML += `<div class="highlight-card" onclick="scrollToBeat(${b.id})"><img src="${b.img}"></div>`;
+
     });
 
-    renderBeats(cat);
 }
 
-// Inicialização ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    renderBeats();
-});
+function scrollToBeat(id) {
+
+    const element = document.getElementById(`beat-card-${id}`);
+
+    if(element) element.scrollIntoView({ behavior: "smooth", block: "center" });
+
+}
+
+document.addEventListener('DOMContentLoaded', () => { render(beats); renderHighlights(); });
+
