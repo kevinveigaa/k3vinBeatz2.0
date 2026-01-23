@@ -1,187 +1,74 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>K3VIN BEATZ | Full Experience</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>K3VIN BEATZ | Loja Oficial</title>
-
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 
+    <script src="https://unpkg.com/wavesurfer.js@7"></script>
 </head>
-
 <body>
 
-<header class="navbar">
-
-  <div class="logo">K3VIN <b>BEATZ</b></div>
-
-  <div class="social-icons">
-
-    <a href="https://wa.me/+5511943750307" target="_blank"><img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp"/></a>
-
-    <a href="https://www.instagram.com/prod_k3vinbeatz" target="_blank"><img src="https://img.icons8.com/ios-glyphs/24/ffffff/instagram-new.png" alt="Instagram"/></a>
-
-  </div>
-
-</header>
-
-<section class="filter-wrapper">
-
-  <div class="tabs">
-
-    <button class="tab-btn active" onclick="filterCat('all', event)">Todos</button>
-
-    <button class="tab-btn" onclick="filterCat('trap', event)">Trap</button>
-
-    <button class="tab-btn" onclick="filterCat('rnb', event)">R&B</button>
-
-    <button class="tab-btn" onclick="filterCat('rap', event)">Rap</button>
-
-    <button class="tab-btn" onclick="filterFavs(event)" style="color: #ff4b4b;">❤ Favoritos</button>
-
-  </div>
-
-  <div class="bpm-filter">
-
-    <button class="tab-btn" onclick="filterBpm('above', event)">Acima de 120 BPM</button>
-
-    <button class="tab-btn" onclick="filterBpm('below', event)">Abaixo de 120 BPM</button>
-
-  </div>
-
-</section>
-
-<section class="highlights">
-
-  <h2>Destaques</h2>
-
-  <div class="highlight-grid" id="highlightGrid"></div>
-
-</section>
-
-<!DOCTYPE html>
-
-<html lang="pt-BR">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>K3VIN BEATZ | Loja Oficial</title>
-
-    <link rel="stylesheet" href="css/style.css">
-
-</head>
-
-<body>
-
-<header class="navbar">
-
-  <div class="logo">K3VIN <b>BEATZ</b></div>
-
-  <div class="social-icons">
-
-    <a href="https://wa.me/+5511943750307" target="_blank"><img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp"/></a>
-
-    <a href="https://www.instagram.com/prod_k3vinbeatz" target="_blank"><img src="https://img.icons8.com/ios-glyphs/24/ffffff/instagram-new.png" alt="Instagram"/></a>
-
-  </div>
-
-</header>
-
-<section class="filter-wrapper">
-
-  <div class="tabs">
-
-    <button class="tab-btn active" onclick="filterCat('all', event)">Todos</button>
-
-    <button class="tab-btn" onclick="filterCat('trap', event)">Trap</button>
-
-    <button class="tab-btn" onclick="filterCat('rnb', event)">R&B</button>
-
-    <button class="tab-btn" onclick="filterCat('rap', event)">Rap</button>
-
-    <button class="tab-btn" onclick="filterFavs(event)" style="color: #ff4b4b;">❤ Favoritos</button>
-
-  </div>
-
-  <div class="bpm-filter">
-
-    <button class="tab-btn" onclick="filterBpm('above', event)">Acima de 120 BPM</button>
-
-    <button class="tab-btn" onclick="filterBpm('below', event)">Abaixo de 120 BPM</button>
-
-  </div>
-
-</section>
-
-<section class="highlights">
-
-  <h2>Destaques</h2>
-
-  <div class="highlight-grid" id="highlightGrid"></div>
-
-</section>
-
-<h2 style="text-align:center; margin-bottom:25px;">Catálogo</h2>
-
-<main id="beatGrid" class="beat-grid"></main>
-
-<section class="testimonials">
-
-  <h2>Comentários</h2>
-
-  <div class="testimonial-grid">
-
-    <div class="testimonial-card"><p>"Os beats são incríveis!"</p><strong>Lucas M.</strong></div>
-
-    <div class="testimonial-card"><p>"Perfeito para minhas produções!"</p><strong>Ana S.</strong></div>
-
-    <div class="testimonial-card"><p>"Muito profissional e rápido."</p><strong>Thiago P.</strong></div>
-
-    <div class="testimonial-card"><p>"Recomendo demais!"</p><strong>Mariana L.</strong></div>
-
-    <div class="testimonial-card"><p>"Qualidade top."</p><strong>Rafael F.</strong></div>
-
-    <div class="testimonial-card"><p>"Timbre único nos graves."</p><strong>Bruno K.</strong></div>
-
-    <div class="testimonial-card"><p>"Melhor custo benefício."</p><strong>Vitor J.</strong></div>
-
-    <div class="testimonial-card"><p>"Os beats são incríveis!"</p><strong>Lucas M.</strong></div>
-
-    <div class="testimonial-card"><p>"Perfeito para minhas produções!"</p><strong>Ana S.</strong></div>
-
-  </div>
-
-  <div class="mini-comment-box">
-
-    <input type="text" id="userComment" placeholder="Deixe seu feedback...">
-
-    <button onclick="sendComment()">Postar</button>
-
-  </div>
-
-</section>
-
-<footer class="license-footer">
-
-  <p>Licença básica inclui uso no Spotify, YouTube e redes sociais.</p>
-
-  <small>Mais vendido, Novo e Exclusivo garantidos.</small>
-
-</footer>
+<nav class="navbar">
+    <div class="logo">K3VIN <span>BEATZ</span></div>
+</nav>
+
+<div class="main-wrapper">
+    <h1>Explorar Beats</h1>
+
+    <div class="filter-scroll">
+        <button class="f-btn active" onclick="filterCat('all', event)">TODOS</button>
+        <button class="f-btn" onclick="filterCat('trap', event)">TRAP</button>
+        <button class="f-btn" onclick="filterCat('rnb', event)">R&B</button>
+        <button class="f-btn" onclick="filterFavs(event)">FAVORITOS ❤</button>
+    </div>
+
+    <div class="beat-list" id="beatGrid"></div>
+
+    <section class="faq-section">
+        <h2>Dúvidas Frequentes</h2>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4>Como recebo o beat?</h4>
+                <p>O envio é imediato via e-mail assim que o pagamento é confirmado. Você recebe o link para download dos arquivos WAV e MP3.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Posso postar no Spotify?</h4>
+                <p>Com certeza. Nossas licenças permitem que você distribua sua música em todas as plataformas digitais e monetize seu trabalho.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Quais os formatos?</h4>
+                <p>Você recebe os arquivos em WAV de alta qualidade (24-bit) e MP3 (320kbps) totalmente sem tags de voz.</p>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div id="stickyPlayer" class="player-bar">
+    <div class="player-inner">
+        <div class="p-left">
+            <img id="p-img-player">
+            <div>
+                <h4 id="p-name-player"></h4>
+                <p style="color:#666;font-size:0.8rem;">K3VIN BEATZ</p>
+            </div>
+        </div>
+        <div class="p-center">
+            <button class="p-main-play" id="pp-btn" onclick="wavesurfer.playPause()">▶</button>
+            <div id="waveform"></div>
+        </div>
+    </div>
+</div>
+
+<a href="https://wa.me/5511943750307" class="whatsapp-float" target="_blank">
+    <svg viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32..."/></svg>
+</a>
 
 <script src="js/script.js"></script>
-
 </body>
-
 </html>
 
 
