@@ -11,6 +11,7 @@ const beats = [
 
 let favorites = JSON.parse(localStorage.getItem('favBeats')) || [];
 let currentId = null;
+let alertShown = false; // Controle para o alerta não aparecer toda hora
 
 const wavesurfer = WaveSurfer.create({
     container: '#waveform', waveColor: '#222', progressColor: '#8a2be2',
@@ -44,13 +45,32 @@ function render(list) {
 function loadBeat(id) {
     const beat = beats.find(x => x.id === id);
     if (currentId === id) { wavesurfer.playPause(); return; }
+    
     currentId = id;
+    alertShown = false; // Reseta o alerta para o novo beat
+    
     document.getElementById('stickyPlayer').style.display = 'block';
     document.getElementById('p-img-player').src = beat.img;
     document.getElementById('p-name-player').innerText = beat.name;
+    
     wavesurfer.load(beat.file);
-    wavesurfer.once('ready', () => wavesurfer.play());
+    
+    wavesurfer.once('ready', () => {
+        wavesurfer.play();
+        // Exibe o alerta assim que começa
+        alert("Você está escutando apenas um preview. Compre o beat completo para ter acesso total!");
+    });
 }
+
+// LOGICA DE CORTE (LIMITE DE 50 SEGUNDOS)
+wavesurfer.on('audioprocess', () => {
+    const currentTime = wavesurfer.getCurrentTime();
+    if (currentTime >= 50) { // Trava em 50 segundos
+        wavesurfer.pause();
+        wavesurfer.setTime(0); // Volta para o início ou para o player
+        alert("Fim do preview! Adquira a licença para baixar o beat completo.");
+    }
+});
 
 function toggleFav(e, id) {
     e.stopPropagation();
