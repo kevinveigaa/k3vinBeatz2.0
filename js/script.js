@@ -1,18 +1,25 @@
 const beats = [
-    {id:1, name:"Retroceder", cat:"trap", bpm:132, price:"R$120", link:"https://pay.kiwify.com.br/0YaIpFV", img:"https://i.imgur.com/WjvDH0b.jpeg"},
-    {id:2, name:"Prodígio", cat:"rnb", bpm:120, price:"R$90", link:"https://pay.kiwify.com.br/jXHrjSr", img:"https://i.imgur.com/cyHzDoM.jpeg"},
-    {id:3, name:"Desista", cat:"rnb", bpm:91, price:"R$130", link:"https://pay.kiwify.com.br/rqdgNG1", img:"https://i.imgur.com/YDgwkli.jpeg"},
-    {id:4, name:"Te Esperando", cat:"rap", bpm:130, price:"R$95", link:"https://pay.kiwify.com.br/509sDIs", img:"https://i.imgur.com/BA6SDme.png"},
-    {id:5, name:"Auto Confiança", cat:"trap", bpm:128, price:"R$82", link:"https://pay.kiwify.com.br/BXai069", img:"https://i.imgur.com/wAOKpZ5.jpeg"},
-    {id:6, name:"Lentamente", cat:"trap", bpm:101, price:"R$98", link:"https://pay.kiwify.com.br/tsbZm3G", img:"https://i.imgur.com/BRJxp0L.jpeg"},
-    {id:7, name:"Sentimento Impuro", cat:"rnb", bpm:110, price:"R$110", link:"https://pay.kiwify.com.br/MlLKd8v", img:"https://i.imgur.com/U4eTmbn.jpeg"},
-    {id:8, name:"Espanhola", cat:"trap", bpm:140, price:"R$130", link:"https://pay.kiwify.com.br/lkhizZS", img:"https://i.imgur.com/y7VdvOD.jpeg"},
-    {id:9, name:"Nada a Perder", cat:"rnb", bpm:76, price:"R$112", link:"https://pay.kiwify.com.br/jumCXVB", img:"https://i.imgur.com/TBZ85F4.jpeg"}
+    {id:1, name:"Retroceder", cat:"trap", bpm:132, price:"R$120", link:"https://pay.kiwify.com.br/0YaIpFV"},
+    {id:2, name:"Prodígio", cat:"rnb", bpm:120, price:"R$90", link:"https://pay.kiwify.com.br/jXHrjSr"},
+    {id:3, name:"Desista", cat:"rnb", bpm:91, price:"R$130", link:"https://pay.kiwify.com.br/rqdgNG1"},
+    {id:4, name:"Te Esperando", cat:"rap", bpm:130, price:"R$95", link:"https://pay.kiwify.com.br/509sDIs"},
+    {id:5, name:"Auto Confiança", cat:"trap", bpm:128, price:"R$82", link:"https://pay.kiwify.com.br/BXai069"},
+    {id:6, name:"Lentamente", cat:"trap", bpm:101, price:"R$98", link:"https://pay.kiwify.com.br/tsbZm3G"},
+    {id:7, name:"Sentimento Impuro", cat:"rnb", bpm:110, price:"R$110", link:"https://pay.kiwify.com.br/MlLKd8v"},
+    {id:8, name:"Espanhola", cat:"trap", bpm:140, price:"R$130", link:"https://pay.kiwify.com.br/lkhizZS"},
+    {id:9, name:"Nada a Perder", cat:"rnb", bpm:76, price:"R$112", link:"https://pay.kiwify.com.br/jumCXVB"}
 ];
 
-let favorites = JSON.parse(localStorage.getItem('favBeats')) || [];
-let currentId = null;
+// 1. Função de limpeza ajustada para manter todas as letras (Nada a Perder -> nadaaperder)
+function cleanName(text) {
+    return text.toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // Remove acentos
+        .replace(/\s+/g, '')            // Remove espaços mantendo as letras (o "a" continua lá)
+        .replace(/[^a-z0-9]/g, "");     // Remove símbolos
+}
 
+// 2. Inicialização WaveSurfer
 const wavesurfer = WaveSurfer.create({
     container: '#waveform',
     waveColor: '#333',
@@ -23,23 +30,25 @@ const wavesurfer = WaveSurfer.create({
     responsive: true
 });
 
+let favorites = JSON.parse(localStorage.getItem('favBeats')) || [];
+let currentId = null;
+
+// 3. Renderização com Suporte a JPG/PNG/JPEG automático
 function render(list) {
     const grid = document.getElementById("beatGrid");
+    if(!grid) return;
     grid.innerHTML = "";
     
-    if (list.length === 0) {
-        grid.innerHTML = `<p style="padding:40px; color:#666; text-align:center; width:100%;">Nenhum beat encontrado aqui.</p>`;
-        return;
-    }
-
     list.forEach(b => {
         const isFav = favorites.includes(b.id);
         const isPlaying = currentId === b.id && wavesurfer.isPlaying();
+        const baseName = cleanName(b.name);
         
         grid.innerHTML += `
         <div class="card">
             <div class="card-top">
-                <img src="${b.img}" class="img-static">
+                <img src="capas/${baseName}.jpg" class="img-static" 
+                     onerror="this.onerror=function(){this.src='capas/${baseName}.png'; this.onerror=function(){this.src='capas/${baseName}.jpeg'}}; this.src='capas/${baseName}.png';">
                 <div class="beat-info-main">
                     <h3>${b.name}</h3>
                     <span>${b.cat.toUpperCase()}</span>
@@ -60,24 +69,39 @@ function render(list) {
     });
 }
 
+// 4. Carregar Beat (Som e Imagem do Player)
 function loadBeat(id) {
     const beat = beats.find(x => x.id === id);
+    const baseName = cleanName(beat.name);
+
     if (currentId === id) {
         wavesurfer.playPause();
         return;
     }
+    
     currentId = id;
-    document.getElementById('stickyPlayer').style.display = 'block';
-    document.getElementById('p-img-player').src = beat.img;
+    
+    // Mostra Player Fixo
+    const player = document.getElementById('stickyPlayer');
+    if(player) player.style.display = 'block';
+    
+    // Atualiza Imagem do Player com Fallback
+    const pImg = document.getElementById('p-img-player');
+    pImg.src = `capas/${baseName}.jpg`;
+    pImg.onerror = function() { this.src = `capas/${baseName}.png`; };
+    
     document.getElementById('p-name-player').innerText = beat.name;
-    const msg = document.getElementById('preview-msg');
-    msg.innerText = "Você está ouvindo um preview, compre o beat completo!";
-    msg.style.color = "#888";
-    wavesurfer.load(beat.file);
-    wavesurfer.once('ready', () => wavesurfer.play());
+
+    // Carrega o áudio: ex beats/nadaaperder.mp3
+    wavesurfer.load(`beats/${baseName}.mp3`);
+    
+    wavesurfer.once('ready', () => {
+        wavesurfer.play();
+        render(beats);
+    });
 }
 
-// CORREÇÃO DOS FAVORITOS
+// 5. Funções de Filtro e Favoritos
 function toggleFav(e, id) {
     e.stopPropagation();
     if (favorites.includes(id)) {
@@ -86,36 +110,33 @@ function toggleFav(e, id) {
         favorites.push(id);
     }
     localStorage.setItem('favBeats', JSON.stringify(favorites));
-
-    // Verifica se estamos na aba de favoritos no momento
-    const activeButton = document.querySelector('.f-btn.active');
-    if (activeButton && activeButton.innerText.includes('Favoritos')) {
-        const favList = beats.filter(b => favorites.includes(b.id));
-        render(favList);
-    } else {
-        render(beats);
-    }
-}
-
-// FUNÇÃO QUE SEU HTML ESTÁ CHAMANDO
-function filterFavs(e) {
-    filterCat('fav', e);
+    render(beats);
 }
 
 function filterCat(cat, e) {
     document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-
-    if (cat === 'all') {
-        render(beats);
-    } else if (cat === 'fav') {
-        const favList = beats.filter(b => favorites.includes(b.id));
-        render(favList);
-    } else {
-        render(beats.filter(b => b.cat === cat));
-    }
+    if(e) e.target.classList.add('active');
+    const filtered = (cat === 'all') ? beats : beats.filter(b => b.cat === cat);
+    render(filtered);
 }
 
-wavesurfer.on('play', () => { document.getElementById('pp-btn').innerText = "II"; render(beats); });
-wavesurfer.on('pause', () => { document.getElementById('pp-btn').innerText = "▶"; render(beats); });
+function filterFavs(e) {
+    document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+    if(e) e.target.classList.add('active');
+    render(beats.filter(b => favorites.includes(b.id)));
+}
+
+// 6. Controle WaveSurfer
+wavesurfer.on('play', () => { 
+    if(document.getElementById('pp-btn')) document.getElementById('pp-btn').innerText = "II"; 
+});
+
+wavesurfer.on('pause', () => { 
+    if(document.getElementById('pp-btn')) document.getElementById('pp-btn').innerText = "▶"; 
+});
+
+// Botão Master Play/Pause
+const masterBtn = document.getElementById('pp-btn');
+if(masterBtn) masterBtn.addEventListener('click', () => wavesurfer.playPause());
+
 document.addEventListener('DOMContentLoaded', () => render(beats));
