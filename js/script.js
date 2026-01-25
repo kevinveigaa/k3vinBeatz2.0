@@ -12,7 +12,6 @@ const beats = [
 let favorites = JSON.parse(localStorage.getItem('favBeats')) || [];
 let currentId = null;
 
-// Configuração do Player Visual
 const wavesurfer = WaveSurfer.create({
     container: '#waveform',
     waveColor: '#333',
@@ -26,6 +25,12 @@ const wavesurfer = WaveSurfer.create({
 function render(list) {
     const grid = document.getElementById("beatGrid");
     grid.innerHTML = "";
+    
+    if (list.length === 0) {
+        grid.innerHTML = `<p style="padding:40px; color:#666; text-align:center; width:100%;">Nenhum beat encontrado aqui.</p>`;
+        return;
+    }
+
     list.forEach(b => {
         const isFav = favorites.includes(b.id);
         const isPlaying = currentId === b.id && wavesurfer.isPlaying();
@@ -39,16 +44,12 @@ function render(list) {
                     <span>${b.cat.toUpperCase()}</span>
                 </div>
             </div>
-            
             <div class="controls-row">
                 <div class="left-controls">
-                    <button class="play-btn-card" onclick="loadBeat(${b.id})">
-                        ${isPlaying ? 'II' : '▶'}
-                    </button>
+                    <button class="play-btn-card" onclick="loadBeat(${b.id})">${isPlaying ? 'II' : '▶'}</button>
                     <span class="bpm-tag">${b.bpm} BPM</span>
                     <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(event, ${b.id})">❤</button>
                 </div>
-                
                 <div class="right-controls">
                     <span class="price-tag">${b.price}</span>
                     <a href="${b.link}" class="btn-buy" target="_blank">COMPRAR</a>
@@ -64,32 +65,18 @@ function loadBeat(id) {
         wavesurfer.playPause();
         return;
     }
-
     currentId = id;
     document.getElementById('stickyPlayer').style.display = 'block';
     document.getElementById('p-img-player').src = beat.img;
     document.getElementById('p-name-player').innerText = beat.name;
-
     const msg = document.getElementById('preview-msg');
     msg.innerText = "Você está ouvindo um preview, compre o beat completo!";
     msg.style.color = "#888";
-    document.querySelectorAll('.btn-buy').forEach(b => b.classList.remove('blink'));
-
     wavesurfer.load(beat.file);
     wavesurfer.once('ready', () => wavesurfer.play());
 }
 
-wavesurfer.on('audioprocess', () => {
-    if (wavesurfer.getCurrentTime() >= 45) {
-        wavesurfer.pause();
-        wavesurfer.setTime(0);
-        const msg = document.getElementById('preview-msg');
-        msg.innerText = "PREVIEW ENCERRADO! COMPRE PARA LIBERAR.";
-        msg.style.color = "#8a2be2";
-        document.querySelectorAll('.btn-buy').forEach(btn => btn.classList.add('blink'));
-    }
-});
-
+// CORREÇÃO DOS FAVORITOS
 function toggleFav(e, id) {
     e.stopPropagation();
     if (favorites.includes(id)) {
@@ -98,16 +85,36 @@ function toggleFav(e, id) {
         favorites.push(id);
     }
     localStorage.setItem('favBeats', JSON.stringify(favorites));
-    render(beats);
+
+    // Verifica se estamos na aba de favoritos no momento
+    const activeButton = document.querySelector('.f-btn.active');
+    if (activeButton && activeButton.innerText.includes('Favoritos')) {
+        const favList = beats.filter(b => favorites.includes(b.id));
+        render(favList);
+    } else {
+        render(beats);
+    }
+}
+
+// FUNÇÃO QUE SEU HTML ESTÁ CHAMANDO
+function filterFavs(e) {
+    filterCat('fav', e);
 }
 
 function filterCat(cat, e) {
     document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
     e.target.classList.add('active');
-    render(cat === 'all' ? beats : beats.filter(b => b.cat === cat));
+
+    if (cat === 'all') {
+        render(beats);
+    } else if (cat === 'fav') {
+        const favList = beats.filter(b => favorites.includes(b.id));
+        render(favList);
+    } else {
+        render(beats.filter(b => b.cat === cat));
+    }
 }
 
 wavesurfer.on('play', () => { document.getElementById('pp-btn').innerText = "II"; render(beats); });
 wavesurfer.on('pause', () => { document.getElementById('pp-btn').innerText = "▶"; render(beats); });
-
 document.addEventListener('DOMContentLoaded', () => render(beats));
