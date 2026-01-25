@@ -10,11 +10,12 @@ const beats = [
     {id:9, name:"Nada a Perder", cat:"rnb", bpm:76, price:"R$112", link:"https://pay.kiwify.com.br/jumCXVB"}
 ];
 
-// --- CONFIGURAÇÕES INICIAIS ---
+// --- VARIÁVEIS DE CONTROLE ---
 let favorites = JSON.parse(localStorage.getItem('favBeats')) || [];
 let currentId = null;
 let currentFilter = 'all';
 
+// --- INICIALIZAR WAVESURFER ---
 const wavesurfer = WaveSurfer.create({
     container: '#waveform',
     waveColor: '#333',
@@ -25,9 +26,9 @@ const wavesurfer = WaveSurfer.create({
     responsive: true
 });
 
-// --- FUNÇÕES DE UTILIDADE ---
+// --- FUNÇÕES AUXILIARES ---
 
-// Gera o nome do arquivo: "Nada a Perder" -> "nadaaperder"
+// Limpa o nome para: nadaaperder, autoconfianca, etc.
 function cleanName(text) {
     return text.toLowerCase()
         .normalize("NFD")
@@ -36,19 +37,27 @@ function cleanName(text) {
         .replace(/[^a-z0-9]/g, "");     
 }
 
-// Aplica a lógica de fallback de imagem (jpg -> png -> jpeg)
+// Lógica de fallback de imagem (tenta jpg -> png -> jpeg)
 function getImgAttributes(baseName) {
     return `src="capas/${baseName}.jpg" 
             onerror="this.onerror=function(){this.src='capas/${baseName}.jpeg'; this.onerror=function(){this.src='capas/${baseName}.png'; this.onerror=null}}; this.src='capas/${baseName}.png';"`;
 }
 
-// --- CORE DO SISTEMA ---
+// --- RENDERIZAÇÃO DA INTERFACE ---
 
-function render(list = beats) {
+function render() {
     const grid = document.getElementById("beatGrid");
     if(!grid) return;
     grid.innerHTML = "";
     
+    // Aplica o filtro atual antes de desenhar
+    let list = beats;
+    if (currentFilter === 'fav') {
+        list = beats.filter(b => favorites.includes(b.id));
+    } else if (currentFilter !== 'all') {
+        list = beats.filter(b => b.cat === currentFilter);
+    }
+
     list.forEach(b => {
         const isFav = favorites.includes(b.id);
         const isPlaying = currentId === b.id && wavesurfer.isPlaying();
@@ -80,11 +89,13 @@ function render(list = beats) {
     });
 }
 
+// --- LÓGICA DE ÁUDIO ---
+
 function loadBeat(id) {
     const beat = beats.find(x => x.id === id);
     const baseName = cleanName(beat.name);
 
-    // Se já for o beat atual, apenas alterna play/pause
+    // Se clicar no mesmo beat, alterna Play/Pause
     if (currentId === id) {
         wavesurfer.playPause();
         return;
@@ -92,13 +103,13 @@ function loadBeat(id) {
     
     currentId = id;
     
-    // Atualiza Player Fixo
+    // Atualiza o Player Fixo embaixo
     const player = document.getElementById('stickyPlayer');
     if(player) player.style.display = 'block';
     
+    // Imagem do Player com Fallback (mesma lógica do card)
     const pImg = document.getElementById('p-img-player');
     if(pImg) {
-        // Aplica a mesma lógica de fallback do card na imagem do player
         pImg.src = `capas/${baseName}.jpg`;
         pImg.onerror = function() {
             this.onerror = function() {
@@ -111,33 +122,42 @@ function loadBeat(id) {
     
     document.getElementById('p-name-player').innerText = beat.name;
 
-    // Carrega áudio e Play Automático
+    // Carregar arquivo de som e dar Play Automático
     wavesurfer.load(`beats/${baseName}.mp3`);
     wavesurfer.once('ready', () => {
         wavesurfer.play();
     });
 }
 
-// --- EVENTOS E SINCRONIZAÇÃO ---
+// --- SINCRONIZAÇÃO E EVENTOS ---
 
+// Quando o áudio começa (seja pelo card ou pelo player de baixo)
 wavesurfer.on('play', () => { 
     const btn = document.getElementById('pp-btn');
     if(btn) btn.innerText = "II"; 
-    updateUI();
+    render(); // Redesenha para colocar "II" no card certo
 });
 
+// Quando o áudio pausa (seja pelo card ou pelo player de baixo)
 wavesurfer.on('pause', () => { 
     const btn = document.getElementById('pp-btn');
     if(btn) btn.innerText = "▶"; 
-    updateUI();
+    render(); // Redesenha para colocar "▶" no card
 });
 
-function updateUI() {
-    const listToRender = currentFilter === 'all' ? beats : 
-                         currentFilter === 'fav' ? beats.filter(b => favorites.includes(b.id)) : 
-                         beats.filter(b => b.cat === currentFilter);
-    render(listToRender);
+// Botão Central do Player Fixo (Baixo)
+const masterBtn = document.getElementById('pp-btn');
+if(masterBtn) {
+    masterBtn.addEventListener('click', () => {
+        if (!currentId) {
+            loadBeat(beats[0].id); // Toca o primeiro se nada estiver selecionado
+        } else {
+            wavesurfer.playPause();
+        }
+    });
 }
+
+// --- FAVORITOS E FILTROS ---
 
 function toggleFav(e, id) {
     e.stopPropagation();
@@ -147,26 +167,22 @@ function toggleFav(e, id) {
         favorites.push(id);
     }
     localStorage.setItem('favBeats', JSON.stringify(favorites));
-    updateUI();
+    render();
 }
 
 function filterCat(cat, e) {
     currentFilter = cat;
     document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
     if(e) e.target.classList.add('active');
-    updateUI();
+    render();
 }
 
 function filterFavs(e) {
     currentFilter = 'fav';
     document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
     if(e) e.target.classList.add('active');
-    updateUI();
+    render();
 }
 
-// Play/Pause do Player Fixo
-const masterBtn = document.getElementById('pp-btn');
-if(masterBtn) masterBtn.addEventListener('click', () => wavesurfer.playPause());
-
-// Iniciar
-document.addEventListener('DOMContentLoaded', () => render(beats));
+// --- INICIALIZAÇÃO ---
+document.addEventListener('DOMContentLoaded', () => render());
