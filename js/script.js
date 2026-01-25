@@ -12,9 +12,10 @@ const beats = [
 let favorites = JSON.parse(localStorage.getItem('favBeats')) || [];
 let currentId = null;
 
+// Configuração do Player Visual
 const wavesurfer = WaveSurfer.create({
     container: '#waveform',
-    waveColor: '#222',
+    waveColor: '#333',
     progressColor: '#8a2be2',
     cursorColor: '#fff',
     barWidth: 2,
@@ -28,19 +29,30 @@ function render(list) {
     list.forEach(b => {
         const isFav = favorites.includes(b.id);
         const isPlaying = currentId === b.id && wavesurfer.isPlaying();
+        
         grid.innerHTML += `
         <div class="card">
-            <img src="${b.img}" class="img-static">
-            <button class="play-btn-card" onclick="loadBeat(${b.id})">${isPlaying ? 'II' : '▶'}</button>
-            <div class="beat-info-main">
-                <h3>${b.name}</h3>
-                <span>${b.cat.toUpperCase()} • ${b.bpm} BPM</span>
+            <div class="card-top">
+                <img src="${b.img}" class="img-static">
+                <div class="beat-info-main">
+                    <h3>${b.name}</h3>
+                    <span>${b.cat.toUpperCase()}</span>
+                </div>
             </div>
-            <div class="col-detail">${b.bpm} BPM</div>
-            <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(event, ${b.id})">❤</button>
-            <div class="price-area">
-                <span class="price-tag">${b.price}</span>
-                <a href="${b.link}" class="btn-buy" target="_blank">COMPRAR</a>
+            
+            <div class="controls-row">
+                <div class="left-controls">
+                    <button class="play-btn-card" onclick="loadBeat(${b.id})">
+                        ${isPlaying ? 'II' : '▶'}
+                    </button>
+                    <span class="bpm-tag">${b.bpm} BPM</span>
+                    <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(event, ${b.id})">❤</button>
+                </div>
+                
+                <div class="right-controls">
+                    <span class="price-tag">${b.price}</span>
+                    <a href="${b.link}" class="btn-buy" target="_blank">COMPRAR</a>
+                </div>
             </div>
         </div>`;
     });
@@ -59,10 +71,8 @@ function loadBeat(id) {
     document.getElementById('p-name-player').innerText = beat.name;
 
     const msg = document.getElementById('preview-msg');
-    msg.style.visibility = "visible";
     msg.innerText = "Você está ouvindo um preview, compre o beat completo!";
-    msg.style.color = "#666";
-
+    msg.style.color = "#888";
     document.querySelectorAll('.btn-buy').forEach(b => b.classList.remove('blink'));
 
     wavesurfer.load(beat.file);
@@ -73,11 +83,9 @@ wavesurfer.on('audioprocess', () => {
     if (wavesurfer.getCurrentTime() >= 45) {
         wavesurfer.pause();
         wavesurfer.setTime(0);
-
         const msg = document.getElementById('preview-msg');
-        msg.innerText = "PREVIEW ENCERRADO! COMPRE O BEAT COMPLETO PARA LIBERAR.";
+        msg.innerText = "PREVIEW ENCERRADO! COMPRE PARA LIBERAR.";
         msg.style.color = "#8a2be2";
-
         document.querySelectorAll('.btn-buy').forEach(btn => btn.classList.add('blink'));
     }
 });
@@ -99,20 +107,7 @@ function filterCat(cat, e) {
     render(cat === 'all' ? beats : beats.filter(b => b.cat === cat));
 }
 
-function filterFavs(e) {
-    document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-    render(beats.filter(b => favorites.includes(b.id)));
-}
-
-wavesurfer.on('play', () => {
-    document.getElementById('pp-btn').innerText = "II";
-    render(beats);
-});
-
-wavesurfer.on('pause', () => {
-    document.getElementById('pp-btn').innerText = "▶";
-    render(beats);
-});
+wavesurfer.on('play', () => { document.getElementById('pp-btn').innerText = "II"; render(beats); });
+wavesurfer.on('pause', () => { document.getElementById('pp-btn').innerText = "▶"; render(beats); });
 
 document.addEventListener('DOMContentLoaded', () => render(beats));
