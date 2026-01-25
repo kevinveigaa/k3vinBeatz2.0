@@ -10,16 +10,11 @@ const beats = [
     {id:9, name:"Nada a Perder", cat:"rnb", bpm:76, price:"R$112", link:"https://pay.kiwify.com.br/jumCXVB"}
 ];
 
-// 1. Função de limpeza ajustada para manter todas as letras (Nada a Perder -> nadaaperder)
-function cleanName(text) {
-    return text.toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") // Remove acentos
-        .replace(/\s+/g, '')            // Remove espaços mantendo as letras (o "a" continua lá)
-        .replace(/[^a-z0-9]/g, "");     // Remove símbolos
-}
+// --- CONFIGURAÇÕES INICIAIS ---
+let favorites = JSON.parse(localStorage.getItem('favBeats')) || [];
+let currentId = null;
+let currentFilter = 'all';
 
-// 2. Inicialização WaveSurfer
 const wavesurfer = WaveSurfer.create({
     container: '#waveform',
     waveColor: '#333',
@@ -30,11 +25,26 @@ const wavesurfer = WaveSurfer.create({
     responsive: true
 });
 
-let favorites = JSON.parse(localStorage.getItem('favBeats')) || [];
-let currentId = null;
+// --- FUNÇÕES DE UTILIDADE ---
 
-// 3. Renderização com Suporte a JPG/PNG/JPEG automático
-function render(list) {
+// Gera o nome do arquivo: "Nada a Perder" -> "nadaaperder"
+function cleanName(text) {
+    return text.toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") 
+        .replace(/\s+/g, '')            
+        .replace(/[^a-z0-9]/g, "");     
+}
+
+// Aplica a lógica de fallback de imagem (jpg -> png -> jpeg)
+function getImgAttributes(baseName) {
+    return `src="capas/${baseName}.jpg" 
+            onerror="this.onerror=function(){this.src='capas/${baseName}.jpeg'; this.onerror=function(){this.src='capas/${baseName}.png'; this.onerror=null}}; this.src='capas/${baseName}.png';"`;
+}
+
+// --- CORE DO SISTEMA ---
+
+function render(list = beats) {
     const grid = document.getElementById("beatGrid");
     if(!grid) return;
     grid.innerHTML = "";
@@ -45,10 +55,9 @@ function render(list) {
         const baseName = cleanName(b.name);
         
         grid.innerHTML += `
-        <div class="card">
+        <div class="card ${currentId === b.id ? 'active-card' : ''}">
             <div class="card-top">
-                <img src="capas/${baseName}.jpg" class="img-static" 
-                     onerror="this.onerror=function(){this.src='capas/${baseName}.png'; this.onerror=function(){this.src='capas/${baseName}.jpeg'}}; this.src='capas/${baseName}.png';">
+                <img ${getImgAttributes(baseName)} class="img-static">
                 <div class="beat-info-main">
                     <h3>${b.name}</h3>
                     <span>${b.cat.toUpperCase()}</span>
@@ -56,7 +65,9 @@ function render(list) {
             </div>
             <div class="controls-row">
                 <div class="left-controls">
-                    <button class="play-btn-card" onclick="loadBeat(${b.id})">${isPlaying ? 'II' : '▶'}</button>
+                    <button class="play-btn-card" onclick="loadBeat(${b.id})">
+                        ${isPlaying ? 'II' : '▶'}
+                    </button>
                     <span class="bpm-tag">${b.bpm} BPM</span>
                     <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(event, ${b.id})">❤</button>
                 </div>
@@ -69,11 +80,11 @@ function render(list) {
     });
 }
 
-// 4. Carregar Beat (Som e Imagem do Player)
 function loadBeat(id) {
     const beat = beats.find(x => x.id === id);
     const baseName = cleanName(beat.name);
 
+    // Se já for o beat atual, apenas alterna play/pause
     if (currentId === id) {
         wavesurfer.playPause();
         return;
@@ -81,27 +92,53 @@ function loadBeat(id) {
     
     currentId = id;
     
-    // Mostra Player Fixo
+    // Atualiza Player Fixo
     const player = document.getElementById('stickyPlayer');
     if(player) player.style.display = 'block';
     
-    // Atualiza Imagem do Player com Fallback
     const pImg = document.getElementById('p-img-player');
-    pImg.src = `capas/${baseName}.jpg`;
-    pImg.onerror = function() { this.src = `capas/${baseName}.png`; };
+    if(pImg) {
+        // Aplica a mesma lógica de fallback do card na imagem do player
+        pImg.src = `capas/${baseName}.jpg`;
+        pImg.onerror = function() {
+            this.onerror = function() {
+                this.src = `capas/${baseName}.jpeg`;
+                this.onerror = null;
+            };
+            this.src = `capas/${baseName}.png`;
+        };
+    }
     
     document.getElementById('p-name-player').innerText = beat.name;
 
-    // Carrega o áudio: ex beats/nadaaperder.mp3
+    // Carrega áudio e Play Automático
     wavesurfer.load(`beats/${baseName}.mp3`);
-    
     wavesurfer.once('ready', () => {
         wavesurfer.play();
-        render(beats);
     });
 }
 
-// 5. Funções de Filtro e Favoritos
+// --- EVENTOS E SINCRONIZAÇÃO ---
+
+wavesurfer.on('play', () => { 
+    const btn = document.getElementById('pp-btn');
+    if(btn) btn.innerText = "II"; 
+    updateUI();
+});
+
+wavesurfer.on('pause', () => { 
+    const btn = document.getElementById('pp-btn');
+    if(btn) btn.innerText = "▶"; 
+    updateUI();
+});
+
+function updateUI() {
+    const listToRender = currentFilter === 'all' ? beats : 
+                         currentFilter === 'fav' ? beats.filter(b => favorites.includes(b.id)) : 
+                         beats.filter(b => b.cat === currentFilter);
+    render(listToRender);
+}
+
 function toggleFav(e, id) {
     e.stopPropagation();
     if (favorites.includes(id)) {
@@ -110,33 +147,26 @@ function toggleFav(e, id) {
         favorites.push(id);
     }
     localStorage.setItem('favBeats', JSON.stringify(favorites));
-    render(beats);
+    updateUI();
 }
 
 function filterCat(cat, e) {
+    currentFilter = cat;
     document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
     if(e) e.target.classList.add('active');
-    const filtered = (cat === 'all') ? beats : beats.filter(b => b.cat === cat);
-    render(filtered);
+    updateUI();
 }
 
 function filterFavs(e) {
+    currentFilter = 'fav';
     document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
     if(e) e.target.classList.add('active');
-    render(beats.filter(b => favorites.includes(b.id)));
+    updateUI();
 }
 
-// 6. Controle WaveSurfer
-wavesurfer.on('play', () => { 
-    if(document.getElementById('pp-btn')) document.getElementById('pp-btn').innerText = "II"; 
-});
-
-wavesurfer.on('pause', () => { 
-    if(document.getElementById('pp-btn')) document.getElementById('pp-btn').innerText = "▶"; 
-});
-
-// Botão Master Play/Pause
+// Play/Pause do Player Fixo
 const masterBtn = document.getElementById('pp-btn');
 if(masterBtn) masterBtn.addEventListener('click', () => wavesurfer.playPause());
 
+// Iniciar
 document.addEventListener('DOMContentLoaded', () => render(beats));
