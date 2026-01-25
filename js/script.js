@@ -13,8 +13,13 @@ let favorites = JSON.parse(localStorage.getItem('favBeats')) || [];
 let currentId = null;
 
 const wavesurfer = WaveSurfer.create({
-    container: '#waveform', waveColor: '#222', progressColor: '#8a2be2',
-    cursorColor: '#fff', barWidth: 2, height: 35, responsive: true
+    container: '#waveform',
+    waveColor: '#222',
+    progressColor: '#8a2be2',
+    cursorColor: '#fff',
+    barWidth: 2,
+    height: 35,
+    responsive: true
 });
 
 function render(list) {
@@ -28,7 +33,8 @@ function render(list) {
             <img src="${b.img}" class="img-static">
             <button class="play-btn-card" onclick="loadBeat(${b.id})">${isPlaying ? 'II' : '▶'}</button>
             <div class="beat-info-main">
-                <h3>${b.name}</h3><span>${b.cat.toUpperCase()} • ${b.bpm} BPM</span>
+                <h3>${b.name}</h3>
+                <span>${b.cat.toUpperCase()} • ${b.bpm} BPM</span>
             </div>
             <div class="col-detail">${b.bpm} BPM</div>
             <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(event, ${b.id})">❤</button>
@@ -42,45 +48,47 @@ function render(list) {
 
 function loadBeat(id) {
     const beat = beats.find(x => x.id === id);
-    if (currentId === id) { wavesurfer.playPause(); return; }
+    if (currentId === id) {
+        wavesurfer.playPause();
+        return;
+    }
+
     currentId = id;
-    
     document.getElementById('stickyPlayer').style.display = 'block';
     document.getElementById('p-img-player').src = beat.img;
     document.getElementById('p-name-player').innerText = beat.name;
-    
-    // AVISO APARECE EM CINZA AO DAR O PRIMEIRO PLAY
+
     const msg = document.getElementById('preview-msg');
     msg.style.visibility = "visible";
     msg.innerText = "Você está ouvindo um preview, compre o beat completo!";
-    msg.style.color = "#666"; // Cinza
-    
+    msg.style.color = "#666";
+
     document.querySelectorAll('.btn-buy').forEach(b => b.classList.remove('blink'));
 
     wavesurfer.load(beat.file);
     wavesurfer.once('ready', () => wavesurfer.play());
 }
 
-// LOGICA DOS 45 SEGUNDOS
 wavesurfer.on('audioprocess', () => {
     if (wavesurfer.getCurrentTime() >= 45) {
         wavesurfer.pause();
         wavesurfer.setTime(0);
-        
-        // MUDANÇA PARA ROXO E TEXTO NOVO
+
         const msg = document.getElementById('preview-msg');
         msg.innerText = "PREVIEW ENCERRADO! COMPRE O BEAT COMPLETO PARA LIBERAR.";
-        msg.style.color = "#8a2be2"; // Roxo
-        
-        // TODOS BOTÕES PISCANDO
+        msg.style.color = "#8a2be2";
+
         document.querySelectorAll('.btn-buy').forEach(btn => btn.classList.add('blink'));
     }
 });
 
 function toggleFav(e, id) {
     e.stopPropagation();
-    if (favorites.includes(id)) { favorites = favorites.filter(f => f !== id); } 
-    else { favorites.push(id); }
+    if (favorites.includes(id)) {
+        favorites = favorites.filter(f => f !== id);
+    } else {
+        favorites.push(id);
+    }
     localStorage.setItem('favBeats', JSON.stringify(favorites));
     render(beats);
 }
@@ -97,14 +105,14 @@ function filterFavs(e) {
     render(beats.filter(b => favorites.includes(b.id)));
 }
 
-wavesurfer.on('play', () => { 
-    document.getElementById('pp-btn').innerText = "II"; 
-    render(beats); 
+wavesurfer.on('play', () => {
+    document.getElementById('pp-btn').innerText = "II";
+    render(beats);
 });
 
-wavesurfer.on('pause', () => { 
-    document.getElementById('pp-btn').innerText = "▶"; 
-    render(beats); 
+wavesurfer.on('pause', () => {
+    document.getElementById('pp-btn').innerText = "▶";
+    render(beats);
 });
 
 document.addEventListener('DOMContentLoaded', () => render(beats));
