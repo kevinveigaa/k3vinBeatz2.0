@@ -9,9 +9,9 @@ const beats = [
     {id:8, name:"Espanhola", cat:"trap", bpm:140, price:"R$130", link:"https://pay.kiwify.com.br/lkhizZS"},
     {id:9, name:"Nada a Perder", cat:"rnb", bpm:76, price:"R$112", link:"https://pay.kiwify.com.br/jumCXVB"},
     {id:10, name:"Olhar Distante", cat:"trap", bpm:78, price:"R$120", link:"https://pay.kiwify.com.br/4O3NlBk"},
-    {id:10, name:"Será Que Não Entende", cat:"trap", bpm:87, price:"R$132", link:"https://pay.kiwify.com.br/hVGyS13"},
-    {id:10, name:"Sem Você", cat:"rap", bpm:93, price:"R$98", link:"https://pay.kiwify.com.br/bxu58oa"},
-    {id:10, name:"Incertezas", cat:"rap", bpm:86, price:"R$96", link:"https://pay.kiwify.com.br/VlRCKXc"},
+    {id:11, name:"Será Que Não Entende", cat:"trap", bpm:87, price:"R$132", link:"https://pay.kiwify.com.br/hVGyS13"},
+    {id:12, name:"Sem Você", cat:"rap", bpm:93, price:"R$98", link:"https://pay.kiwify.com.br/bxu58oa"},
+    {id:13, name:"Incertezas", cat:"rap", bpm:86, price:"R$96", link:"https://pay.kiwify.com.br/VlRCKXc"},
 ];
 
 // --- ESTADO GLOBAL ---
