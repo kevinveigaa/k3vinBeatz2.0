@@ -14,6 +14,7 @@ const beats = [
     {id:13, name:"Incertezas", cat:"rap", bpm:86, price:"R$96", link:"https://pay.kiwify.com.br/VlRCKXc"},
     {id:14, name:"Adiversidades", cat:"rap", bpm:86, price:"R$142", link:"https://pay.kiwify.com.br/l6Y7evm"},
     {id:15, name:"Menor Problema v2", cat:"funk", bpm:101, price:"R$142", link:"https://pay.kiwify.com.br/kTP7YBT"},
+    {id:16, name:"Menor Problema", cat:"funk", bpm:101, price:"R$140", link:"https://pay.kiwify.com.br/DQro2Vd"},
 ];
 
 // --- ESTADO GLOBAL ---
