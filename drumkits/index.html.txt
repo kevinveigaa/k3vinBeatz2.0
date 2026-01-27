@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Drumkits | Loja Oficial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="drumkits.css">
+
+    <!-- Fonte -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="top-bar">
+    <div class="logo">DRUMKITS</div>
+
+    <div class="menu">
+        <button class="hamburger">☰</button>
+    </div>
+</header>
+
+<!-- MENU MOBILE -->
+<nav class="mobile-menu">
+    <a href="index.html">Beats</a>
+    <a href="drumkits.html" class="active">Drumkits</a>
+</nav>
+
+<!-- FILTROS -->
+<section class="filters">
+    <button class="f-btn active">Todos</button>
+    <button class="f-btn">Trap</button>
+    <button class="f-btn">RNB</button>
+    <button class="f-btn">Fav</button>
+</section>
+
+<!-- GRID DRUMKITS -->
+<main class="grid" id="drumkitGrid">
+
+    <!-- CARD -->
+    <div class="card">
+        <div class="card-top">
+            <img src="capas/trapdrumkit01.jpg" alt="Trap Drumkit">
+        </div>
+
+        <div class="card-info">
+            <h3>trapdrumkit01</h3>
+            <span class="preview-text">escutar preview</span>
+        </div>
+
+        <div class="card-actions">
+            <button class="preview-btn" onclick="playPreview('previews/trapdrumkit01.mp3')">
+                ▶
+            </button>
+
+            <a href="https://pay.kiwify.com.br/SEULINK" target="_blank" class="buy-btn">
+                COMPRAR
+            </a>
+        </div>
+    </div>
+
+    <!-- CARD -->
+    <div class="card">
+        <div class="card-top">
+            <img src="capas/rnbdrumkit01.jpg" alt="RNB Drumkit">
+        </div>
+
+        <div class="card-info">
+            <h3>rnbdrumkit01</h3>
+            <span class="preview-text">escutar preview</span>
+        </div>
+
+        <div class="card-actions">
+            <button class="preview-btn" onclick="playPreview('previews/rnbdrumkit01.mp3')">
+                ▶
+            </button>
+
+            <a href="https://pay.kiwify.com.br/SEULINK" target="_blank" class="buy-btn">
+                COMPRAR
+            </a>
+        </div>
+    </div>
+
+</main>
+
+<!-- AVISO PREVIEW -->
+<div class="preview-warning">
+    você está ouvindo um preview do drumkit
+</div>
+
+<!-- JS -->
+<script src="drumkits.js"></script>
+
+</body>
+</html>

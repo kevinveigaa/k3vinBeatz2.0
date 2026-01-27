@@ -1,0 +1,30 @@
+let currentAudio = null;
+let currentSrc = null;
+
+function playPreview(src) {
+
+    // Se já estiver tocando o mesmo preview, reinicia
+    if (currentAudio && currentSrc === src) {
+        currentAudio.currentTime = 0;
+        return;
+    }
+
+    // Para qualquer preview anterior
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+    }
+
+    currentAudio = new Audio(src);
+    currentSrc = src;
+
+    currentAudio.play();
+
+    console.log("você está ouvindo um preview do drumkit");
+
+    // Quando acabar o áudio, limpa
+    currentAudio.onended = () => {
+        currentAudio = null;
+        currentSrc = null;
+    };
+}
