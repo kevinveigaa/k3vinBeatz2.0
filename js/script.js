@@ -12,6 +12,8 @@ const beats = [
     {id:11, name:"Será Que Não Entende", cat:"trap", bpm:87, price:"R$132", link:"https://pay.kiwify.com.br/hVGyS13"},
     {id:12, name:"Sem Você", cat:"rap", bpm:93, price:"R$98", link:"https://pay.kiwify.com.br/bxu58oa"},
     {id:13, name:"Incertezas", cat:"rap", bpm:86, price:"R$96", link:"https://pay.kiwify.com.br/VlRCKXc"},
+    {id:14, name:"Adversidades", cat:"rap", bpm:86, price:"R$142", link:"https://pay.kiwify.com.br/l6Y7evm"},
+    {id:15, name:"Menor Problema v2", cat:"funk", bpm:101, price:"R$142", link:"https://pay.kiwify.com.br/kTP7YBT"},
 ];
 
 // --- ESTADO GLOBAL ---
