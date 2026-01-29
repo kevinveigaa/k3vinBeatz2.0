@@ -15,6 +15,14 @@ const beats = [
     {id:14, name:"Adiversidades", cat:"rap", bpm:86, price:"R$142", link:"https://pay.kiwify.com.br/l6Y7evm"},
     {id:15, name:"Menor Problema v2", cat:"funk", bpm:101, price:"R$142", link:"https://pay.kiwify.com.br/kTP7YBT"},
     {id:16, name:"Menor Problema", cat:"funk", bpm:101, price:"R$140", link:"https://pay.kiwify.com.br/DQro2Vd"},
+    {id:17, name:"Metas", cat:"rap", bpm:80, price:"R$110", link:"https://pay.kiwify.com.br/DZ9bjai"},
+    {id:18, name:"Amores Fictícios", cat:"trap", bpm:91, price:"R$135", link:"https://pay.kiwify.com.br/4aG3STt"},
+    {id:19, name:"Prioridades", cat:"trap", bpm:80, price:"R$143", link:"https://pay.kiwify.com.br/cGnuoHg"},
+    {id:20, name:"Na Maciota ", cat:"funk", bpm:64, price:"R$90", link:"https://pay.kiwify.com.br/016tPBc"},
+    {id:21, name:"Reflexões", cat:"trap", bpm:87, price:"R$87", link:"https://pay.kiwify.com.br/uND8Cp6"},
+    {id:22, name:"O Amor Fala", cat:"rnb", bpm:120, price:"R$97", link:"https://pay.kiwify.com.br/yMStIel"},
+    {id:23, name:"Modo Breck", cat:"rap", bpm:110, price:"R$146", link:"https://pay.kiwify.com.br/RjArpSP"},
+    {id:24, name:"Mano do Gheto", cat:"rap", bpm:132, price:"R$168", link:"https://pay.kiwify.com.br/5KFm02p"},
 ];
 
 // --- ESTADO GLOBAL ---
