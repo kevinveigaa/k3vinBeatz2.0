@@ -25,64 +25,60 @@ const beats = [
     {id:24, name:"Mano do Gheto", cat:"rap", bpm:132, price:"R$168", link:"https://pay.kiwify.com.br/5KFm02p"},
 ];
 
-// --- ESTADO GLOBAL ---
 let favorites = JSON.parse(localStorage.getItem('favBeats')) || [];
 let currentId = null;
 let currentFilter = 'all';
 
-// --- CONFIGURAÇÃO WAVESURFER ---
+// WaveSurfer
 const wavesurfer = WaveSurfer.create({
     container: '#waveform',
     waveColor: '#333',
     progressColor: '#8a2be2',
-    cursorColor: '#fff',
-    barWidth: 2,
     height: 35,
     responsive: true
 });
 
-// --- FUNÇÕES DE LIMPEZA E UTILIDADE ---
-function cleanName(text) {
-    return text.toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") 
-        .replace(/\s+/g, '')            
-        .replace(/[^a-z0-9]/g, "");     
+// A MÁGICA DE SUMIR O LINK (CARAMBA!)
+function setupSmartMenu() {
+    const path = window.location.pathname;
+    const links = document.querySelectorAll('.nav-links a');
+
+    links.forEach(link => {
+        const text = link.innerText.toLowerCase();
+        // Se estiver em Drumkits, some link Drumkits
+        if (path.includes("drumkits") && text.includes("drumkit")) {
+            link.style.display = 'none';
+        } 
+        // Se estiver na Home (Beats), some link Beats
+        else if (!path.includes("drumkits") && text.includes("beat")) {
+            link.style.display = 'none';
+        }
+    });
 }
 
-// --- RENDERIZAÇÃO ---
+function cleanName(t) { return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '').replace(/[^a-z0-9]/g, ""); }
+
 function render() {
     const grid = document.getElementById("beatGrid");
     if(!grid) return;
     grid.innerHTML = "";
     
-    let list = beats;
-    if (currentFilter === 'fav') {
-        list = beats.filter(b => favorites.includes(b.id));
-    } else if (currentFilter !== 'all') {
-        list = beats.filter(b => b.cat === currentFilter);
-    }
+    let list = (currentFilter === 'fav') ? beats.filter(b => favorites.includes(b.id)) : 
+               (currentFilter !== 'all') ? beats.filter(b => b.cat === currentFilter) : beats;
 
     list.forEach(b => {
         const isFav = favorites.includes(b.id);
         const isPlaying = currentId === b.id && wavesurfer.isPlaying();
-        const baseName = cleanName(b.name);
-        
+        const bName = cleanName(b.name);
         grid.innerHTML += `
-        <div class="card ${currentId === b.id ? 'active-card' : ''}">
+        <div class="card">
             <div class="card-top">
-                <img src="capas/${baseName}.jpg" class="img-static" 
-                     onerror="this.onerror=function(){this.src='capas/${baseName}.png'; this.onerror=function(){this.src='capas/${baseName}.jpeg'}}; this.src='capas/${baseName}.png';">
-                <div class="beat-info-main">
-                    <h3>${b.name}</h3>
-                    <span>${b.cat.toUpperCase()}</span>
-                </div>
+                <img src="capas/${bName}.png" class="img-static" onerror="this.src='capas/${bName}.jpg'">
+                <div class="beat-info-main"><h3>${b.name}</h3><span>${b.cat.toUpperCase()}</span></div>
             </div>
             <div class="controls-row">
                 <div class="left-controls">
-                    <button class="play-btn-card" onclick="loadBeat(${b.id})">
-                        ${isPlaying ? 'II' : '▶'}
-                    </button>
+                    <button class="play-btn-card" onclick="loadBeat(${b.id})">${isPlaying ? 'II' : '▶'}</button>
                     <span class="bpm-tag">${b.bpm} BPM</span>
                     <button class="btn-fav ${isFav ? 'active' : ''}" onclick="toggleFav(event, ${b.id})">❤</button>
                 </div>
@@ -95,80 +91,20 @@ function render() {
     });
 }
 
-// --- CONTROLE DE ÁUDIO ---
 function loadBeat(id) {
     const beat = beats.find(x => x.id === id);
-    const baseName = cleanName(beat.name);
-
-    if (currentId === id) {
-        wavesurfer.playPause();
-        return;
-    }
-    
+    if (currentId === id) { wavesurfer.playPause(); return; }
     currentId = id;
-    
-    const player = document.getElementById('stickyPlayer');
-    if(player) player.style.display = 'block';
-    
-    const pImg = document.getElementById('p-img-player');
-    if(pImg) {
-        pImg.src = `capas/${baseName}.jpg`;
-        pImg.onerror = function() { 
-            this.onerror = function() {
-                this.src = `capas/${baseName}.jpeg`;
-                this.onerror = null;
-            };
-            this.src = `capas/${baseName}.png`; 
-        };
-    }
-    
+    document.getElementById('stickyPlayer').style.display = 'block';
+    document.getElementById('p-img-player').src = `capas/${cleanName(beat.name)}.png`;
     document.getElementById('p-name-player').innerText = beat.name;
-
-    wavesurfer.load(`beats/${baseName}.mp3`);
-    wavesurfer.once('ready', () => {
-        wavesurfer.play();
-    });
+    wavesurfer.load(`beats/${cleanName(beat.name)}.mp3`);
+    wavesurfer.once('ready', () => wavesurfer.play());
 }
 
-// --- SINCRONIA MÚTUA (PLAY/PAUSE) ---
-
-// Quando o WaveSurfer começa a tocar
-wavesurfer.on('play', () => {
-    const btnMaster = document.getElementById('pp-btn');
-    if(btnMaster) btnMaster.innerText = "II"; 
-    render(); // Atualiza ícones nos cards lá em cima
-});
-
-// Quando o WaveSurfer pausa
-wavesurfer.on('pause', () => {
-    const btnMaster = document.getElementById('pp-btn');
-    if(btnMaster) btnMaster.innerText = "▶"; 
-    render(); // Atualiza ícones nos cards lá em cima
-});
-
-// Clique no botão do player fixo (Baixo)
-document.addEventListener('DOMContentLoaded', () => {
-    const masterBtn = document.getElementById('pp-btn');
-    if(masterBtn) {
-        masterBtn.onclick = function() {
-            if (!currentId) {
-                loadBeat(beats[0].id); // Toca o primeiro beat caso nada tenha sido selecionado
-            } else {
-                wavesurfer.playPause();
-            }
-        };
-    }
-    render();
-});
-
-// --- FILTROS E FAVORITOS ---
 function toggleFav(e, id) {
     e.stopPropagation();
-    if (favorites.includes(id)) {
-        favorites = favorites.filter(f => f !== id);
-    } else {
-        favorites.push(id);
-    }
+    favorites = favorites.includes(id) ? favorites.filter(f => f !== id) : [...favorites, id];
     localStorage.setItem('favBeats', JSON.stringify(favorites));
     render();
 }
@@ -179,3 +115,13 @@ function filterCat(cat, e) {
     if(e) e.target.classList.add('active');
     render();
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    setupSmartMenu();
+    render();
+    const pp = document.getElementById('pp-btn');
+    if(pp) pp.onclick = () => currentId ? wavesurfer.playPause() : loadBeat(beats[0].id);
+});
+
+wavesurfer.on('play', render);
+wavesurfer.on('pause', render);
