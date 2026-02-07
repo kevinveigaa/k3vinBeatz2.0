@@ -23,6 +23,7 @@ const beats = [
     {id:22, name:"O Amor Fala", cat:"rnb", bpm:120, price:"R$97", link:"https://pay.kiwify.com.br/yMStIel"},
     {id:23, name:"Modo Breck", cat:"rap", bpm:110, price:"R$146", link:"https://pay.kiwify.com.br/RjArpSP"},
     {id:24, name:"Mano do Gheto", cat:"rap", bpm:132, price:"R$168", link:"https://pay.kiwify.com.br/5KFm02p"},
+    {id:25, name:"Aquele Momento", cat:"trap", bpm:130, price:"R$154", link:"https://pay.kiwify.com.br/dXHJBi4"},
 ];
 
 // --- ESTADO GLOBAL ---
