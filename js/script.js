@@ -1,3 +1,4 @@
+// --- BANCO DE DADOS DOS BEATS ---
 const beats = [
     {id:1, name:"Retroceder", cat:"trap", bpm:132, price:"R$120", link:"https://pay.kiwify.com.br/0YaIpFV"},
     {id:2, name:"Prodígio", cat:"rnb", bpm:120, price:"R$90", link:"https://pay.kiwify.com.br/jXHrjSr"},
@@ -47,7 +48,7 @@ function cleanName(text) {
     return text.toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "") 
-        .replace(/\s+/g, '')            
+        .replace(/\s+/g, '')             
         .replace(/[^a-z0-9]/g, "");     
 }
 
@@ -101,6 +102,10 @@ function loadBeat(id) {
     const beat = beats.find(x => x.id === id);
     const baseName = cleanName(beat.name);
 
+    // Pausa o vídeo se ele estiver tocando para não misturar sons
+    const vPlayer = document.getElementById('portfolioVideo');
+    if(vPlayer) vPlayer.pause();
+
     if (currentId === id) {
         wavesurfer.playPause();
         return;
@@ -115,11 +120,8 @@ function loadBeat(id) {
     if(pImg) {
         pImg.src = `capas/${baseName}.jpg`;
         pImg.onerror = function() { 
-            this.onerror = function() {
-                this.src = `capas/${baseName}.jpeg`;
-                this.onerror = null;
-            };
             this.src = `capas/${baseName}.png`; 
+            this.onerror = function() { this.src = `capas/${baseName}.jpeg`; };
         };
     }
     
@@ -131,34 +133,49 @@ function loadBeat(id) {
     });
 }
 
-// --- SINCRONIA MÚTUA (PLAY/PAUSE) ---
+// --- TRAVA DE 45 SEGUNDOS ---
+wavesurfer.on('audioprocess', () => {
+    if (wavesurfer.getCurrentTime() >= 45) {
+        wavesurfer.pause();
+        wavesurfer.setTime(0);
+        alert("Atenção: Este é um preview de 45 segundos. Adquira o beat para o arquivo completo!");
+    }
+});
 
-// Quando o WaveSurfer começa a tocar
+// --- SINCRONIA MÚTUA ---
 wavesurfer.on('play', () => {
     const btnMaster = document.getElementById('pp-btn');
     if(btnMaster) btnMaster.innerText = "II"; 
-    render(); // Atualiza ícones nos cards lá em cima
+    render();
 });
 
-// Quando o WaveSurfer pausa
 wavesurfer.on('pause', () => {
     const btnMaster = document.getElementById('pp-btn');
     if(btnMaster) btnMaster.innerText = "▶"; 
-    render(); // Atualiza ícones nos cards lá em cima
+    render();
 });
 
-// Clique no botão do player fixo (Baixo)
+// --- INICIALIZAÇÃO ---
 document.addEventListener('DOMContentLoaded', () => {
     const masterBtn = document.getElementById('pp-btn');
     if(masterBtn) {
         masterBtn.onclick = function() {
             if (!currentId) {
-                loadBeat(beats[0].id); // Toca o primeiro beat caso nada tenha sido selecionado
+                loadBeat(beats[0].id);
             } else {
                 wavesurfer.playPause();
             }
         };
     }
+
+    // Se o usuário der play no vídeo do portfólio, pausa o beat
+    const vPlayer = document.getElementById('portfolioVideo');
+    if(vPlayer) {
+        vPlayer.onplay = () => {
+            if(wavesurfer.isPlaying()) wavesurfer.pause();
+        };
+    }
+
     render();
 });
 
@@ -179,4 +196,22 @@ function filterCat(cat, e) {
     document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
     if(e) e.target.classList.add('active');
     render();
+}
+// --- FUNÇÃO PARA ROLAR ATÉ O VÍDEO ---
+function irParaExemplo() {
+    // Se o usuário estiver na tela do MIDI Pack, volta para os Beats primeiro
+    voltarBeats(); 
+    
+    // Procura a seção do vídeo (showcase) e desliza suavemente
+    const showcase = document.querySelector('.portfolio-showcase');
+    if (showcase) {
+        showcase.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+// Função para o botão subir suavemente até o topo da página
+function voltarParaLoja() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
 }
