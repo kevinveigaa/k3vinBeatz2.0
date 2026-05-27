@@ -4,38 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>K3vin Beatz | Premium Beats</title>
-
     <link rel="icon" href="capas/logodosite.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
-
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/wavesurfer.js"></script>
 </head>
-
 <body>
-
 <nav class="navbar">
     <div class="logo">K3VIN<span>BEATZ</span></div>
 </nav>
-
 <div class="main-wrapper" id="beatsPage">
-
     <h1>Explorar Beats</h1>
-
-    <div style="margin-bottom: 30px; display: flex; gap: 15px; flex-wrap: wrap;">
-        
-      <button class="f-btn" onclick="mostrarPresets()">🎤 PACK K3VINBEATZ GRÁTIS</button>  
-      
-      <button class="f-btn" onclick="mostrarMidi()">🔥 MIDI PACK</button>
-
-        
-
+    <div style="margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
+        <button class="f-btn" onclick="mostrarPresets()">🎤 PACK K3VINBEATZ GRÁTIS</button>
+        <button class="f-btn" onclick="mostrarMidi()">🔥 MIDI PACK</button>
         <button class="f-btn" onclick="irParaExemplo()">PROD. AMOSTRA📺 </button>
+    </div>
 
+    <div class="search-container">
+        <input type="text" id="beatSearch" placeholder="🔍 Pesquise por nome, categoria ou BPM..." oninput="handleSearchInput()">
+        <button id="clearSearchBtn" onclick="clearSearch()">&times;</button>
     </div>
 
     <div class="filter-scroll">
-        <button class="f-btn active" onclick="filterCat('all', event)">Todos</button>
+        <button class="f-btn active" id="btn-all-filter" onclick="filterCat('all', event)">Beats Restantes</button>
         <button class="f-btn" onclick="filterCat('rnb', event)">R&B</button>
         <button class="f-btn" onclick="filterCat('rap', event)">Rap</button>
         <button class="f-btn" onclick="filterCat('trap', event)">Trap</button>
@@ -43,116 +35,86 @@
         <button class="f-btn" onclick="filterCat('fav', event)">❤ Favoritos</button>
     </div>
 
+    <div id="destaquesSection">
+        <h2 class="section-title">💯 Em Destaque</h2>
+        <div class="beat-list" id="destaquesGrid"></div>
+    </div>
+
+    <div id="popularesSection">
+        <h2 class="section-title">🔥 Mais Populares</h2>
+        <div class="beat-list" id="popularesGrid"></div>
+    </div>
+
+    <h2 class="section-title" id="mainSectionTitle">Geral</h2>
     <div class="beat-list" id="beatGrid"></div>
 
     <section class="portfolio-showcase">
-    <div class="showcase-container">
-        
-        <div class="showcase-text">
-            <span class="subtitle">Exemplo de Produção</span>
-            <h2>Rap do Minato (Prod. Kevin)</h2>
-            <p>
-                Confira um exemplo da qualidade de mixagem, masterização e composição. 
-                Este projeto demonstra a textura e o peso que trago para cada produção.
-            </p>
-
-            <div class="showcase-badges">
-                <span>Mixagem Premium</span>
-                <span>Vibe Dark Trap</span>
-                <span>Master Final</span>
+        <div class="showcase-container">
+            <div class="showcase-text">
+                <span class="subtitle">Exemplo de Produção</span>
+                <h2>Rap do Minato (Prod. Kevin)</h2>
+                <p>Confira um exemplo da qualidade de mixagem, masterização e composição. Este projeto demonstra a textura e o peso que trago para cada produção.</p>
+                <div class="showcase-badges">
+                    <span>Mixagem Premium</span>
+                    <span>Vibe Dark Trap</span>
+                    <span>Master Final</span>
+                </div>
+            </div>
+            <div class="showcase-video">
+                <video id="portfolioVideo" controls style="width: 100%; height: 100%; object-fit: cover;">
+                    <source src="videos/minato.mp4" type="video/mp4">
+                    Seu navegador não suporta vídeos.
+                </video>
             </div>
         </div>
-
-        <div class="showcase-video">
-            <video id="portfolioVideo" controls style="width: 100%; height: 100%; object-fit: cover;">
-                <source src="videos/minato.mp4" type="video/mp4">
-                Seu navegador não suporta vídeos.
-            </video>
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="f-btn" onclick="voltarParaLoja()" style="border-color: var(--primary); background: rgba(138, 43, 226, 0.1);">
+                ⬆️ VOLTAR PARA OS BEATS
+            </button>
         </div>
-
-    </div>
-
-    <div style="text-align: center; margin-top: 30px;">
-        <button class="f-btn" onclick="voltarParaLoja()" style="border-color: var(--primary); background: rgba(138, 43, 226, 0.1);">
-            ⬆️ VOLTAR PARA OS BEATS
-        </button>
-    </div>
-
-</section>
-
+    </section>
     <section class="faq-section">
         <h2 style="margin-bottom: 30px;">Dúvidas Frequentes</h2>
-
         <div class="faq-grid">
             <div class="faq-item">
                 <h4>Como recebo o beat?</h4>
                 <p>Após o pagamento você recebe no e-mail.</p>
             </div>
-
             <div class="faq-item">
                 <h4>Os beats são exclusivos?</h4>
                 <p>Tem licença e opção exclusiva.</p>
             </div>
-
             <div class="faq-item">
                 <h4>Posso postar no Spotify?</h4>
                 <p>Sim, permitido.</p>
             </div>
         </div>
     </section>
-
 </div>
-
 <div id="midiPage" class="main-wrapper" style="display:none;">
-
     <h1>🔥 MIDI Pack Exclusivo</h1>
-
     <img src="img/midipack1.png" alt="MIDI Pack" style="width:100%; max-width:500px; border-radius:12px; margin:20px 0;">
-
-    <p style="color:#888; max-width:600px;">
-        Hitmaker MIDI Pack Vol.1 com +60 melodias prontas!  
-        Troque instrumentos, personalize e crie beats únicos 🔥
-    </p>
-
+    <p style="color:#888; max-width:600px;">Hitmaker MIDI Pack Vol.1 com +60 melodias prontas! Troque instrumentos, personalize e crie beats únicos 🔥</p>
     <div style="margin-top:30px; background:#0d0d0d; padding:30px; border-radius:12px; border:1px solid #1f1f1f;">
-        
         <h2 style="color:#8a2be2;">O que você recebe:</h2>
-
         <ul style="margin-top:15px; color:#aaa;">
             <li>✔ +60 MIDIs prontos</li>
             <li>✔ Trap, Drill, Plug, R&B</li>
             <li>✔ Uso comercial</li>
             <li>✔ Compatível com qualquer DAW</li>
         </ul>
-
         <h2 style="margin-top:25px;">R$29,90</h2>
-
-        <a href="https://pay.kiwify.com.br/SAQ94pl" target="_blank" class="btn-buy" style="display:inline-block; margin-top:15px;">
-            COMPRAR AGORA
-        </a>
+        <a href="https://pay.kiwify.com.br/SAQ94pl" target="_blank" class="btn-buy" style="display:inline-block; margin-top:15px;">COMPRAR AGORA</a>
     </div>
-
-    <button onclick="voltarBeats()" class="f-btn" style="margin-top:30px;">
-        ← Voltar pros Beats
-    </button>
-
+    <button onclick="voltarBeats()" class="f-btn" style="margin-top:30px;">← Voltar pros Beats</button>
 </div>
-
 <div id="presetPage" class="main-wrapper" style="display:none;">
-
     <div class="pack-brand-header">K3VINBEATZ</div>
     <h1>PACK PESSOAL DE PRODUÇÃO</h1>
-
     <img src="img/packk3.png" alt="Pack Pessoal" style="width:100%; max-width:500px; border-radius:12px; margin:20px 0;">
-
-    <p style="color:#888; max-width:600px;">
-        Tudo que eu uso no meu dia a dia pra criar meus beats — direto do estúdio! 🎛️🔥
-    </p>
-
+    <p style="color:#888; max-width:600px;">Tudo que eu uso no meu dia a dia pra criar meus beats — direto do estúdio! 🎛️🔥</p>
     <div style="margin-top:30px; background:#0d0d0d; padding:30px; border-radius:12px; border:1px solid #1f1f1f;">
-        
         <h2 style="color:#8a2be2;">O que tem nesse pack:</h2>
-
         <ul style="margin-top:15px; color:#aaa;">
             <li>✔ MIDI's usados nas minhas melodias</li>
             <li>✔ Drum Kit Trap completo</li>
@@ -160,34 +122,19 @@
             <li>✔ Hi-hats e percussões</li>
             <li>✔ FX e ambiências</li>
         </ul>
-
         <h2 style="color:#8a2be2; margin-top:25px;">Sobre esse pack:</h2>
-        <p style="color:#aaa; margin-top:5px; font-size:0.95rem; line-height:1.6;">
-            Esse pack é literalmente minha base de produção. Tudo aqui é usado nas minhas criações reais.
-        </p>
-
+        <p style="color:#aaa; margin-top:5px; font-size:0.95rem; line-height:1.6;">Esse pack é literalmente minha base de produção. Tudo aqui é usado nas minhas criações reais.</p>
         <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #1f1f1f; display: flex; flex-wrap: wrap; gap: 15px; font-size: 0.8rem; font-weight: bold; color: #888;">
             <span>💾 MIDI & SAMPLES</span>
             <span>🎛️ CUSTOM DRUMS</span>
             <span>🎹 UNIQUE TIMBRES</span>
             <span>🔗 ESTÚDIO REAL</span>
         </div>
-
-        <p style="margin-top:25px; font-size:0.8rem; color:#666; text-transform: uppercase;">
-            ACESSE MINHA BASE DE PRODUÇÃO. TUDO O QUE VOCÊ PRECISA PARA CRIAR BEATS ÚNICOS. DIRETO DO MEU ESTÚDIO.
-        </p>
-
-        <a href="https://drive.google.com/uc?export=download&id=1YADdeF5eLCh7nuXln9emhIuHm699Qkqb" target="_blank" class="btn-buy" style="display:inline-block; margin-top:15px; background: #8a2be2;">
-            [ BAIXAR PACK GRÁTIS 🔥 ]
-        </a>
+        <p style="margin-top:25px; font-size:0.8rem; color:#666; text-transform: uppercase;">ACESSE MINHA BASE DE PRODUÇÃO. TUDO O QUE VOCÊ PRECISA PARA CRIAR BEATS ÚNICOS. DIRETO DO MEU ESTÚDIO.</p>
+        <a href="https://drive.google.com/uc?export=download&id=1YADdeF5eLCh7nuXln9emhIuHm699Qkqb" target="_blank" class="btn-buy" style="display:inline-block; margin-top:15px; background: #8a2be2;">[ BAIXAR PACK GRÁTIS 🔥 ]</a>
     </div>
-
-    <button onclick="voltarBeats()" class="f-btn" style="margin-top:30px;">
-        ← Voltar pros Beats
-    </button>
-
+    <button onclick="voltarBeats()" class="f-btn" style="margin-top:30px;">← Voltar pros Beats</button>
 </div>
-
 <div class="player-bar" id="stickyPlayer">
     <div class="player-inner">
         <div class="p-left">
@@ -197,57 +144,48 @@
                 <p>K3vin Beatz</p>
             </div>
         </div>
-
         <div class="p-center">
             <div id="preview-msg">Preview do beat</div>
             <div id="waveform"></div>
         </div>
-
         <button class="p-main-play" id="pp-btn">▶</button>
     </div>
 </div>
 
+<!-- NOVO BOTÃO FLUTUANTE PARA VOLTAR AO TOPO -->
+<button class="scroll-top-btn" onclick="voltarParaTopo()" id="scrollTopBtn">▲</button>
+
 <a href="https://wa.me/5511943750307" class="whatsapp-float" target="_blank">
     <svg viewBox="0 0 32 32"><path fill="white" d="M19.11 17.205c-.372-.186-2.203-1.088-2.545-1.213-.343-.124-.593-.186-.843.187-.248.372-.967 1.213-1.186 1.461-.217.248-.434.279-.806.093-.372-.186-1.57-.579-2.99-1.846-1.105-.986-1.85-2.205-2.066-2.577-.217-.372-.023-.572.163-.757.167-.166.372-.434.558-.651.186-.217.248-.372.372-.62.124-.248.062-.465-.031-.651-.093-.186-.843-2.033-1.155-2.79-.305-.734-.615-.634-.843-.646-.217-.01-.465-.012-.713-.012-.248 0-.651.093-.992.465-.341.372-1.302 1.272-1.302 3.102s1.334 3.602 1.52 3.85c.186.248 2.627 4.012 6.366 5.625.889.383 1.582.611 2.123.782.891.283 1.702.243 2.345.148.715-.107 2.203-.9 2.514-1.77.31-.87.31-1.617.217-1.77-.093-.155-.341-.248-.713-.434zM16.001 3C8.832 3 3 8.832 3 16c0 2.818.918 5.422 2.48 7.536L3 29l5.618-2.433C10.678 27.51 13.273 28.5 16 28.5c7.168 0 13-5.832 13-13S23.168 3 16.001 3z"/></svg>
 </a>
-
 <a href="https://www.instagram.com/prod_k3vinbeatz/" class="social-float insta" target="_blank">
     <svg viewBox="0 0 24 24"><path fill="white" d="M7.75 2C4.57 2 2 4.57 2 7.75v8.5C2 19.43 4.57 22 7.75 22h8.5C19.43 22 22 19.43 22 16.25v-8.5C22 4.57 19.43 2 16.25 2h-8.5zm0 2h8.5C18.01 4 20 5.99 20 7.75v8.5c0 1.76-1.99 3.75-3.75 3.75h-8.5C5.99 20 4 18.01 4 16.25v-8.5C4 5.99 5.99 4 7.75 4zm4.25 2.5A5.5 5.5 0 1 0 17.5 12 5.5 5.5 0 0 0 12 6.5zm0 2A3.5 3.5 0 1 1 8.5 12 3.5 3.5 0 0 1 12 8.5zm5.25-.88a1.13 1.13 0 1 0 1.13 1.13 1.13 1.13 0 0 0-1.13-1.13z"/></svg>
 </a>
-
 <a href="https://www.youtube.com/@DJK3Beatmaker" class="social-float yt" target="_blank">
     <svg viewBox="0 0 24 24"><path fill="white" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.5 12 3.5 12 3.5s-7.6 0-9.4.6A3 3 0 0 0 .5 6.2 31.7 31.7 0 0 0 0 12a31.7 31.7 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.6 9.4.6 9.4.6s7.6 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.7 31.7 0 0 0 24 12a31.7 31.7 0 0 0-.5-5.8zM9.75 15.5v-7l6 3.5-6 3.5z"/></svg>
 </a>
-
 <script src="js/script.js"></script>
-
 <script>
-
 function mostrarMidi() {
     document.getElementById("beatsPage").style.display = "none";
     document.getElementById("midiPage").style.display = "block";
     document.getElementById("presetPage").style.display = "none";
     document.getElementById("stickyPlayer").style.display = "none";
 }
-
 function mostrarPresets() {
     document.getElementById("beatsPage").style.display = "none";
     document.getElementById("midiPage").style.display = "none";
     document.getElementById("presetPage").style.display = "block";
     document.getElementById("stickyPlayer").style.display = "none";
 }
-
 function voltarBeats() {
     document.getElementById("beatsPage").style.display = "block";
     document.getElementById("midiPage").style.display = "none";
     document.getElementById("presetPage").style.display = "none";
-
-    if(currentId) { 
+    if(typeof currentId !== 'undefined' && currentId) {
         document.getElementById("stickyPlayer").style.display = "block";
     }
 }
-
 </script>
-
 </body>
 </html>
