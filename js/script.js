@@ -5,7 +5,7 @@ const beats = [
     {id:3, name:"Desista", cat:"rnb", bpm:91, price:"R$15", link:"https://pay.kiwify.com.br/rqdgNG1"},
     {id:4, name:"Te Esperando", cat:"rap", bpm:130, price:"R$15", link:"https://pay.kiwify.com.br/509sDIs"},
     {id:5, name:"Auto Confiança", cat:"trap", bpm:128, price:"R$15", link:"https://pay.kiwify.com.br/BXai069"},
-    {id:6, name:"Lentamente", cat:"trap", bpm:101, price:"R$16", link:"https://pay.kiwify.com.br/tsbZm3G"},
+    {id:6, name:"Lentamente", cat:"trap", bpm:101, price:"R$15", link:"https://pay.kiwify.com.br/tsbZm3G"},
     {id:7, name:"Sentimento Impuro", cat:"rnb", bpm:110, price:"R$15", link:"https://pay.kiwify.com.br/MlLKd8v"},
     {id:8, name:"Espanhola", cat:"trap", bpm:140, price:"R$15", link:"https://pay.kiwify.com.br/lkhizZS"},
     {id:9, name:"Nada a Perder", cat:"rnb", bpm:76, price:"R$15", link:"https://pay.kiwify.com.br/jumCXVB"},
